@@ -12,40 +12,40 @@ void gotoxy(int x, int y)
 int main()
 {
 	system("color FC");
-	gotoxy(60,4);
+	gotoxy(55,4);
 	printf("-회원 가입-");
 
-	gotoxy(93,7);
+	gotoxy(88,7);
 	printf("뒤로가기 : B 종료 : X");
-	gotoxy(20,8);
+	gotoxy(15,8);
 	printf("□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□\n");
-	gotoxy(20,9);
+	gotoxy(15,9);
 	printf("□                                                                                          □\n");
-	gotoxy(20,10);
+	gotoxy(15,10);
 	printf("□                                                                                          □\n");
-	gotoxy(20,11); 
+	gotoxy(15,11); 
 	printf("□        학번      :     1092011                                                           □\n");
-	gotoxy(20,12);
+	gotoxy(15,12);
 	printf("□                                                                                          □\n");
-	gotoxy(20,13);
+	gotoxy(15,13);
 	printf("□        PW        :     ********                                                          □\n");
-	gotoxy(20,14);
+	gotoxy(15,14);
 	printf("□                                                                                          □\n");
-	gotoxy(20,15);
+	gotoxy(15,15);
 	printf("□        이름      :     김진삼                                                            □\n");
-	gotoxy(20,16);
+	gotoxy(15,16);
 	printf("□                                                                                          □\n");
-	gotoxy(20,17);
+	gotoxy(15,17);
 	printf("□        고유코드  :     0000                                                              □\n");
-	gotoxy(20,18);
+	gotoxy(15,18);
 	printf("□                                                                                          □\n");
-	gotoxy(20,19);
+	gotoxy(15,19);
 	printf("□                                                                                          □\n");
-	gotoxy(20,20);
+	gotoxy(15,20);
 	printf("□        모든 입력이 끝났습니까? (Y/N)                                                     □\n");
-	gotoxy(20,21);
+	gotoxy(15,21);
 	printf("□                                                                                          □\n");
-	gotoxy(20,22);
+	gotoxy(15,22);
 	printf("□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□\n");
 	
 		printf("\n");
