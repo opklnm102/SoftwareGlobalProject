@@ -9,45 +9,44 @@ void gotoxy(int x, int y)
 	 SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),Cur);
 }
 
-int main()
-{
+int main() {
+	int i;
+
 	system("color FC");
 	gotoxy(55,4);
 	printf("-회원 가입-");
+		
 
-	gotoxy(88,7);
-	printf("뒤로가기 : B 종료 : X");
-	gotoxy(15,8);
-	printf("□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□\n");
-	gotoxy(15,9);
-	printf("□                                                                                          □\n");
-	gotoxy(15,10);
-	printf("□                                                                                          □\n");
-	gotoxy(15,11); 
-	printf("□        학번      :     1092011                                                           □\n");
-	gotoxy(15,12);
-	printf("□                                                                                          □\n");
-	gotoxy(15,13);
-	printf("□        PW        :     ********                                                          □\n");
-	gotoxy(15,14);
-	printf("□                                                                                          □\n");
-	gotoxy(15,15);
-	printf("□        이름      :     김진삼                                                            □\n");
-	gotoxy(15,16);
-	printf("□                                                                                          □\n");
-	gotoxy(15,17);
-	printf("□        고유코드  :     0000                                                              □\n");
-	gotoxy(15,18);
-	printf("□                                                                                          □\n");
-	gotoxy(15,19);
-	printf("□                                                                                          □\n");
-	gotoxy(15,20);
-	printf("□        모든 입력이 끝났습니까? (Y/N)                                                     □\n");
-	gotoxy(15,21);
-	printf("□                                                                                          □\n");
-	gotoxy(15,22);
-	printf("□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□□\n");
-	
-		printf("\n");
-	
+	for(i=0; i<45; i++){
+		gotoxy(15+2*i, 8);
+		printf("■");
+	}
+
+	for(i=0;i <15; i++){
+	  gotoxy(15, 8+i);
+	 printf("■");
+	}
+
+	for(i=0;i <45; i++){
+	  gotoxy(15+i*2, 22);
+	 printf("■");
+	}
+
+	for(i=0;i <15; i++){
+	  gotoxy(105, 8+i);
+	  printf("■");
+	}
+	gotoxy(85,7);
+	printf("뒤로가기 : B 종료 : X");	
+	gotoxy(22,11); 
+	printf("학번      :     1092011");
+	gotoxy(22,13); 
+	printf("PW        :     ********");
+	gotoxy(22,15); 
+	printf("이름      :     김진삼");
+	gotoxy(22,17); 
+	printf("고유코드  :     0000");
+	gotoxy(22,20);
+	printf("모든 입력이 끝났습니까? (Y/N)"); 
+	gotoxy(22,23);
 }
