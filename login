@@ -11,7 +11,6 @@ void gotoxy(int x, int y)
 
 int main()
 {
-	int i,j;
 	system("color FC");
 	gotoxy(60,4);
 	printf("-회원 가입-");
