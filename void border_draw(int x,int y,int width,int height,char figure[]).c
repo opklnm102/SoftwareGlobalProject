@@ -29,8 +29,7 @@ void border_draw(int x,int y,int width,int height,char figure[]){
 
 //테두리 그리기(시작좌표(x,y), 크기(width X height)) 
 void list_border_draw(int x,int y,int width,int height){  
-	int i,j;
-	
+	int i,j;	
 
 	gotoxy(x,y);  //시작좌표	
 	i=y;

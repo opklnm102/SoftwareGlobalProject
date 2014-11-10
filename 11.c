@@ -13,29 +13,29 @@ int main() {
 	int i;
 	char command;
 
-	system("color FC");
-	
+	system("mode con:cols=130 lines=45");  //°¡·Î 130, ¼¼·Î 45 
+
 	for(i=0; i<30; i++){
 		gotoxy(30+2*i, 8);
-		printf("â– ");
+		printf("¡á");
 	}
 
 	for(i=0;i <15; i++){
 	  gotoxy(30, 8+i);
-	 printf("â– ");
+	 printf("¡á");
 	}
 
 	for(i=0;i <30; i++){
 	  gotoxy(30+i*2, 22);
-	 printf("â– ");
+	 printf("¡á");
 	}
 
 	for(i=0;i <15; i++){
 	  gotoxy(88, 8+i);
-	  printf("â– ");
+	  printf("¡á");
 	}
 	gotoxy(47,14); 
-	printf("ì‹œê°„í‘œê°€ ì „ì²´ ì‚­ì œë©ë‹ˆë‹¤. (Y/N)");
+	printf("½Ã°£Ç¥°¡ ÀüÃ¼ »èÁ¦µË´Ï´Ù. (Y/N)");
 	gotoxy(60,15);
 	scanf("%c",&command);	
 	gotoxy(22,23);

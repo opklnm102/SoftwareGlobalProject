@@ -7,16 +7,16 @@ void gotoxy(int x,int y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos); 
 }
 
-//í…Œë‘ë¦¬ ê·¸ë¦¬ê¸°(ì‹œì‘ì¢Œí‘œ(x,y), í¬ê¸°(width X height), ê·¸ë¦´ë„í˜•)
+//Å×µÎ¸® ±×¸®±â(½ÃÀÛÁÂÇ¥(x,y), Å©±â(width X height), ±×¸±µµÇü)
 void border_draw(int x,int y,int width,int height,char figure[]){  
 	int i,j;
 
-	gotoxy(x,y);  //ì‹œì‘ì¢Œí‘œ	
+	gotoxy(x,y);  //½ÃÀÛÁÂÇ¥	
 	i=y;
-	while(i<y+height){ //ì„¸ë¡œ
+	while(i<y+height){ //¼¼·Î
 		j=x;
 		gotoxy(j,i+1);
-		while(j<x+width){  //ê°€ë¡œ
+		while(j<x+width){  //°¡·Î
 			if(i==y || i==y+height-1 || j==x || j==x+width-1)
 				printf("%c%c",figure[0],figure[1]);
 			else
@@ -32,45 +32,46 @@ int main() {
 	char command;
 	char name[10]={' '};
 
-	border_draw(60,5,22,16,"â”");
+	system("mode con:cols=130 lines=45");  //°¡·Î 130, ¼¼·Î 45 
+
+	border_draw(60,5,22,16,"¦¬");
 	gotoxy(60,6);
-	printf("â”");
+	printf("¦®");
 	gotoxy(102,6);
-	printf("â”“");
+	printf("¦¯");
 	gotoxy(60,21);
-	printf("â”—");
+	printf("¦±");
 	gotoxy(102,21);
-	printf("â”›");
+	printf("¦°");
 	for(i=0;i <14; i++){
 	  gotoxy(60, 7+i);
-	 printf("â”ƒ");
+	 printf("¦­");
 	}
 	for(i=0;i <14; i++){
 	  gotoxy(102, 7+i);
-	 printf("â”ƒ");
-	}
-	system("color FC");
+	 printf("¦­");
+	}	
 	gotoxy(60,5);
-	printf("ë‚˜ì˜ ì•½ì†");	
+	printf("³ªÀÇ ¾à¼Ó");	
 	gotoxy(20,5); 
-	printf("â˜† ì•½ì† ë©”ë‰´ â˜†");
+	printf("¡Ù ¾à¼Ó ¸Ş´º ¡Ù");
 	gotoxy(23,7); 
-	printf("1. ì•½ì†ë§Œë“¤ê¸°");
+	printf("1. ¾à¼Ó¸¸µé±â");
 	gotoxy(23,9); 
-	printf("2. ì•½ì† ìˆ˜ì •");
+	printf("2. ¾à¼Ó ¼öÁ¤");
 	gotoxy(23,11); 
-	printf("3. ì•½ì† ì‚­ì œ");
+	printf("3. ¾à¼Ó »èÁ¦");
 	gotoxy(23,13); 
-	printf("4. ì•½ì† ì¡ì•„ë³´ê¸°");
+	printf("4. ¾à¼Ó Àâ¾Æº¸±â");
 	gotoxy(25,16);
-	printf("â–· ë©”ë‰´ ì„ íƒ :"); 
+	printf("¢¹ ¸Ş´º ¼±ÅÃ :"); 
 	
 	gotoxy(65,8);
-	printf("ÂºíŒ€í”„ë¡œì íŠ¸     / (11/9)");
+	printf("¨¬ÆÀÇÁ·ÎÁ§Æ®     / (11/9)");
 	gotoxy(65,11);
-	printf("ÂºíŒ€í”„ë¡œì íŠ¸2    / (11/11)");
+	printf("¨¬ÆÀÇÁ·ÎÁ§Æ®2    / (11/11)");
 	gotoxy(65,14);
-	printf("Âºì¡°ë³„ê³¼ì œ       / (11/18)");
+	printf("¨¬Á¶º°°úÁ¦       / (11/18)");
 	gotoxy(40,16);
 	scanf("%c",&command);	
 	gotoxy(22,23);

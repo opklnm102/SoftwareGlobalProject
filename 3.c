@@ -15,42 +15,42 @@ int main() {
 	char name[10];
 	int studentN,pw,originC;
 
-	system("color FC");
+	system("mode con:cols=130 lines=45");  //°¡·Î 130, ¼¼·Î 45 
 	gotoxy(55,4);
-	printf("-íšŒì› ê°€ì…-");
+	printf("-È¸¿ø °¡ÀÔ-");
 		
 
 	for(i=0; i<45; i++){
 		gotoxy(15+2*i, 8);
-		printf("â– ");
+		printf("¡á");
 	}
 
 	for(i=0;i <15; i++){
 	  gotoxy(15, 8+i);
-	 printf("â– ");
+	 printf("¡á");
 	}
 
 	for(i=0;i <45; i++){
 	  gotoxy(15+i*2, 22);
-	 printf("â– ");
+	 printf("¡á");
 	}
 
 	for(i=0;i <15; i++){
 	  gotoxy(105, 8+i);
-	  printf("â– ");
+	  printf("¡á");
 	}
 	gotoxy(70,7);
-	printf("ë’¤ë¡œê°€ê¸° : B ì¢…ë£Œ : X ìœ ì§€ : S");	
+	printf("µÚ·Î°¡±â : B Á¾·á : X À¯Áö : S");	
 	gotoxy(22,11); 
-	printf("í•™ë²ˆ      :");
+	printf("ÇĞ¹ø      :");
 	gotoxy(22,13); 
 	printf("PW        :");
 	gotoxy(22,15); 
-	printf("ì´ë¦„      :");
+	printf("ÀÌ¸§      :");
 	gotoxy(22,17); 
-	printf("ê³ ìœ ì½”ë“œ  :");
+	printf("°íÀ¯ÄÚµå  :");
 	gotoxy(22,20);
-	printf("ëª¨ë“  ì…ë ¥ì´ ëë‚¬ìŠµë‹ˆê¹Œ? (Y/N)"); 
+	printf("¸ğµç ÀÔ·ÂÀÌ ³¡³µ½À´Ï±î? (Y/N)"); 
 	
 	gotoxy(103,7);
 	scanf("%c",&command);

@@ -21,27 +21,26 @@ int main() {
 
 	for(i=0; i<30; i++){
 		gotoxy(10+i*2, 10);
-		printf("â– ");
+		printf("¡á");
 	}
 
 	for(i=0;i <15; i++){
 		gotoxy(10, 10+i);
-		printf("â– ");
+		printf("¡á");
 	}
 
 	for(i=0;i <30; i++){
 		gotoxy(10+i*2, 25);
-		printf("â– ");
+		printf("¡á");
 	}
 
 	for(i=0;i <15; i++){
 		gotoxy(68, 10+i);
-		printf("â– ");
+		printf("¡á");
 	}
 
-	
 	gotoxy(25, 17);
-	printf("í•™ë²ˆ :");
+	printf("ÇÐ¹ø :");
 	gotoxy(25, 19);
 	printf("PW : ");
 	gotoxy(33, 17);
@@ -49,7 +48,6 @@ int main() {
 	gotoxy(30, 19);
 	scanf("%d", &pw);
 	gotoxy(50, 35);
-	printf("í™˜ì˜í•©ë‹ˆë‹¤!");
-	gotoxy(50, 36);
-	
+	printf("È¯¿µÇÕ´Ï´Ù!");
+	gotoxy(50, 36);	
 }
