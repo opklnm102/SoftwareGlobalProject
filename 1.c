@@ -7,47 +7,80 @@ void gotoxy(int x,int y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos); 
 }
 
+void printMold() {
+
+	int i;
+
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+	
+	for(i=0;i<44;i++){
+		gotoxy(0,i+1);
+		printf("■                                                                                                                              ■");
+	}
+
+	gotoxy(0,44);
+	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+
+}
+
+//테두리 그리기(시작좌표(x,y), 크기(width X height)) 
+void list_border_draw(int x,int y,int width,int height){  
+   int i,j;   
+
+   gotoxy(x,y);  //시작좌표   
+   i=y;
+   while(i<y+height){ //세로
+      j=x;
+      gotoxy(j,i+1);
+      while(j<x+width){  //가로
+         if(i==y && j==x)  //왼쪽위 구석
+            printf("%s","┌");
+         else if(i==y && j==x+width-1)  //오른쪽위 구석
+            printf("%s","┐");
+         else if(i==y+height-1 && j==x)  //왼쪽아래 구석
+            printf("%s","└");
+         else if(i==y+height-1 && j==x+width-1)  //오른쪽 아래 구석
+            printf("%s","┘");
+         else if(i==y || i==y+height-1)  //가로 그리기
+            printf("%s","─");
+         else if(j==x || j==x+width-1)  //세로 그리기
+            printf("%s","│");
+         else
+            printf("  ");
+         j++;
+      }
+      i++;
+   }
+}
+
 int main() 
 {
-	int i;
+
 	int tmp;
+	int x=71,y=23;
 
-	system("mode con:cols=130 lines=45");  //���� 130, ���� 45 
+	
+	system("mode con:cols=130 lines=46");  //가로 130, 세로 46 
 
-	gotoxy(35,12);
+	printMold();
+	list_border_draw(x-36,y-12,30,20);
+
+	gotoxy(60,14);
 	printf("*Togedule*");
 
-	for(i=0; i<30; i++){
-		gotoxy(10+i*2, 10);
-		printf("��");
-	}
+	
 
-	for(i=0;i <15; i++){
-		gotoxy(10, 10+i);
-		printf("��");
-	}
+	gotoxy(45, 18);
+	printf("1. 로  그  인");
+	gotoxy(45, 21);
+	printf("2. 회 원 가 입");
+	gotoxy(45, 24);
+	printf("3. 비밀번호찾기");
 
-	for(i=0;i <30; i++){
-		gotoxy(10+i*2, 25);
-		printf("��");
-	}
-
-	for(i=0;i <15; i++){
-		gotoxy(68, 10+i);
-		printf("��");
-	}
-
-	gotoxy(20, 15);
-	printf("1. ��  ��  ��");
-	gotoxy(20, 18);
-	printf("2. ȸ �� �� ��");
-	gotoxy(20, 21);
-	printf("3. ��й�ȣ ã��");
-
-	gotoxy(45,23);
-	printf("�޴����� : ");
-	gotoxy(56,23);
+	gotoxy(73,28);
+	printf("메뉴선택 : ");
+	gotoxy(84,28);
 	scanf("%d",&tmp);
 
-	gotoxy(50,50);
+	gotoxy(100,100);
 }
