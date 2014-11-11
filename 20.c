@@ -89,7 +89,7 @@ int main() {
 	
 
 	system("color F0");
-	gotoxy(58,10); 
+	gotoxy(58,8); 
 	printf("☆ 돈 나누기 ☆");
 
 	gotoxy(x+13,y+2); 
@@ -115,8 +115,9 @@ int main() {
 
 	gotoxy(x+59,y+32); 
 	printf("뒤로가기 B, 종료 X, 계속하기 S :");
+	gotoxy(x+25,y2+22);
 	scanf("%c",&command);
-	gotoxy(35,21);	
+	gotoxy(x+91,y+32); 
 	scanf("%d",&command1);
-	gotoxy(23,22);	
+	gotoxy(x+59,y+32); 
 }
