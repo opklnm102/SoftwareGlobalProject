@@ -7,18 +7,18 @@ void gotoxy(int x, int y);
 void printMold();
 void makeTimetable_SubjectOfNumInput();
 void makeTimetable_SubjectOfNameClass( int* SubjectOfday) ;
-void modifyTimetable(); 
-char dayOfWeek[5][4] = {"¿ù", "È­", "¼ö", "¸ñ", "±Ý"};
+void modifyTimetable();
+void list_border_draw(int x,int y,int width,int height);
+char dayOfWeek[5][4] = {"ì›”", "í™”", "ìˆ˜", "ëª©", "ê¸ˆ"};
 
 int main() {
 
-   
 
-   system("mode con:cols=130 lines=45");  //°¡·Î 130, ¼¼·Î 45 
-   //printMold() ; //Æ²±×¸®±â
-   makeTimetable_SubjectOfNumInput(); // ½Ã°£Ç¥¸¸µé±â½ÃÀÛ
+   system("mode con:cols=130 lines=46");  //ê°€ë¡œ 130, ì„¸ë¡œ 45 
+   //printMold() ; //í‹€ê·¸ë¦¬ê¸°
+   makeTimetable_SubjectOfNumInput(); // ì‹œê°„í‘œë§Œë“¤ê¸°ì‹œìž‘
    //printMold() ;
-   modifyTimetable(); //½Ã°£Ç¥¼öÁ¤
+   modifyTimetable(); //ì‹œê°„í‘œìˆ˜ì •
 
    
 
@@ -32,24 +32,27 @@ void gotoxy(int x, int y) {
    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),Cur); 
 }
 
-//½Ã°£Ç¥¸¸µé±â -°ú¸ñ°¹¼öÀÔ·Â
+//ì‹œê°„í‘œë§Œë“¤ê¸° -ê³¼ëª©ê°¯ìˆ˜ìž…ë ¥
 void makeTimetable_SubjectOfNumInput() {
 
    int i;
    int SubjectCntOfday[5]={0};
+   int x=71,y=23;
+   
 
    printMold() ;
+   list_border_draw(x-36,y-12,30,20);
 
-   gotoxy(32,12);
-   printf("- ½Ã°£Ç¥ ¸¸µé±â -");
+   gotoxy(58,15);
+   printf("- ì‹œê°„í‘œ ë§Œë“¤ê¸° -");
 
    for(i=0;i<5;i++){
-      gotoxy(20, 15+i*2);
-      printf(" %s¿äÀÏ °ú¸ñ °¹¼ö : ", dayOfWeek[i]);
+      gotoxy(50, 19+i*2);
+      printf(" %sìš”ì¼ ê³¼ëª© ê°¯ìˆ˜ : ", dayOfWeek[i]);
    }
 
    for(i=0;i<5;i++){
-      gotoxy(40,15+i*2);
+      gotoxy(70,19+i*2);
       scanf("%d", &SubjectCntOfday[i]);
    }
 
@@ -59,109 +62,97 @@ void makeTimetable_SubjectOfNumInput() {
 
 }
 
-//½Ã°£Ç¥¸¸µé±â-°ú¸ñÀÌ¸§/±³½Ã
+//ì‹œê°„í‘œë§Œë“¤ê¸°-ê³¼ëª©ì´ë¦„/êµì‹œ
 void makeTimetable_SubjectOfNameClass( int* SubjectCntOfday) {
 
-   int i, j;
+   int i, j, k=0;
    char subjectName[15];
    char subjectClass[10];
-   int cnt=0 ,tmp=0;
+   int cnt=0 ,tmp=12;
    int y;
+
+   printMold() ;
 
    for( i = 0; i < 5; i++){
 
       if( SubjectCntOfday[i] != 0 ) {
-
-         printf("£ª£ª£ª£ª£ª£ª£ª£ª£ª£ª£ª- %s¿äÀÏ -£ª£ª£ª£ª£ª£ª£ª£ª£ª£ª£ª\n", dayOfWeek[i]);
-
+		  k++;
+		  gotoxy(40,10+k);
+         printf("ï¼Šï¼Šï¼Šï¼Šï¼Šï¼Šï¼Šï¼Šï¼Šï¼Šï¼Š- %sìš”ì¼ -ï¼Šï¼Šï¼Šï¼Šï¼Šï¼Šï¼Šï¼Šï¼Šï¼Šï¼Š\n", dayOfWeek[i]);
+		 
          for(j=0; j <SubjectCntOfday[i] ; j++){
-            printf(" %d. °ú¸ñ¸í :                 ±³½Ã :       \n",j+1);
+			 k++;
+			 gotoxy(40,10+k);
+            printf(" %d. ê³¼ëª©ëª… :                       êµì‹œ :       \n",j+1);
 
          }
+		 k++;
+		 gotoxy(40,10+k);
          printf("\n");
       }
    }
-
 
 
    for( i = 0; i < 5; i++){
 
       for(j=0; j <SubjectCntOfday[i] ; j++){
 
-         y = j+1+tmp;
+         y = j+tmp;
 
-         gotoxy(14,y);
+		  
+         gotoxy(54,y);
          scanf("%s",&subjectName);
 
-         gotoxy(48,y);
+         gotoxy(82,y);
          scanf("%s",&subjectClass);
 
 
          if(j+1 == SubjectCntOfday[i]){
-            tmp = y+2;
-         }
+           
+				 tmp = 3+y;
+		 }
+		
+	  }
+       printf("\n");
 
-      }
-      printf("\n");
    }
 
       system("cls");   
 }
 
-//Æ² Ãâ·Â
-void printMold() {
 
-   int i;
-
-   for(i=0; i<30; i++){
-      gotoxy(10+i*2, 10);
-      printf("¡á");
-   }
-
-   for(i=0;i <15; i++){
-      gotoxy(10, 10+i);
-      printf("¡á");
-   }
-
-   for(i=0;i <30; i++){
-      gotoxy(10+i*2, 25);
-      printf("¡á");
-   }
-
-   for(i=0;i <15; i++){
-      gotoxy(68, 10+i);
-      printf("¡á");
-   }
-}
-
-//½Ã°£Ç¥ ¼öÁ¤
+//ì‹œê°„í‘œ ìˆ˜ì •
 void modifyTimetable() {
 
    char tmp[100];
    int modifyDay[5] ={0};
    int modifySubjectN[5]={0};
    int i,j=0;
+   int x=71,y=23;
 
 
    fflush(stdin);
 
    printMold() ;
+   printMold() ;
+   list_border_draw(x-36,y-12,30,20);
 
-   gotoxy(32,12);
-   printf("- ½Ã°£Ç¥ ¼öÁ¤ -");
+   gotoxy(58,15);
+   printf("- ì‹œê°„í‘œ ìˆ˜ì • -");
 
-   gotoxy(15, 14);
-   printf("¼öÁ¤ÇÏ½Ç ¿äÀÏ : ");
+   gotoxy(42, 19);
+   printf("ìˆ˜ì •í•˜ì‹¤ ìš”ì¼ : ");
 
-   gotoxy(31, 14);
+   gotoxy(58, 19);
    gets(tmp);
 
    for(i=0; i<5; i++) {
       if ( strstr(tmp, dayOfWeek[i]) ) {
-         gotoxy(20, 16+j*2);
-         printf("%s¿äÀÏ °ú¸ñ °¹¼ö : \n", dayOfWeek[i]);
+          gotoxy(44, 21+j*2);
+         printf("%sìš”ì¼ ê³¼ëª© ê°¯ìˆ˜ : \n", dayOfWeek[i]);
          modifyDay[i] = i;
          j++;
+
       }
    }
 
@@ -170,7 +161,7 @@ void modifyTimetable() {
    for(i=0; i<5; i++) {
 
       if(modifyDay[i] != 0 ) {
-         gotoxy(40, 16+j*2);
+         gotoxy(63, 21+j*2);
          scanf("%d", &modifySubjectN[modifyDay[i]]);
          j++;
       }
@@ -179,4 +170,57 @@ void modifyTimetable() {
    system("cls");   
    makeTimetable_SubjectOfNameClass(modifySubjectN);
 
+}
+
+
+//í‹€ ì¶œë ¥
+void printMold() {
+
+	int i;
+
+	
+
+	printf("â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– ");
+	
+	for(i=0;i<44;i++){
+		gotoxy(0,i+1);
+		printf("â–                                                                                                                               â– ");
+	}
+
+	gotoxy(0,44);
+	printf("â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– ");
+
+	gotoxy(88,41);
+   printf("ë’¤ë¡œê°€ê¸° B, ì¢…ë£Œ X, ê³„ì†í•˜ê¸° S");
+
+
+}
+
+void list_border_draw(int x,int y,int width,int height){  
+   int i,j;   
+
+   gotoxy(x,y);  //ì‹œìž‘ì¢Œí‘œ   
+   i=y;
+   while(i<y+height){ //ì„¸ë¡œ
+      j=x;
+      gotoxy(j,i+1);
+      while(j<x+width){  //ê°€ë¡œ
+         if(i==y && j==x)  //ì™¼ìª½ìœ„ êµ¬ì„
+            printf("%s","â”Œ");
+         else if(i==y && j==x+width-1)  //ì˜¤ë¥¸ìª½ìœ„ êµ¬ì„
+            printf("%s","â”");
+         else if(i==y+height-1 && j==x)  //ì™¼ìª½ì•„ëž˜ êµ¬ì„
+            printf("%s","â””");
+         else if(i==y+height-1 && j==x+width-1)  //ì˜¤ë¥¸ìª½ ì•„ëž˜ êµ¬ì„
+            printf("%s","â”˜");
+         else if(i==y || i==y+height-1)  //ê°€ë¡œ ê·¸ë¦¬ê¸°
+            printf("%s","â”€");
+         else if(j==x || j==x+width-1)  //ì„¸ë¡œ ê·¸ë¦¬ê¸°
+            printf("%s","â”‚");
+         else
+            printf("  ");
+         j++;
+      }
+      i++;
+   }
 }
