@@ -1,6 +1,5 @@
-#include<stdio.h>
-#include<windows.h>
-#include<conio.h>
+#include <stdio.h>
+#include <Windows.h>
 
 void gotoxy(int x,int y)
 {	
@@ -8,47 +7,32 @@ void gotoxy(int x,int y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos); 
 }
 
-//Å×µÎ¸® ±×¸®±â(½ÃÀÛÁÂÇ¥(x,y), Å©±â(width X height)) 
-void list_border_draw(int x,int y,int width,int height){  
-	int i,j;
-	
+void printMold() {
 
-	gotoxy(x,y);  //½ÃÀÛÁÂÇ¥	
-	i=y;
-	while(i<y+height){ //¼¼·Î
-		j=x;
-		gotoxy(j,i+1);
-		while(j<x+width){  //°¡·Î
-			if(i==y && j==x)  //¿ÞÂÊÀ§ ±¸¼®
-				printf("%s","¦£");
-			else if(i==y && j==x+width-1)  //¿À¸¥ÂÊÀ§ ±¸¼®
-				printf("%s","¦¤");
-			else if(i==y+height-1 && j==x)  //¿ÞÂÊ¾Æ·¡ ±¸¼®
-				printf("%s","¦¦");
-			else if(i==y+height-1 && j==x+width-1)  //¿À¸¥ÂÊ ¾Æ·¡ ±¸¼®
-				printf("%s","¦¥");
-			else if(i==y || i==y+height-1)  //°¡·Î ±×¸®±â
-				printf("%s","¦¡");
-			else if(j==x || j==x+width-1)  //¼¼·Î ±×¸®±â
-				printf("%s","¦¢");
-			else
-				printf("  ");
-			j++;
-		}
-		i++;
+	int i;
+	gotoxy(0,0);
+	printf("â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– ");
+
+	for(i=0;i<44;i++){
+		gotoxy(0,i+1);
+		printf("â–                                                                                                                               â– ");
 	}
+
+	gotoxy(0,44);
+	printf("â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– ");
+
 }
 
-//Å×µÎ¸® ±×¸®±â(½ÃÀÛÁÂÇ¥(x,y), Å©±â(width X height), ±×¸±µµÇü) 2ºñÆ®Â¥¸® µµÇü
+//í…Œë‘ë¦¬ ê·¸ë¦¬ê¸°(ì‹œìž‘ì¢Œí‘œ(x,y), í¬ê¸°(width X height), ê·¸ë¦´ë„í˜•) 2ë¹„íŠ¸ì§œë¦¬ ë„í˜•
 void border_draw(int x,int y,int width,int height,char figure[]){  
 	int i,j;
 
-	gotoxy(x,y);  //½ÃÀÛÁÂÇ¥	
+	gotoxy(x,y);  //ì‹œìž‘ì¢Œí‘œ	
 	i=y;
-	while(i<y+height){ //¼¼·Î
+	while(i<y+height){ //ì„¸ë¡œ
 		j=x;
 		gotoxy(j,i+1);
-		while(j<x+width){  //°¡·Î
+		while(j<x+width){  //ê°€ë¡œ
 			if(i==y || i==y+height-1 || j==x || j==x+width-1)
 				printf("%c%c",figure[0],figure[1]);
 			else
@@ -59,98 +43,70 @@ void border_draw(int x,int y,int width,int height,char figure[]){
 	}
 }
 
-int main()
-{	
-	int x=10,y=3;  //½ÃÀÛ ÁÂÇ¥
+//í…Œë‘ë¦¬ ê·¸ë¦¬ê¸°(ì‹œìž‘ì¢Œí‘œ(x,y), í¬ê¸°(width X height)) 
+void list_border_draw(int x,int y,int width,int height){  
 	int i,j;
-	int place_category,place;  //Àå¼Ò¸®½ºÆ®(P-1-7)
-	int delete_promise;  //¾à¼Ó»èÁ¦(P-3)
-	char delete_selection;  
-	int division_money,money;  //µ·ºÐ¹è(D)
-	system("mode con:cols=130 lines=45");  //°¡·Î 130, ¼¼·Î 45 
 
-	//Àå¼Ò¼±ÅÃ(P-1-7)
-	//list_border_draw(3,7,40,10);  //¸®½ºÆ®Å×µÎ¸® ±×¸®±â
-	//gotoxy(3,3);
-	//printf("¾à¼ÓÀå¼Ò");
-	//gotoxy(35,6);
-	//printf("Àå¼Ò¸®½ºÆ®");
-	//gotoxy(6,9);
-	//printf("1.ÇÐ½À°ü·Ã½Ã¼³");
-	//gotoxy(6,11);
-	//printf("2.ÈÞ°Ô½Ã¼³");
-	//gotoxy(6,13);
-	//printf("3.±âÅ¸½Ã¼³");
-	//gotoxy(3,19);
-	//printf("¿øÇÏ´Â Àå¼Ò>> "); scanf("%d",&place_category);	
-	//
-	//system("cls");		
-	//
-	//list_border_draw(3,7,40,10);  //¸®½ºÆ®Å×µÎ¸® ±×¸®±â
-	//gotoxy(3,3);
-	//printf("¾à¼ÓÀå¼Ò");
-	//gotoxy(35,6);
-	//printf("Àå¼Ò¸®½ºÆ®");
-	//gotoxy(6,9);
-	//printf("1.Å½±¸°ü ÁöÇÏ ¸ÅÁ¡");
-	//gotoxy(6,11);
-	//printf("2.ÄÄ°ø ÀÚÀ¯½Ç½À½Ç");
-	//gotoxy(3,19);
-	//printf("Àå¼Ò>> ");	scanf("%d",&place);	
-	//
-	//system("cls");
-
-	//¾à¼Ó»èÁ¦(P-3)
-	list_border_draw(3,6,40,10);  //¸®½ºÆ®Å×µÎ¸® ±×¸®±â
-	gotoxy(3,3);
-	printf("--³ªÀÇ ¾à¼Ó¸®½ºÆ®--");
-	gotoxy(6,8);
-	printf("  ¾à¼Ó¸í                 ¾à¼Ó³¯Â¥");
-	gotoxy(6,10);
-	printf("1.È«´ë°¡±â                11/28");
-	gotoxy(6,12);
-	printf("2.ÇÐ±³°¡±â                11/17");
-
-	list_border_draw(3,19,40,10);  //¸®½ºÆ®Å×µÎ¸® ±×¸®±â
-
-	gotoxy(5,18);
-	printf("»èÁ¦ÇÏ½Ç ¾à¼Ó>> "); scanf("%d",&delete_promise);
-
-	gotoxy(6,21);
-	printf(" ¾à¼Ó¸í            Àå¼Ò             ³¯Â¥        ½Ã°£        ÇÔ²²ÇÒÄ£±¸");
-	gotoxy(6,23);
-	printf("ÇÐ±³°¡±â        °øÇÐ°ü(405)        11/14        2½Ã          ÀÌÁ¤ÈÆ");
-	
-	gotoxy(5,30);
-	printf("ÀüÃ¼»èÁ¦µË´Ï´Ù. »èÁ¦ÇÏ½Ã°Ú½À´Ï±î?(Y/N)"); fflush(stdin);
-	scanf("%c",&delete_selection);
-
-	system("cls");
-
-	list_border_draw(3,6,40,10);  //¸®½ºÆ®Å×µÎ¸® ±×¸®±â
-	gotoxy(3,3);
-	printf("--µ· ³ª´²µå¸±²²¿ä!--");
-	gotoxy(6,8);
-	printf("  ¾à¼Ó¸í                 ¾à¼Ó³¯Â¥");
-	gotoxy(6,10);
-	printf("1.È«´ë°¡±â                11/28");
-	gotoxy(6,12);
-	printf("2.ÇÐ±³°¡±â                11/17");	
-	
-	list_border_draw(3,20,40,10);  //¸®½ºÆ®Å×µÎ¸® ±×¸®±â
-	gotoxy(4,20);
-	printf("<¼±ÅÃµÈ ¾à¼Ó>");
-
-	gotoxy(5,18);
-	printf("µ· ³ª´­ ¾à¼Ó>> "); scanf("%d",&division_money);
-
-	gotoxy(6,22);
-	printf(" ¾à¼Ó¸í            Àå¼Ò             ³¯Â¥        ½Ã°£        ÇÔ²²ÇÒÄ£±¸");
-	gotoxy(6,24);
-	printf("ÇÐ±³°¡±â        °øÇÐ°ü(405)        11/14        2½Ã          ÀÌÁ¤ÈÆ");
-
-	gotoxy(5,31);
-	printf("³ª´­ ±Ý¾× ÀÔ·Â>> "); fflush(stdin);
-	scanf("%d",&money);
+	gotoxy(x,y);  //ì‹œìž‘ì¢Œí‘œ	
+	i=y;
+	while(i<y+height){ //ì„¸ë¡œ
+		j=x;
+		gotoxy(j,i+1);
+		while(j<x+width){  //ê°€ë¡œ
+			if(i==y && j==x)  //ì™¼ìª½ìœ„ êµ¬ì„
+				printf("%s","â”Œ");
+			else if(i==y && j==x+width-1)  //ì˜¤ë¥¸ìª½ìœ„ êµ¬ì„
+				printf("%s","â”");
+			else if(i==y+height-1 && j==x)  //ì™¼ìª½ì•„ëž˜ êµ¬ì„
+				printf("%s","â””");
+			else if(i==y+height-1 && j==x+width-1)  //ì˜¤ë¥¸ìª½ ì•„ëž˜ êµ¬ì„
+				printf("%s","â”˜");
+			else if(i==y || i==y+height-1)  //ê°€ë¡œ ê·¸ë¦¬ê¸°
+				printf("%s","â”€");
+			else if(j==x || j==x+width-1)  //ì„¸ë¡œ ê·¸ë¦¬ê¸°
+				printf("%s","â”‚");
+			else
+				printf("  ");
+			j++;
+		}
+		i++;
+	}
 }
 
+int main() {
+	int stdX = 34, stdY = 6;
+	int i, j, k, m, n, q;
+	system("mode con:cols=130 lines=46");  //ê°€ë¡œ 130, ì„¸ë¡œ 45 
+	
+	printMold();
+	gotoxy( stdX+16, stdY+5 );
+	printf("   ìˆ˜ì •í•  ë‚´ìš©ì„ ì„ íƒí•˜ì„¸ìš”: \n\n");
+	gotoxy( stdX+5, stdY+7 );
+	printf("1. ì•½ì†ëª…      : \n");
+	gotoxy( stdX+5, stdY+8 );
+	printf("2. ì•½ì†ìž¥ì†Œ    : \n");
+	gotoxy( stdX+5, stdY+9 );
+	printf("3. ì•½ì†ë‚ ì§œ    : \n");
+	gotoxy( stdX+5, stdY+10 );
+	printf("4. ì•½ì†ì‹œê°„    : \n");
+	gotoxy( stdX+5, stdY+11 );
+	printf("5. í•¨ê»˜í•  ì¹œêµ¬ : \n");
+	gotoxy( 80 , 40 );
+	printf("ë’¤ë¡œê°€ê¸° B, ì¢…ë£Œ X, ê³„ì†í•˜ê¸° S :");
+	
+	list_border_draw(stdX+6,stdY+12,25,15);
+	gotoxy( stdX+44, stdY+5  );
+	scanf("%d", &i );
+	gotoxy( stdX+22, stdY+7  );
+	scanf("%d", &j );
+	gotoxy( stdX+22, stdY+8  );
+	scanf("%d", &k );
+	gotoxy( stdX+22, stdY+9 );
+	scanf("%d", &m );
+	gotoxy( stdX+22, stdY+10 );
+	scanf("%d", &n );
+	gotoxy( stdX+22, stdY+11 );
+	scanf("%d", &q );
+	printf("\n");
+	gotoxy( stdX+22, stdY+30 );
+}
