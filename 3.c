@@ -1,6 +1,5 @@
-#include <stdio.h>
+#include<stdio.h>
 #include <windows.h>
-
 
 void gotoxy(int x, int y)
 {
@@ -82,11 +81,12 @@ int main() {
 	int x=23, y=4;
 	char command,finishC;
 	char name[10];
-	int studentN,pw,originC;
+	char pw[10];
+	int studentN,originC;
 	
 	system("mode con:cols=130 lines=46");  //가로 130, 세로 45 
 	printMold();
-	gotoxy(58,10);
+	gotoxy(60,10);
 	printf("-회원 가입-");
 	
 	list_border_draw(42,12,23,14);
@@ -109,7 +109,7 @@ int main() {
 	gotoxy(40+x,11+y);
 	scanf("%d",&studentN);
 	gotoxy(40+x,13+y);
-	scanf("%d",&pw);
+	scanf("%s",&pw);
 	gotoxy(40+x,15+y);
 	scanf("%s",&name);
 	gotoxy(40+x,17+y);
