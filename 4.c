@@ -76,7 +76,6 @@ void printMold() {
        i++; 
     } 
  } 
-
 int main(){
 	int x=26, y=1;
 	int i;
@@ -84,7 +83,7 @@ int main(){
 	char command;
 	system("mode con:cols=130 lines=46");  //가로 130, 세로 45 
 	printMold();
-	gotoxy(58,10);	
+	gotoxy(56,10);	
 	printf("-비밀번호 재설정-");
 
 	list_border_draw(42,12,23,14);
