@@ -20,7 +20,22 @@ void printMold() {
 
 	gotoxy(0,44);
 	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-
+	gotoxy(43,12);
+	printf("┌");
+	gotoxy(87,12);
+	printf("┐");
+	for(i=0;i<13;i++){
+		gotoxy(43,i+13);
+		printf("│                                          │");
+	}
+	gotoxy(43,26);
+	printf("└");
+	gotoxy(87,26);
+	printf("┘");
+	gotoxy(45,12);
+	printf("─────────────────────");
+	gotoxy(45,26);
+	printf("─────────────────────");
 }
 
 //테두리 그리기(시작좌표(x,y), 크기(width X height)) 
@@ -63,24 +78,26 @@ int main()
 	system("mode con:cols=130 lines=46");  //가로 130, 세로 46 
 
 	printMold();
-	list_border_draw(x-36,y-12,30,20);
 
-	gotoxy(60,14);
+
+	gotoxy(60,10);
 	printf("*Togedule*");
 
 	
 
-	gotoxy(45, 18);
+	gotoxy(50, 15);
 	printf("1. 로  그  인");
-	gotoxy(45, 21);
+	gotoxy(50, 18);
 	printf("2. 회 원 가 입");
-	gotoxy(45, 24);
+	gotoxy(50, 21);
 	printf("3. 비밀번호찾기");
 
-	gotoxy(73,28);
+	gotoxy(73,24);
 	printf("메뉴선택 : ");
-	gotoxy(84,28);
+	gotoxy(84,24);
 	scanf("%d",&tmp);
 
-	gotoxy(100,100);
+	gotoxy(50,27);
 }
+
+
