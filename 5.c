@@ -21,6 +21,23 @@ void printMold() {
 
    gotoxy(0,44);
    printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+    gotoxy(43,13);
+	printf("┌");
+	gotoxy(87,13);
+	printf("┐");
+	for(i=0;i<13;i++){
+		gotoxy(43,i+14);
+		printf("│                                          │");
+	}
+	gotoxy(43,27);
+	printf("└");
+	gotoxy(87,27);
+	printf("┘");
+	gotoxy(45,13);
+	printf("─────────────────────");
+	gotoxy(45,27);
+	printf("─────────────────────");
+
 
 }
 
@@ -86,7 +103,7 @@ int main() {
 	printMold();
 	gotoxy(58,10);
 	printf("%s 님 안녕하세요!",name);		
-	list_border_draw(42,12,23,14);
+
 	
 	gotoxy(40+x,11+y); 
 	printf("1. 내 상태보기");
