@@ -20,22 +20,23 @@ void printMold() {
 
 	gotoxy(0,44);
 	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-	gotoxy(43,12);
+	 gotoxy(43,13);
 	printf("┌");
-	gotoxy(87,12);
+	gotoxy(87,13);
 	printf("┐");
 	for(i=0;i<13;i++){
-		gotoxy(43,i+13);
+		gotoxy(43,i+14);
 		printf("│                                          │");
 	}
-	gotoxy(43,26);
+	gotoxy(43,27);
 	printf("└");
-	gotoxy(87,26);
+	gotoxy(87,27);
 	printf("┘");
-	gotoxy(45,12);
+	gotoxy(45,13);
 	printf("─────────────────────");
-	gotoxy(45,26);
+	gotoxy(45,27);
 	printf("─────────────────────");
+
 }
 
 //테두리 그리기(시작좌표(x,y), 크기(width X height)) 
@@ -99,5 +100,3 @@ int main()
 
 	gotoxy(50,27);
 }
-
-
