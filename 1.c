@@ -20,22 +20,17 @@ void printMold() {
 
 	gotoxy(0,44);
 	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-	 gotoxy(43,13);
-	printf("┌");
-	gotoxy(87,13);
-	printf("┐");
-	for(i=0;i<13;i++){
-		gotoxy(43,i+14);
-		printf("│                                          │");
+	gotoxy(38,i+14);
+		printf("│                                                    │");
 	}
-	gotoxy(43,27);
+	gotoxy(38,32);
 	printf("└");
-	gotoxy(87,27);
+	gotoxy(92,32);
 	printf("┘");
-	gotoxy(45,13);
-	printf("─────────────────────");
-	gotoxy(45,27);
-	printf("─────────────────────");
+	gotoxy(40,13);
+	printf("──────────────────────────");
+	gotoxy(40,32);
+	printf("──────────────────────────");
 
 }
 
