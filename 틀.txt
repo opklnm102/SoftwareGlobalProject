@@ -1,0 +1,12 @@
+for(i=0;i<13;i++){
+		gotoxy(43,i+14);
+		printf("弛                                          弛");
+	}
+	gotoxy(43,27);
+	printf("戌");
+	gotoxy(87,27);
+	printf("戎");
+	gotoxy(45,13);
+	printf("式式式式式式式式式式式式式式式式式式式式式");
+	gotoxy(45,27);
+	printf("式式式式式式式式式式式式式式式式式式式式式");
