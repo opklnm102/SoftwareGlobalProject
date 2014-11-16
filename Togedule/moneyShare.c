@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include"structHeader.h"
 
 int* moneyShare(int beforeDivideMoney, int peopleCnt, int divisionNumber){
 	/*
