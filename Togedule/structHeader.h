@@ -1,15 +1,20 @@
+//#ifndef structHeader_H
+//#define structHeader_H
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<conio.h>
+
 
 //B(뒤로가기), X(종료)를 입력해야하기 때문에 전부 char 형으로 입력을 받아야한다.
 
 //회원 구조체
 typedef struct structMember{  
 	char name[13];  //회원이름
-	char ID[7];  //학번
-	char password[13];  
-	char backupPassword[13];  //고유코드
+	char ID[8];  //학번
+	char password[14];  //비밀번호  
+	char backupPassword[14];  //고유코드
 }structMember;
 
 //약속 구조체
@@ -20,7 +25,7 @@ typedef struct structPromise{
 	char Promisedate[10];  //약속날짜
 	char **promiseFriendsName;  //인원수의 입력을 받아 동적할당 {“김동희”, “이설희”}
 	//비용 포인터 만들어야함
-}structMember;
+}structPromise;
 
 //과목 구조체
 typedef struct structSubject{  
@@ -38,4 +43,11 @@ typedef struct structCost{
 	char cost;
 }structCost;
 
-char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"}; // 전역변수.
+//char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"}; // 전역변수.
+
+void login();  //로그인
+void membership();  //회원가입
+void mainMenu();  //로그인 후 메인메뉴
+void pwFind();  //비밀번호 찾기
+
+//#endif
