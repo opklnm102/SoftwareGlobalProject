@@ -3,7 +3,7 @@
 
 
 void login(){
-	char id[8],password[14],fid[8],fname[13];  //fid,fname 파일에서 불러온 학번,이름
+	char id[8], password[14], fid[8], fname[13];  //fid,fname 파일에서 불러온 학번,이름
 	structMember s;  //멤버 구조체	
 	FILE *fp1,*fp2=NULL;
 	char txt[]=".txt";  //확장자
