@@ -1,16 +1,19 @@
 					if (restMoney == 0) {
-						finalPrice = baseMoney
-								+ (restMoney / (totalNumber * divisionNumber) * divisionNumber);
+
+						finalPrice = baseMoney + (restMoney / (totalNumber * divisionNumber) * divisionNumber);
 						str += finalPrice + "�� " + totalNumber + "��";
 
-					} else {
+					} 
+					else {
 						restPeople = restMoney / divisionNumber;
 						finalPrice = baseMoney + divisionNumber;
 						if (restMoney % divisionNumber == 0) {
 							str += finalPrice + "�� " + restPeople + "��\n";
 							str += (baseMoney + (restMoney % divisionNumber))
 									+ "�� " + (totalNumber - restPeople) + "��";
-						} else {
+						} 
+						
+					else {
 							if (restPeople != 0)
 								str += finalPrice + "�� " + restPeople + "��\n";
 							if (totalNumber - restPeople - 1 != 0)
@@ -23,3 +26,4 @@
 
 						}
 					}
+					 
