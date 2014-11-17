@@ -1,7 +1,5 @@
 #include"structHeader.h"
 
-
-
 void login(){
 	char id[8],password[14],fid[8],fname[13];  //fid,fname 파일에서 불러온 학번,이름
 	structMember s;  //멤버 구조체	
@@ -13,8 +11,8 @@ void login(){
 	printf("*togedule*\n");
 	printf("-Login-\n");
 	//로그인 정보 입력
-	printf("학번 : "); scanf("%s",id);  
-	printf("P  W : "); scanf("%s",password);
+	printf("학번 : "); scanf("%s",id);    
+	printf("P  W : "); scanf("%s",password); fflush(stdin);
 
 	//회원가입여부 확인	
 	fp1=fopen("회원목록.txt","r");  //회원목록 열고
@@ -51,15 +49,21 @@ void login(){
 		}
 	}
 
-	//PW를 고유코드로 설정->에러
+	//PW를 고유코드로 설정->에러->파일에 출력시 널값은 출력안되게.. 수정바람
 	printf("PW 고유코드로 초기화\n");
-	fp2=fopen(fileName,"a");
-	fseek(fp2,0,SEEK_SET);
-	while(!feof(fp2)){  //파일끝까지 확인
-		fscanf(fp2,"%s",fname);  //비밀번호가 있는 커서의 위치를 찾는다. 
-		if(!strcmp(s.name,fname))  
-			fprintf(fp2,"%s",s.backupPassword);
-	}
+	fp2=fopen(fileName,"r+");
+	printf("%d",ftell(fp2));
+	fseek(fp2,27,SEEK_SET);
+	fprintf(fp2,"%s\n",s.backupPassword);
+
+	//while(!feof(fp2)){  //파일끝까지 확인
+	//	fscanf(fp2,"%s",fname);  //비밀번호가 있는 커서의 위치를 찾는다. 
+	//	printf("%d",ftell(fp2));
+	//	if(!strcmp(s.name,fname)){  
+	//		fflush(fp2);
+	//		
+	//	}
+	//}
 	fclose(fp2);
 	//getch();
 }
