@@ -95,7 +95,7 @@ void moneyShare(){
 		srand((unsigned)time(NULL));
 		randomPersonNumber = ( rand()%5 );
 		beforeDivideMoney = 0;
-		printf("%d", randomPersonNumber);
+		printf("%d번째 사람이 당첨!\n", randomPersonNumber+1);
 		printf("나눌 돈을 적어주세요 : ▶"); fflush(stdin);
 		scanf("%d", &beforeDivideMoney); 
 		printf("사람 수를 입력해주세요 :▶");
