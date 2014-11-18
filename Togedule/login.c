@@ -6,7 +6,7 @@ void login(){
 	FILE *fp1,*fp2=NULL;
 	char txt[]=".txt";  //확장자
 	char fileName[20];  //열기할 파일이름
-	int loginCount;  //로그인 횟수
+	int loginCount;  //로그인 횟수	
 
 	printf("*togedule*\n");
 	printf("-Login-\n");
@@ -39,6 +39,7 @@ void login(){
 
 	fclose(fp2);
 	fp2=NULL;
+
 	loginCount=0;
 	while(loginCount<4){  //로그인 횟수 5가 넘을 경우 고유코드로 초기화
 		if(strcmp(password,s.password)==0) //로그인		
@@ -51,23 +52,8 @@ void login(){
 
 	//PW를 고유코드로 설정->에러->파일에 출력시 널값은 출력안되게.. 수정바람
 	printf("PW 고유코드로 초기화\n");
-	fp2=fopen(fileName,"r+");
-	printf("%d",ftell(fp2));
-	fseek(fp2,27,SEEK_SET);
-	fprintf(fp2,"%s\n",s.backupPassword);
-
-	//while(!feof(fp2)){  //파일끝까지 확인
-	//	fscanf(fp2,"%s",fname);  //비밀번호가 있는 커서의 위치를 찾는다. 
-	//	printf("%d",ftell(fp2));
-	//	if(!strcmp(s.name,fname)){  
-	//		fflush(fp2);
-	//		
-	//	}
-	//}
-	fclose(fp2);
-	//getch();
+	fp2=fopen(fileName,"w");
+	fprintf(fp2,"%s\n","회원정보");
+	fprintf(fp2,"%s\n%s\n%s\n%s\n",s.ID,s.name,s.backupPassword,s.backupPassword);  //개인별 회원정보파일 갱신
+	fclose(fp2);	
 }
-
-
-
-
