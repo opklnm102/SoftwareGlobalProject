@@ -29,5 +29,23 @@
     <ClCompile Include="mainMenu.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="login.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="membership.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="pwFind.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="timeTable.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="function.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="promise.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

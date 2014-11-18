@@ -78,9 +78,15 @@
     <ClInclude Include="structHeader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="function.c" />
+    <ClCompile Include="login.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="mainMenu.c" />
+    <ClCompile Include="membership.c" />
     <ClCompile Include="moneyTest.c" />
+    <ClCompile Include="promise.c" />
+    <ClCompile Include="pwFind.c" />
+    <ClCompile Include="timeTable.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

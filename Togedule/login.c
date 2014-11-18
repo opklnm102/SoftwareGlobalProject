@@ -7,12 +7,25 @@ void login(){
 	char txt[]=".txt";  //확장자
 	char fileName[20];  //열기할 파일이름
 	int loginCount;  //로그인 횟수	
+	char ch;
+	int i=0;
 
 	printf("*togedule*\n");
 	printf("-Login-\n");
 	//로그인 정보 입력
-	printf("학번 : "); scanf("%s",id);    
-	printf("P  W : "); scanf("%s",password); fflush(stdin);
+	printf("학번 : "); scanf("%s",id); fflush(stdin);    
+	printf("P  W : "); 
+
+	for(i=0; i<14; i++){  //비밀번호 입력시 ***로 출력부분
+		ch=getch();
+		if(ch == 13){  //enter키(비밀번호입력끝부분) 확인
+			password[i] = '\0';
+			printf("\n"); break;
+		}
+		password[i] = ch;
+		printf("*");
+		fflush(stdin);   
+	}	
 
 	//회원가입여부 확인	
 	fp1=fopen("회원목록.txt","r");  //회원목록 열고
@@ -46,7 +59,17 @@ void login(){
 			mainMenu();
 		else{  //로그인 실패
 			loginCount++;
-			printf("로그인 실패\nPW재입력 : "); scanf("%s",password); fflush(stdin);
+			printf("로그인 실패\nPW재입력 : "); 
+			for(i=0; i<14; i++){  //비밀번호 입력시 ***로 출력부분
+				ch=getch();
+				if(ch == 13){  //enter키(비밀번호입력끝부분) 확인 
+					password[i] = '\0';
+					printf("\n"); break;
+				}
+				password[i] = ch;
+				printf("*");
+				fflush(stdin);   
+			}			
 		}
 	}
 
@@ -56,4 +79,5 @@ void login(){
 	fprintf(fp2,"%s\n","회원정보");
 	fprintf(fp2,"%s\n%s\n%s\n%s\n",s.ID,s.name,s.backupPassword,s.backupPassword);  //개인별 회원정보파일 갱신
 	fclose(fp2);	
+	getch();
 }

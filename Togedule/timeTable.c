@@ -1,42 +1,20 @@
-#include <stdio.h>
-#include <windows.h>
-#include <malloc.h>
-#include <string.h>
+#include"structHeader.h"
+//개인파일로 만들시 꼭 위의 헤더랑 function.c 포함해서 작업해야함
+char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"};  //전역변수
 
-//과목 구조체
-typedef struct Subject{
-	char dayOfWeek[4]; //요일
-	char subjectName[15]; //이름
-	char subjectClass[10]; //교시
-}Subject;
+//int main() {
+//
+//	system("mode con:cols=130 lines=46");  //가로 130, 세로 45  //지워도됨 
+//	timetableMenu();
+//	gotoxy(50,50);
+//}
 
-void gotoxy(int x, int y);
-void timetableMenu(); //시간표메뉴함수
-void timetableDraw(); //시간표그리기함수
-void saveTimetalbe(Subject* subjectPointer, int subjectSum); //시간표 txt로 저장하는 함수
-void InputSubjectCnt(); //월~금 과목갯수 입력 함수
-void InputSubjectNameAndClass( int* SubjectCntOfday, int subjectSum) ; // 이름/교시 입력함수
-void modifyTimetable(); //시간표수정함수
-void removeTimetable(); //시간표삭제함수(시간표txt파일삭제)
-void screenBorderDraw(); // 전체화면틀출력함수
-void listBorderDraw(); //메뉴틀출력함수
-
-char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"};
-
-
-int main() {
-
-	system("mode con:cols=130 lines=46");  //가로 130, 세로 45 
-	timetableMenu();
-	gotoxy(50,50);
-}
-
-void gotoxy(int x, int y) { 
-	COORD Cur;
-	Cur.X=x;
-	Cur.Y=y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),Cur); 
-}
+//void gotoxy(int x, int y) { 
+//	COORD Cur;
+//	Cur.X=x;
+//	Cur.Y=y;
+//	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),Cur); 
+//}
 
 //시간표메뉴함수
 void timetableMenu() {
@@ -77,7 +55,7 @@ void timetableDraw(){
 	FILE *fp1;
 	int i,j,stringCnt=0;
 	int Subjectcnt;
-	Subject* subjectPointer;
+	structSubject* subjectPointer;
 	int tmpClassCnt;
 	int b=0;
 	
@@ -109,7 +87,7 @@ void timetableDraw(){
 	
 	fscanf(fp1, "%d", &Subjectcnt);
 
-	subjectPointer = (Subject*)malloc(sizeof(Subject)*Subjectcnt);
+	subjectPointer = (structSubject*)malloc(sizeof(structSubject)*Subjectcnt);
 
 	for(i=0;i<Subjectcnt;i++) 
 	fscanf(fp1,"%s %s %s", subjectPointer[i].dayOfWeek, subjectPointer[i].subjectName, subjectPointer[i].subjectClass);
@@ -144,7 +122,7 @@ void timetableDraw(){
 }
 
 //시간표 txt로 저장하는 함수
-void saveTimetalbe(Subject* subjectPointer, int subjectSum) {
+void saveTimetalbe(structSubject* subjectPointer, int subjectSum) {
 
 	FILE *fp1,*fp2;   
 	char fileName[30];
@@ -234,11 +212,11 @@ void InputSubjectCnt() {
 void InputSubjectNameAndClass(int* SubjectCntOfday, int subjectSum) {
 
 	int i, j, k=0, l;
-	Subject* subjectPointer; 
+	structSubject* subjectPointer; 
 	int cnt=0 ,tmp=12;
 	int y=0;
 
-	subjectPointer = (Subject*)malloc(sizeof(Subject)*subjectSum);
+	subjectPointer = (structSubject*)malloc(sizeof(structSubject)*subjectSum);
 
 
 	for( i = 0; i < 5; i++){
@@ -374,43 +352,3 @@ void removeTimetable() {
 	Sleep(10000);
 
 }
-
-
-
-//틀 출력
-void screenBorderDraw(){
-
-	int i;
-
-	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-
-	for(i=0;i<44;i++){
-		gotoxy(0,i+1);
-		printf("■                                                                                                                              ■");
-	}
-
-	gotoxy(0,44);
-	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-
-	gotoxy(88,41);
-	printf("뒤로가기 B, 종료 X, 계속하기 S");
-
-
-}
-
-void listBorderDraw(){  
-
-	int i;   
-
-	gotoxy(3,10);
-	printf("┌─────────────────────────┐");
-
-	for(i=0; i<20; i++) { 
-		gotoxy(3,11+i);
-		printf("│                                                  │");
-	}
-
-	gotoxy(3,30);
-	printf("└─────────────────────────┘");
-}
-

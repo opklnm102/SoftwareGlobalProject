@@ -3,9 +3,12 @@
 #include <string.h>
 #include <conio.h> 
 #include <time.h>
+#include<malloc.h>
+#include <windows.h>
 
 //B(뒤로가기), X(종료)를 입력해야하기 때문에 전부 char 형으로 입력을 받아야한다.
 
+/*-------------------------------구조체정의--------------------------------*/
 //회원 구조체
 typedef struct structMember{  
 	char name[13];  //회원이름
@@ -16,18 +19,20 @@ typedef struct structMember{
 
 //약속 구조체
 typedef struct structPromise{ 
-	char name [41];  //약속명
-	char *promisePlace;  //약속장소 이름을 모르기 때문에 DB의 문자열을 가리킨다
+	char promiseName [41];  //약속명
+	char promisePlace[30];  //장소 이름을 모르기 때문에 포인터 DB의 문자열을 가리킬 것이다 //장소DB 계획이 아직 구체적으로 안나와서 일단 배열로 분배.
     char promiseTime[6];  //약속시간
 	char Promisedate[10];  //약속날짜
+	char promiseFreindsCount[2];//추가
 	char **promiseFriendsName;  //인원수의 입력을 받아 동적할당 {“김동희”, “이설희”}
 	//비용 포인터 만들어야함
 }structPromise;
 
 //과목 구조체
-typedef struct structSubject{  
-	char subjectName[15];  //과목이름
-	char subjectClass[10];  //입력받는 과목교시  ->1,2,3 ->함수로 처리해야함.
+typedef struct Subject{
+	char dayOfWeek[4]; //요일
+	char subjectName[15]; //과목이름
+	char subjectClass[10]; //교시
 }structSubject;
 
 //시간표 구조체
@@ -40,12 +45,53 @@ typedef struct structCost{
 	char cost;
 }structCost;
 
+/*-------------------------------구조체정의 끝--------------------------------*/
+
 //char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"}; // 전역변수.
 
+extern char dayOfWeek[5][4]; // 전역변수.
+
+/*-------------------------------함수원형선언--------------------------------*/
+//로그인관련
 void login();  //로그인
 void membership();  //회원가입
 void mainMenu();  //로그인 후 메인메뉴
 void pwFind();  //비밀번호 찾기
+
+//시간표관련
+void timetableMenu(); //시간표메뉴함수->시간표 시작
+void timetableDraw(); //시간표그리기함수
+void saveTimetalbe(structSubject* subjectPointer, int subjectSum); //시간표 txt로 저장하는 함수
+void InputSubjectCnt(); //월~금 과목갯수 입력 함수
+void InputSubjectNameAndClass( int* SubjectCntOfday, int subjectSum) ; // 이름/교시 입력함수
+void modifyTimetable(); //시간표수정함수
+void removeTimetable(); //시간표삭제함수(시간표txt파일삭제)
+
+//약속관련
+void promise();  //약속 시작
+
+//비용관련
+void moneyShare();  //돈나눠주세요 시작
+
+//공통으로 쓰이는 것들
+void gotoxy(int x, int y);  //좌표설정
+void screenBorderDraw(); //전체화면틀출력함수
+void listBorderDraw(); //메뉴틀출력함수
+
+
+/*-------------------------------함수원형선언 끝--------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //파일입출력 모드 

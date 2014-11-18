@@ -9,9 +9,6 @@ void moneyShare(){
 
 	//나누기 전 돈, 사람 수, 나누는 수, 최종 돈, 남는 돈, i, 몰아주는 사람 제외하고 나머지
 
-
-
-
 	/*-------------------------------변수 시작했다--------------------------------*/
 	int beforeDivideMoney; // 나누기 전 돈
 	int finalMoney; // 최종 돈
@@ -25,7 +22,6 @@ void moneyShare(){
 	int menuseletion; //메뉴 선택하는 변수
 	int randomPersonNumber; //랜덤으로 받은 시드값을 저장하는 변수 1,2,3,4,5 중 하나
 	/*--------------------------------변수 끝났다---------------------------------*/
-
 
 	//메뉴를 선택해라
 	while(1) {
@@ -50,8 +46,7 @@ void moneyShare(){
 		baseMoney = (beforeDivideMoney / (peopleCnt * divisionNumber)) * divisionNumber;
 		/*int beforeDivideMoney, peopleCnt=0, divisionNumber, baseMoney = 0, finalMoney, restMoney, i, restPeople;
 		int arrMoney[5] = {0, 0, 0, 0, 0};*/
-
-
+		
 		restMoney = beforeDivideMoney - ( baseMoney * peopleCnt );
 
 		/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ알고리즘 시작ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
@@ -89,33 +84,32 @@ void moneyShare(){
 		for(i=0; i<5; i++){ //for (i=0; i<peopleCnt; i++)
 			printf("%d\n", arrMoney[i]);
 		}
-		break;
+
+		getch(); break;
 
 	case 2: //한 명한테 몰아주기
 		srand((unsigned)time(NULL));
-		randomPersonNumber = ( rand()%5 );
-		beforeDivideMoney = 0;
-		printf("%d번째 사람이 당첨!\n", randomPersonNumber+1);
-		printf("나눌 돈을 적어주세요 : ▶"); fflush(stdin);
-		scanf("%d", &beforeDivideMoney); 
-		printf("사람 수를 입력해주세요 :▶");
+		printf("사람 수를 입력해주세요 :▶"); scanf("%d",&peopleCnt); fflush(stdin); 
+		randomPersonNumber = ( rand()%peopleCnt );
 		
+		printf("나눌 돈을 적어주세요 : ▶"); 
+		scanf("%d", &beforeDivideMoney);  fflush(stdin); 
+
+		printf("%d번째 사람이 당첨!\n", randomPersonNumber+1);
+
 		arrMoney[randomPersonNumber] = beforeDivideMoney;
 
-		for(i=0; i<5; i++){
+		for(i=0; i<peopleCnt; i++){
 			printf("%d ", arrMoney[i]);
 		}
-
+		getch();
 		break;
-
 	}
-
-
 }
 
-	int main(void){
-
-		moneyShare();
-
-		return 0;
-	}
+//int main(void){
+//
+//	moneyShare();
+//
+//	return 0;
+//}

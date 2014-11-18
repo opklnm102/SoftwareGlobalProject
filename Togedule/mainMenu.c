@@ -2,6 +2,7 @@
 
 void mainMenu(){
 	char menuSelect;
+	system("cls");
 
 	printf("  님 안녕하세요!\n");
 	printf("1. 내 상태보기\n"); 
@@ -15,11 +16,13 @@ void mainMenu(){
 	case '1' :  //내 상태보기
 		break;
 	case '2' :  //시간표 만들기
+		timetableMenu();
 		break;
 	case '3' :  //약속 잡아주세요
+		promise();
 		break;
 	case '4' :  //돈 나눠주세요
-		break;
+		moneyShare(); break;
 	case '5' :  //나갈래요
 		exit(1);
 	}
