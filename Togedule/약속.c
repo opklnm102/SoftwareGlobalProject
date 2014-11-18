@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
- 
+#include <time.h>
+
 char dayOfWeek[5][4] = {"월","화","수","목","금"};
  
 struct structMember{
@@ -37,7 +38,7 @@ struct structCost{
  
 int login(char *name,struct structMember *loginID) {		// 로그인한 회원의 정보를 읽어올수 있게 만드는 함수	,name에 현재 로그인한 회원의 이름을 채워넣으면 된다.
 	FILE *fp;
-	char openDB[22];										// 이름을 토대로 txt 파일을 불러와서 정보를 읽는다.
+	char openDB[30];										// 이름을 토대로 txt 파일을 불러와서 정보를 읽는다.
 	char textFile[]=".txt";
 	char ID[8];
 	char listName[13];
@@ -62,6 +63,7 @@ int login(char *name,struct structMember *loginID) {		// 로그인한 회원의 정보를 
 	fclose(fp);
 	strcpy(openDB,ID);
 	strcat(openDB,name);
+	strcat(openDB,"PromiseList");
 	strcat(openDB,textFile);
 	fp = fopen(openDB, "r");
 	if ( fp == NULL ) {
@@ -77,7 +79,7 @@ int login(char *name,struct structMember *loginID) {		// 로그인한 회원의 정보를 
 			fscanf(fp,"%s", loginID->backupPassword);
 		}
 	
-	
+		
 		if(!strcmp(check,"약속리스트")){
 			fscanf(fp,"%d", &listCount);
 			promiseList=(struct structPromise*)malloc(sizeof(struct structPromise)*listCount);
@@ -217,20 +219,14 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 		fclose(fp);
 		strcpy(openDB,ID);
 		strcat(openDB,name);		//이 부분을 만든 이유는 나중에 각 회원의 txt파일에 정보를 저장하기 위해서 또 통합시간표 생성을 위해...
+		strcat(openDB,"timetable");
 		strcat(openDB,textFile);	//뒤에 장소선택까지 끝마치고 txt파일에 저장하는 부분은 아직 구현안함 그떄 여길 손봐서 해당회원txt파일을 뒤로 넘겨주던가 여기 코드를 복사해서 쓰면 될듯
-		
 		fp = fopen(openDB, "r");
 		while (!feof(fp)) {
 				fscanf(fp, "%s", &check);
-				if(!strcmp(check,"회원정보")){
-					fscanf(fp,"%s", friendID.ID);
-					fscanf(fp,"%s", friendID.name);
-				}
-				if(!strcmp(check,"시간표")){ 
-					while(strcmp(dayWeek,"약속리스트")){
+				if(!strcmp(check,"시간표")){  //8 시간표 개수로 바꿔줘야함
+					while(!feof(fp)){
 						fscanf(fp,"%s", &dayWeek);
-						if(!strcmp(dayWeek,"약속리스트"))
-							break;
 						if(!strcmp(dayWeek,"월"))
 							dayweek=0;
 						else if(!strcmp(dayWeek,"화"))
@@ -278,12 +274,16 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 	}	
 	return exist;
 }
-void callendar() {
+int callendar(int Month) {
 	int last,th,year,day,date,x,z,y,m;
-	printf("년도를 입력하세요 : ");
-	scanf("%d",&y);
-	printf("월을 입력하세요 : ");
-	scanf("%d",&m);
+	time_t curr;
+
+	struct tm *d;
+	curr=time(NULL);
+	d=localtime(&curr);
+	year = d->tm_year;
+	y=year+1900;
+	m=Month;
 	if((m>=1)&&(m<=12))
 	{
 		if((m==1)||(m==3)||(m==5)||(m==7)||(m==8)||(m==10)||(m==12))
@@ -339,22 +339,38 @@ void callendar() {
 				else if(date>=last)
 				{
 					printf("\n");
-					return;
+					
+					return y;
 				}
 			}
 		}
 		printf("\n");
 		
 	}
+
+}
+    
+  
+       
+int weekday(int year, int month, int day) //요일 찾는 함수 리턴 정수
+{
+    int year_1 = year / 100;
+    int year_2 = year - year_1 * 100;
+     
+    return (day + (month + 1) * 26 / 10 + year_2 + (year_2 / 4) + (year_1 / 4) - 2 * year_1 - 2) % 7;
 }
 void selectDate(int CombineTimetable[5][13]){	//요일, 시간, 날짜 입력받는 함수
 	
 	char dayofweek[3];
 	char time[27];
-	char date[10];
+	char month[10];
+	char day[10];
+	char temp[10]={0};
 	int dayofWeek;
 	int Time;
-	int Date;
+	int Day;
+	int Month;
+	int year;
 	int i,j;
 	int errorCheck;
 	char dayOfWeek[5][4] = {"월","화","수","목","금"};
@@ -366,18 +382,56 @@ void selectDate(int CombineTimetable[5][13]){	//요일, 시간, 날짜 입력받는 함수
 	printf("예) 5, 6, 7\n");
 	printf("예) 10월 30일\n");
 	
-	callendar();
+	
 	for (i=0; i<5; i++) {
 		for(j=0; j<13; j++)
 			printf("%d ",CombineTimetable[i][j]);
 	printf("\n");
 	}
-	printf("요일");
-	scanf("%s",dayofweek);
+	
+	
+	printf("약속을 잡을 월 입력");		//월을 입력하면 자동으로 현재 연도 해당 월의 달력 출력
+	scanf("%s",&month);
+	
+	for(i=0;i<strlen(month);i++) {
+		if(strncmp(month,"월",1)!=0){
+			
+			strncat(temp,month,1);
+			changeLocation(month);
+		}
+		if(strncmp(month,"월",1)==0) {	
+			Month=atoi(temp);
+			break;
+		}		
+	}
+	year=callendar(Month);			
+	printf("약속을 잡을 일 입력");		//일을 입력하면
+	scanf("%s",&day);
+	for(i=0; i<strlen(temp); i++)
+		temp[i]='\0';
+	for(i=0;i<strlen(day);i++) {
+		if(strncmp(day,"일",1)!=0){
+			strncat(temp,day,1);
+			changeLocation(day);
+		}
+		if(strncmp(day,"일",1)==0) {
+			Day=atoi(temp);
+			break;
+		}		
+	} 
+	switch(weekday(year,Month,Day)){		//해당 연도 월 일에 해당하는 요일을 계산해서 삽입.
+	case 0: strcpy(dayofweek,"월"); break;
+	case 1: strcpy(dayofweek,"화"); break;
+	case 2: strcpy(dayofweek,"수"); break;
+	case 3: strcpy(dayofweek,"목"); break;
+	case 4: strcpy(dayofweek,"금"); break;
+	case 5: strcpy(dayofweek,"토"); break;
+	case 6: strcpy(dayofweek,"일"); break;
+	}
+	
 	printf("시간");
 	scanf("%s",time);
-	printf("날짜");
-	scanf("%s",date);
+
 	if(!strcmp(dayofweek,dayOfWeek[0]))
 		dayofWeek=0;
 	else if(!strcmp(dayofweek,dayOfWeek[1]))
@@ -388,18 +442,18 @@ void selectDate(int CombineTimetable[5][13]){	//요일, 시간, 날짜 입력받는 함수
 		dayofWeek=3;
 	else if(!strcmp(dayofweek,dayOfWeek[4]))
 		dayofWeek=4;
-	while(1){
+	while(1){		//시간이 통합시간표에 겹치는 시간이면 재입력. 제대로 입력시 넘김
 		errorCheck=0;
-		Time = atoi(time);
-		printf("%d",Time);
+		Time = atoi(time);		
 		if(CombineTimetable[dayofWeek][Time-1]==1){
 			errorCheck=1;
 		}					
 		if(errorCheck==0)
 			break;
-		printf("시간재입력");
-		scanf("%s",time);
+		printf("통합 시간표를 보고 입력한 요일의 빈시간을 입력하세요: ");
+		scanf("%s",&time);
 	}
+	printf("다음장으로 넘어갑니다.\n");
 }
  
 void promiseCreatConsole() {	//약속만들기 함수 (약속명, 인원수 입력  .이름 검색함수 내부 포함. 약속 리스트 출력)
