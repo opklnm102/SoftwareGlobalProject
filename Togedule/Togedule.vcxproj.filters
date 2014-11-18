@@ -20,19 +20,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="login.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="main.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="mainMenu.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="membership.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="pwFind.c">
+    <ClCompile Include="moneyTest.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
