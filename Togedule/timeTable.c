@@ -17,6 +17,7 @@ void saveTimetalbe(Subject* subjectPointer, int subjectSum); //시간표 txt로 저장
 void InputSubjectCnt(); //월~금 과목갯수 입력 함수
 void InputSubjectNameAndClass( int* SubjectCntOfday, int subjectSum) ; // 이름/교시 입력함수
 void modifyTimetable(); //시간표수정함수
+void removeTimetable(); //시간표삭제함수(시간표txt파일삭제)
 void screenBorderDraw(); // 전체화면틀출력함수
 void listBorderDraw(); //메뉴틀출력함수
 
@@ -47,7 +48,7 @@ void timetableMenu() {
 		screenBorderDraw() ;
 		listBorderDraw();
 		timetableDraw();
-		/*
+		
 		gotoxy(20, 18);
 		printf(" 1. 시간표 만들기 ");
 		gotoxy(20,20);
@@ -62,10 +63,10 @@ void timetableMenu() {
 
 		case 1: InputSubjectCnt();  break; // 시간표만들기시작
 		case 2: modifyTimetable(); break; //시간표수정
-			//  case 3: break;
+		case 3: removeTimetable(); break; //시간표삭제
 
 		}
-		*/
+		
 	}
 }
 
@@ -81,26 +82,31 @@ void timetableDraw(){
 	int b=0;
 	
 
-	
-
-	gotoxy(57,10); 
+	gotoxy(57,7); 
 	printf("┌───┬─────┬─────┬─────┬─────┬─────┐");
-	gotoxy(57,11);
+	gotoxy(57,8);
 	printf("│ 교시 │    월    │    화    │    수    │    목    │    금    │"); 
-	gotoxy(57,12);
+	gotoxy(57,9);
 	printf("├───┼─────┼─────┼─────┼─────┼─────┤");
-	for(i=0; i<18; i++) { 
-		gotoxy(57,13+i);
-		printf("│  %2d  │                                                          │",i+1);
+	for(i=0; i<26; i+=2) { 
+		gotoxy(57,10+i);
+		printf("│  %2d  │          │          │          │          │          │",i/2+1);
+		gotoxy(57,10+i+1);
+		if(i!= 24)
+		printf("├───┼─────┼─────┼─────┼─────┼─────┤");
 	}
-	gotoxy(57,30);
-	printf("└─────────────────────────────────┘");
-
-	
-
-	//timetable.txt가 있는 경우
+	gotoxy(57,35);
+	printf("└───┴─────┴─────┴─────┴─────┴─────┘");
 
 	fp1=fopen("timetable.txt","r");
+
+	if(fp1 == NULL ) {
+		gotoxy(83,20);
+		printf("*시간표를 만들어주세요*");
+	}
+	//timetable.txt가 있는 경우
+	else {
+	
 	fscanf(fp1, "%d", &Subjectcnt);
 
 	subjectPointer = (Subject*)malloc(sizeof(Subject)*Subjectcnt);
@@ -119,26 +125,22 @@ void timetableDraw(){
 					
 				}*/
 
-				while( subjectPointer[i].dayOfWeek[stringCnt++] != '\0' ) {
+				while( subjectPointer[i].subjectClass[stringCnt] != '\0' ) {
 					if(subjectPointer[i].subjectClass[stringCnt] >= '0' && subjectPointer[i].subjectClass[stringCnt] <='9'){
-						tmpClassCnt =  subjectPointer[i].subjectClass[stringCnt] - 48;
+						tmpClassCnt =  subjectPointer[i].subjectClass[stringCnt] - '0';
 					}
 
-					gotoxy(58,13+b);
-					b++;
+					gotoxy(67+12*j,8+tmpClassCnt*2); //67+6*j, 12+tmpClassCnt
 					printf("%s",subjectPointer[i].subjectName);
+				stringCnt++;
 				}
-				
+				stringCnt = 0;
 			}
 
 		}
 	}
+	}
 	
-
-	
-
-
-
 }
 
 //시간표 txt로 저장하는 함수
@@ -347,6 +349,29 @@ void modifyTimetable() {
 
 
 	InputSubjectNameAndClass(modifySubjectN,cnt);
+
+}
+
+
+void removeTimetable() {
+     
+
+	 int nResult = remove("timetable.txt"); //해당 파일을 지운다.
+ 
+	screenBorderDraw() ;
+
+	gotoxy(30,30);
+ 
+ if(nResult == 0)
+ {
+  printf("succes");  //지우기 성공
+ } else if (nResult == -1)
+ {
+  printf("fail");  //지우기 실패
+ }
+
+
+	Sleep(10000);
 
 }
 
