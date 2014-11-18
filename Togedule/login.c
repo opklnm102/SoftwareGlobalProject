@@ -56,7 +56,7 @@ void login(){
 	loginCount=0;
 	while(loginCount<4){  //로그인 횟수 5가 넘을 경우 고유코드로 초기화
 		if(strcmp(password,s.password)==0) //로그인		
-			mainMenu();
+			mainMenu(fname);
 		else{  //로그인 실패
 			loginCount++;
 			printf("로그인 실패\nPW재입력 : "); 
@@ -80,4 +80,5 @@ void login(){
 	fprintf(fp2,"%s\n%s\n%s\n%s\n",s.ID,s.name,s.backupPassword,s.backupPassword);  //개인별 회원정보파일 갱신
 	fclose(fp2);	
 	getch();
+
 }

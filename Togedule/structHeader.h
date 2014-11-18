@@ -55,7 +55,7 @@ extern char dayOfWeek[5][4]; // 전역변수.
 //로그인관련
 void login();  //로그인
 void membership();  //회원가입
-void mainMenu();  //로그인 후 메인메뉴
+void mainMenu(char *loginName);  //로그인 후 메인메뉴
 void pwFind();  //비밀번호 찾기
 
 //시간표관련
@@ -68,7 +68,7 @@ void modifyTimetable(); //시간표수정함수
 void removeTimetable(); //시간표삭제함수(시간표txt파일삭제)
 
 //약속관련
-void promise();  //약속 시작
+void promise(char *loginName);  //약속 시작
 
 //비용관련
 void moneyShare();  //돈나눠주세요 시작

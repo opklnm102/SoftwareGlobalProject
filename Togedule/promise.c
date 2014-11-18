@@ -188,6 +188,10 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 		strcat(openDB,"timetable");
 		strcat(openDB,textFile);	//뒤에 장소선택까지 끝마치고 txt파일에 저장하는 부분은 아직 구현안함 그떄 여길 손봐서 해당회원txt파일을 뒤로 넘겨주던가 여기 코드를 복사해서 쓰면 될듯
 		fp = fopen(openDB, "r");
+		if(!fp){
+			printf("%s 회원의 시간표가 없습니다.",name);
+			break;
+		}
 		while (!feof(fp)) {
 			fscanf(fp, "%s", &check);
 			if(!strcmp(check,"시간표")){  //8 시간표 개수로 바꿔줘야함
@@ -231,11 +235,12 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 
 
 		for(i=0; i<5; i++) {		//읽어왔으면 회원 이름을 strcpy를 이용 구조체 nwePromise 의 promiseFriendsName 에 복사붙여넣기 
-			if(*newPromise.promiseFriendsName[i] == NULL){
+			if(!strcmp(newPromise.promiseFriendsName[i],"\0")){
 				strcpy(newPromise.promiseFriendsName[i],friendID.name);
 				break;
 			}
 		}
+		printf("df");
 		break;
 	}	
 	return exist;
@@ -479,12 +484,13 @@ void showMenu() {
 	printf("▷ 메뉴 선택 : ");
 }
 
-void promise(){
+void promise(char *loginName){
 
 	char logID[8];
 	struct structMember loginID;		//현재 회원정보를 가져올 구조체 생성
 	char menuControl;
-	strcpy(logID,"김진삼");				//이름을 기반으로 txt파일을 찾는 형식. 이름을 logID에 복사해준다.
+
+	strcpy(logID,loginName);				//이름을 기반으로 txt파일을 찾는 형식. 이름을 logID에 복사해준다.
 
 	showMenu();
 

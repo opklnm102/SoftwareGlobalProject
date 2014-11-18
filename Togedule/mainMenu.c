@@ -1,6 +1,6 @@
 #include"structHeader.h"
 
-void mainMenu(){
+void mainMenu(char *loginName){
 	char menuSelect;
 	system("cls");
 
@@ -19,7 +19,7 @@ void mainMenu(){
 		timetableMenu();
 		break;
 	case '3' :  //약속 잡아주세요
-		promise();
+		promise(loginName);
 		break;
 	case '4' :  //돈 나눠주세요
 		moneyShare(); break;
