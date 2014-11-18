@@ -1,6 +1,5 @@
 #include"structHeader.h"
 
-
 void membership(){
 
 	structMember s;  //멤버 구조체	
@@ -36,6 +35,7 @@ void membership(){
 				con=0;
 				fclose(fp1);
 				fclose(fp2);
+				printf("회원 가입 완료!!! \n");
 			}
 			else{  //파일이 있을 경우
 				printf("이미 회원가입하셨습니다.\n");
