@@ -44,8 +44,6 @@ void moneyShare(int beforeDivideMoney, int peopleCnt, int divisionNumber,int dp[
          dp[i] = (baseMoney + (restMoney %divisionNumber));
          }
    }
-
-
 }
 
 int main(void){
@@ -64,7 +62,7 @@ int main(void){
    moneyShare(beforeDivideMoney, peopleCnt, divisionNumber,arrMoney);
 
    for(i=0;i<5;i++){ //for (i=0; i<peopleCnt; i++)
-      printf("%d %d\n",arrMoney[i]);
+      printf("%d \n",arrMoney[i]);
    }
    /*finalMoney = moneyShare(beforeDivideMoney, peopleCnt, divisionNumber);*/
 }
