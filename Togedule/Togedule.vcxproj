@@ -78,6 +78,8 @@
     <ClInclude Include="structHeader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="main.c" />
+    <ClCompile Include="mainMenu.c" />
     <ClCompile Include="moneyTest.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
