@@ -1,7 +1,8 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include<conio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <conio.h> 
+#include <time.h>
 
 //B(뒤로가기), X(종료)를 입력해야하기 때문에 전부 char 형으로 입력을 받아야한다.
 
