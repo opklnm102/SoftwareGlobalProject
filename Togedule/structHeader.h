@@ -53,7 +53,7 @@ extern char dayOfWeek[5][4]; // 전역변수.
 
 /*-------------------------------함수원형선언--------------------------------*/
 //로그인관련
-void login();  //로그인
+void login(structMember *s);  //로그인
 void membership();  //회원가입
 void mainMenu(char *loginName);  //로그인 후 메인메뉴
 void pwFind();  //비밀번호 찾기

@@ -1,8 +1,8 @@
 #include"structHeader.h"
 
-void login(){
+void login(structMember *s){
 	char id[8],password[14],fid[8],fname[13];  //fid,fname 파일에서 불러온 학번,이름
-	structMember s;  //멤버 구조체	
+	//structMember s;  //멤버 구조체	
 	FILE *fp1,*fp2=NULL;
 	char txt[]=".txt";  //확장자
 	char fileName[20];  //열기할 파일이름
@@ -48,14 +48,14 @@ void login(){
 	}
 	//회원정보입력
 	fseek(fp2,10,SEEK_CUR);  //파일의 첫 "회원정보"때문에 커서 이동
-	fscanf(fp2,"%s %s %s %s",s.ID,s.name,s.password,s.backupPassword);  //개인별 회원정보입력
+	fscanf(fp2,"%s %s %s %s",s->ID,s->name,s->password,s->backupPassword);  //개인별 회원정보입력
 
 	fclose(fp2);
 	fp2=NULL;
 
 	loginCount=0;
 	while(loginCount<4){  //로그인 횟수 5가 넘을 경우 고유코드로 초기화
-		if(strcmp(password,s.password)==0) //로그인		
+		if(strcmp(password,s->password)==0) //로그인		
 			mainMenu(fname);
 		else{  //로그인 실패
 			loginCount++;
@@ -77,7 +77,7 @@ void login(){
 	printf("PW 고유코드로 초기화\n");
 	fp2=fopen(fileName,"w");
 	fprintf(fp2,"%s\n","회원정보");
-	fprintf(fp2,"%s\n%s\n%s\n%s\n",s.ID,s.name,s.backupPassword,s.backupPassword);  //개인별 회원정보파일 갱신
+	fprintf(fp2,"%s\n%s\n%s\n%s\n",s->ID,s->name,s->backupPassword,s->backupPassword);  //개인별 회원정보파일 갱신
 	fclose(fp2);	
 	getch();
 

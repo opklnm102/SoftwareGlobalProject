@@ -2,8 +2,8 @@
 
 int main()
 {
-
 	char menuSelect;
+	structMember s;  //다른 메뉴로 회원정보를 넘겨준다.
 
 	system("mode con:cols=130 lines=46");  //가로 130, 세로 45 
 
@@ -17,8 +17,7 @@ int main()
 		
 		switch(menuSelect){
 		case '1' :  //로그인
-			login();
-			
+			login(&s);			
 			break;
 		case '2' :  //회원가입
 			membership();
