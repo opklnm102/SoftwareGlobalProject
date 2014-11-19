@@ -15,12 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="structHeader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="moneyTest.c">
+    <ClCompile Include="function.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="login.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="main.c">
@@ -29,19 +27,10 @@
     <ClCompile Include="mainMenu.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="login.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="membership.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="pwFind.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="timeTable.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="function.c">
+    <ClCompile Include="moneyTest.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="promise.c">
@@ -50,5 +39,16 @@
     <ClCompile Include="promisePlace.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="pwFind.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="timeTable.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="structHeader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

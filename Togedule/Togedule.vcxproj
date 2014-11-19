@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{FC40AD42-0992-433A-9787-8C16A9E5C3F7}</ProjectGuid>
+    <ProjectGuid>{87827712-A0D2-48AA-AC3C-E1051A6D2694}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Togedule</RootNamespace>
   </PropertyGroup>
@@ -75,9 +75,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="structHeader.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="function.c" />
     <ClCompile Include="login.c" />
     <ClCompile Include="main.c" />
@@ -88,6 +85,9 @@
     <ClCompile Include="promisePlace.c" />
     <ClCompile Include="pwFind.c" />
     <ClCompile Include="timeTable.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="structHeader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
