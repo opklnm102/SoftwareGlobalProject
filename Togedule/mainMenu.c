@@ -1,6 +1,6 @@
 #include"structHeader.h"
 
-void mainMenu(char *loginName){
+void mainMenu(structMember *s){
 	char menuSelect;
 	system("cls");
 
@@ -16,10 +16,10 @@ void mainMenu(char *loginName){
 	case '1' :  //내 상태보기
 		break;
 	case '2' :  //시간표 만들기
-		timetableMenu();
+		timetableMenu(s);
 		break;
 	case '3' :  //약속 잡아주세요
-		promise(loginName);
+		promise(s);
 		break;
 	case '4' :  //돈 나눠주세요
 		moneyShare(); break;

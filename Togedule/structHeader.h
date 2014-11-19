@@ -55,20 +55,20 @@ extern char dayOfWeek[5][4]; // 전역변수.
 //로그인관련
 void login(structMember *s);  //로그인
 void membership();  //회원가입
-void mainMenu(char *loginName);  //로그인 후 메인메뉴
+void mainMenu(structMember *s);  //로그인 후 메인메뉴
 void pwFind();  //비밀번호 찾기
 
 //시간표관련
-void timetableMenu(); //시간표메뉴함수->시간표 시작
+void timetableMenu(structMember *s); //시간표메뉴함수->시간표 시작
 void timetableDraw(); //시간표그리기함수
-void saveTimetalbe(structSubject* subjectPointer, int subjectSum); //시간표 txt로 저장하는 함수
-void InputSubjectCnt(); //월~금 과목갯수 입력 함수
-void InputSubjectNameAndClass( int* SubjectCntOfday, int subjectSum) ; // 이름/교시 입력함수
-void modifyTimetable(); //시간표수정함수
-void removeTimetable(); //시간표삭제함수(시간표txt파일삭제)
+void InputSubjectCnt(structMember *s); //월~금 과목갯수 입력 함수
+void InputSubjectNameAndClass(structMember *s, int* SubjectCntOfday, int subjectSum) ; // 이름/교시 입력함수
+void saveTimetalbe(structMember *s,structSubject* subjectPointer, int subjectSum); //시간표 txt로 저장하는 함수
+void modifyTimetable(structMember *s); //시간표수정함수
+void removeTimetable(structMember *s); //시간표삭제함수(시간표txt파일삭제)
 
 //약속관련
-void promise(char *loginName);  //약속 시작
+void promise(structMember *s);  //약속 시작
 
 //비용관련
 void moneyShare();  //돈나눠주세요 시작

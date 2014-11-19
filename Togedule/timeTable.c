@@ -17,7 +17,7 @@ char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"};  //전역변수
 //}
 
 //시간표메뉴함수
-void timetableMenu() {
+void timetableMenu(structMember *s) {
 
 	int i;
 	int choiceMenu;
@@ -39,9 +39,9 @@ void timetableMenu() {
 
 		switch (choiceMenu) {
 
-		case 1: InputSubjectCnt();  break; // 시간표만들기시작
-		case 2: modifyTimetable(); break; //시간표수정
-		case 3: removeTimetable(); break; //시간표삭제
+		case 1: InputSubjectCnt(s);  break; // 시간표만들기시작
+		case 2: modifyTimetable(s); break; //시간표수정
+		case 3: removeTimetable(s); break; //시간표삭제
 
 		}
 		
@@ -144,13 +144,13 @@ void saveTimetalbe(structSubject* subjectPointer, int subjectSum) {
 
 
 //시간표 월~금 과목갯수 입력 함수
-void InputSubjectCnt() {
+void InputSubjectCnt(structMember *s) {
 
 	int i, subjectSum=0;
 	int SubjectCntOfday[5]={0};
 
-	screenBorderDraw() ;
-	listBorderDraw();
+	screenBorderDraw();  //전체화면틀출력함수
+	listBorderDraw();  //메뉴틀출력함수
 
 	gotoxy(6, 31);
 	printf("** 하루 최대과목 갯수는 5개이하.");
@@ -204,12 +204,12 @@ void InputSubjectCnt() {
 			break;
 		}
 	}
-	InputSubjectNameAndClass(SubjectCntOfday,subjectSum) ;
+	InputSubjectNameAndClass(s,SubjectCntOfday,subjectSum) ;
 
 }
 
 // 이름/교시 입력함수
-void InputSubjectNameAndClass(int* SubjectCntOfday, int subjectSum) {
+void InputSubjectNameAndClass(structMember *s,int* SubjectCntOfday, int subjectSum) {
 
 	int i, j, k=0, l;
 	structSubject* subjectPointer; 
@@ -273,7 +273,7 @@ void InputSubjectNameAndClass(int* SubjectCntOfday, int subjectSum) {
 		printf("\n");
 	}
 
-	saveTimetalbe(subjectPointer,subjectSum);
+	saveTimetalbe(s,subjectPointer,subjectSum);
 
 	free(subjectPointer);
 	system("cls");  
@@ -282,7 +282,7 @@ void InputSubjectNameAndClass(int* SubjectCntOfday, int subjectSum) {
 
 
 //시간표 수정
-void modifyTimetable() {
+void modifyTimetable(structMember *s) {
 
 	char tmp[100];
 	int modifyDay[5] ={0};
@@ -291,7 +291,7 @@ void modifyTimetable() {
 
 	fflush(stdin);
 
-	screenBorderDraw() ;
+	screenBorderDraw();
 	listBorderDraw();
 
 	gotoxy(30,15);
@@ -326,12 +326,12 @@ void modifyTimetable() {
 	}
 
 
-	InputSubjectNameAndClass(modifySubjectN,cnt);
+	InputSubjectNameAndClass(s,modifySubjectN,cnt);
 
 }
 
 
-void removeTimetable() {
+void removeTimetable(structMember *s) {
      
 
 	 int nResult = remove("timetable.txt"); //해당 파일을 지운다.
