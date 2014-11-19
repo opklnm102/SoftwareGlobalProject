@@ -17,14 +17,20 @@ void login(structMember *s){
 	printf("P  W : "); 
 
 	for(i=0; i<14; i++){  //비밀번호 입력시 ***로 출력부분
-		ch=getch();
+		ch=getch();		
 		if(ch == 13){  //enter키(비밀번호입력끝부분) 확인
 			password[i] = '\0';
 			printf("\n"); break;
 		}
-		password[i] = ch;
-		printf("*");
-		fflush(stdin);   
+		else if(ch == 8){
+			i -= 2;
+			fflush(stdin);  //좌표설정해서 printf("*");로 backspace처럼 지울수있게 좌표 x로 -1한다음에 거기서부터공백1칸출력
+		}
+		else{
+			password[i] = ch;
+			printf("*");
+			fflush(stdin);
+		}
 	}	
 
 	//회원가입여부 확인	
@@ -62,6 +68,7 @@ void login(structMember *s){
 			printf("로그인 실패\nPW재입력 : "); 
 			for(i=0; i<14; i++){  //비밀번호 입력시 ***로 출력부분
 				ch=getch();
+				checkInput();
 				if(ch == 13){  //enter키(비밀번호입력끝부분) 확인 
 					password[i] = '\0';
 					printf("\n"); break;

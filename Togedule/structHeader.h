@@ -5,6 +5,7 @@
 #include <time.h>
 #include<malloc.h>
 #include <windows.h>
+#pragma warning (disable:4996)
 
 //B(뒤로가기), X(종료)를 입력해야하기 때문에 전부 char 형으로 입력을 받아야한다.
 
@@ -77,6 +78,7 @@ void moneyShare();  //돈나눠주세요 시작
 void gotoxy(int x, int y);  //좌표설정
 void screenBorderDraw(); //전체화면틀출력함수
 void listBorderDraw(); //메뉴틀출력함수
+void checkInput();  //버퍼에 남아있는거 체크
 
 
 /*-------------------------------함수원형선언 끝--------------------------------*/

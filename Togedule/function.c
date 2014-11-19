@@ -41,4 +41,14 @@ void listBorderDraw(){
 	printf("└─────────────────────────┘");
 }
 
+//버퍼에 남아있는거 체크
+void checkInput(){
+	int ch;
+	ch = getchar();
+	if(ch == 32){
+		printf("please check the input whether it is valld or not.\n");
+		exit(0);
+	}
+}
+
 
