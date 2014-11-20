@@ -71,14 +71,14 @@ void removeTimetable(structMember *s); //시간표삭제함수(시간표txt파일삭제)
 //약속관련
 void promise(structMember *s);  //약속 시작
 void showMenu();  //약속메뉴들 출력
-int promiseList(char *id,char *name);	// 로그인한 회원의 약속리스트를 불러오는 함수 , 출력만 한다. 없을경우 없다고 출력해준다.
+int promiseList(char *DBname);	// 로그인한 회원의 약속리스트를 불러오는 함수 , 출력만 한다. 없을경우 없다고 출력해준다.
 void changeLocation( char* str );
 int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13]);
 int callendar(int Month);  //달력
 int weekday(int year, int month, int day);  //요일 찾는 함수 리턴 정수
 void selectDate(int CombineTimetable[5][13],char *DBname,structPromise *newPromise);  //요일, 시간, 날짜 입력받는 함수
 void promiseCreatConsole(char *DBname);	//약속만들기 함수 (약속명, 인원수 입력  .이름 검색함수 내부 포함. 약속 리스트 출력)
-void promisePlace();  //약속장소 선택
+void promisePlace(char *DBname, struct structPromise *newPromise);  //약속장소 선택
 
 //비용관련
 void moneyShare();  //돈나눠주세요 시작

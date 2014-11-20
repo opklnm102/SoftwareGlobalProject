@@ -29,8 +29,9 @@ int promiseList(char *DBname){	// 로그인한 회원의 약속리스트를 불러오는 함수 , �
 			fscanf(fp,"%d", &listCount);
 			for(i=0; i<listCount; i++){
 				fscanf(fp,"%s", promiseName);
-				fscanf(fp,"%s", check);
-				fscanf(fp,"%s", check);
+				fgets(check,41,fp);
+				fgets(check,41,fp);
+				fgets(check,41,fp);
 				fscanf(fp,"%s", promiseDate);
 				fscanf(fp,"%s", check);
 				printf("○ %s ",promiseName);
@@ -388,87 +389,9 @@ void selectDate(int CombineTimetable[5][13],char *DBname,structPromise *newPromi
 	}
 
 	strcpy(newPromise->promiseTime,time);			//자료 저장을 위한부분 임시로 여기에 삽입. 뒤에 장소DB가 만들어지고 장소함수도 만들어지면 그쪽으로 옮길 예정
-	strcpy(openDB,DBname);
-	strcat(openDB,"PromiseList.txt");				//학번+이름+PromiseList.txt 가 각 회원의 약속리스트파일
-	fp=fopen(openDB,"r");							//읽기버전으로 우선 연다.
+	
+	promisePlace(DBname,newPromise);
 
-	if(!fp) {										//약속리스트가 없으면 
-		fp=fopen(openDB,"w");						//쓰기버전으로 열어서 새로 약속리스트를 만든다.
-		fprintf(fp,"약속리스트\n");
-		fprintf(fp,"1\n");
-		fprintf(fp,newPromise->promiseName);
-		fprintf(fp,"\n");
-		fprintf(fp,"임시장소");						//newPromise->promisePlace이게 들어가야함 장소는 아직 없으므로 빼놓고 '임시장소'를 파일에 출력하게함
-		fprintf(fp,"\n");
-		fprintf(fp,newPromise->promiseTime);
-		fprintf(fp,"\n");
-		fprintf(fp,newPromise->Promisedate);
-		fprintf(fp,"\n");
-		promiseCount=atoi(newPromise->promiseFreindsCount);			//serchName함수에서 저장한 이름검색이 된 회원의 학번을 하나씩 삽입.  
-		for(i=0; i<promiseCount; i++) {
-			if(strcmp(newPromise->promiseFriendsName[i],"\0")){
-				fprintf(fp,newPromise->promiseFriendsName[i]);				
-			}
-			if(i!=promiseCount-1)
-				fprintf(fp,",");									//","도 찍어준다.띄어쓰기 없이 쉼표로 구분
-		}
-		fclose(fp);
-		
-	}		
-	else{												//약속리스트가 있으면
-		while (!feof(fp)) {	
-
-			fscanf(fp, "%s", &check);					//첫줄을 읽어 혹시나 약속리스트가 아닌경우를 대비
-				if(!strcmp(check,"약속리스트")){ 
-
-					fscanf(fp,"%d", &promiseCount);		//둘째줄을 읽어 promiseCount에 저장. 약속리스트의 개수를 의미.
-					oldPromise=(struct structPromise*)malloc(sizeof(struct structPromise)*promiseCount);		//여기랑 밑의 동적할당 해제부분에서 오류가 발생 
-					friendsName=(char**)malloc(sizeof(char)*promiseCount);						//<-딱 이 malloc만 사이즈가 틀린것같은데 어느정도 사이즈를 키워주면 한두번은 오류없이 실행되다가 금세 다시 오류발생중...
-					for(i=0; i<promiseCount; i++) {
-						friendsName[i]=(char*)malloc(sizeof(char)*60);
-
-					}
-					for(i=0; i<promiseCount; i++) {								//일단 약속리스트개수만큼 약속을 읽어와서 oldPromise구조체에 순서대로 저장
-						fscanf(fp,"%s",&oldPromise[i].promiseName);
-						fscanf(fp,"%s",&oldPromise[i].promisePlace);
-						fscanf(fp,"%s",&oldPromise[i].promiseTime);
-						fscanf(fp,"%s",&oldPromise[i].Promisedate);
-						fscanf(fp,"%s",&check);
-						strcpy(friendsName[i],check);
-					}
-				}
-		}
-		fclose(fp);
-		fp=fopen(openDB,"w");												//w버전으로 약속리스트를 다시 열어 기존 파일을 날리고 새로 작성한다.
-		fprintf(fp,"약속리스트\n");
-		itoa(promiseCount+1,promisecount,10);
-		fprintf(fp,"%s\n",promisecount);
-		for(i=0; i<promiseCount; i++) {
-			fprintf(fp,"%s\n",oldPromise[i].promiseName);
-			fprintf(fp,"%s\n",oldPromise[i].promisePlace);
-			fprintf(fp,"%s\n",oldPromise[i].promiseTime);
-			fprintf(fp,"%s\n",oldPromise[i].Promisedate);
-			fprintf(fp,"%s\n",friendsName[i]);
-		}
-		fprintf(fp,"%s\n",newPromise->promiseName);
-		fprintf(fp,"임시장소");				//위와 동일하게 newPromise->promisePlace가 들어갈 자리. 아직 장소가 없으므로 '임시장소'로 출력
-		fprintf(fp,"\n");
-		fprintf(fp,"%s시\n",newPromise->promiseTime);
-		fprintf(fp,"%s\n",newPromise->Promisedate);
-		promiseCount=atoi(newPromise->promiseFreindsCount);
-		for(i=0; i<promiseCount; i++) {		
-			if(strcmp(newPromise->promiseFriendsName[i],"\0")){
-				fprintf(fp,"%s",newPromise->promiseFriendsName[i]);				
-				}
-			if(i!=promiseCount-1)
-				fprintf(fp,",");
-		}
-		fclose(fp);	
-		for(i=0;i<promiseCount; i++)			//다 잘 만들어지는데 동적할당 해제시 여기서 계속 오류발생...누군가 문제해결책 알고있으면 알려주길...
-			free(friendsName[i]);				//test시에는 동적할당해제 주석처리하고 돌리면 됨...주석처리 안해도 일단 txt파일은 제대로 출력되서 만들어지므로 체크할떄 참고..
-		free(friendsName);
-		free(oldPromise);
-	}
 	printf("다음장으로 넘어갑니다.\n");
 }
 
