@@ -9,7 +9,7 @@ void promisePlace(){
 	int placeCount;  //소분류의 수
 	char **subcategory;  //소분류 저장공간
 	int i,len;
-	
+
 	fp1=fopen("place.txt","r");  //장소리스트DB 열고
 
 	if(fp1 == NULL){
@@ -17,15 +17,21 @@ void promisePlace(){
 		return;
 	}
 
-	printf("약속장소\n");
-	printf("--장소리스트--\n");
+	while(1){
+		printf("약속장소\n");
+		printf("--장소리스트--\n");
 
-	//장소리스트 대분류
-	printf("1. 학습관련시설\n");
-	printf("2. 휴게시설\n");
-	printf("3. 기타시설\n");
-	printf("4. 건강,문화시설\n");
-	printf("대분류 선택>> "); scanf("%d",&placeSelect); fflush(stdin);
+		//장소리스트 대분류
+		printf("1. 학습관련시설\n");
+		printf("2. 휴게시설\n");
+		printf("3. 기타시설\n");
+		printf("4. 건강,문화시설\n");
+		printf("대분류 선택>> "); scanf("%d",&placeSelect); fflush(stdin);
+		if(1 <= placeSelect && placeSelect <= 4) break;
+		printf("리스트에 있는 것중에 고르시오\n");
+		getch();
+		system("cls");
+	}
 
 	switch(placeSelect){  //장소리스트 대분류 선택
 	case 1 :
@@ -48,9 +54,10 @@ void promisePlace(){
 
 	while(!feof(fp1)){  //파일끝까지 확인
 		fgets(DBplace,30,fp1); 
-		//fseek(fp1,3,SEEK_CUR);
+
 		if(!strcmp(DBplace,place)){  //대분류를 찾고
 			fscanf(fp1,"%d",&placeCount);  //대분류에 속해 있는 소분류의 개수입력
+			fseek(fp1,2,SEEK_CUR);
 			break;
 		}
 		for(i=0;i<30;i++) DBplace[i]=-52;
@@ -62,10 +69,17 @@ void promisePlace(){
 		fgets(subcategory[i],30,fp1);  //소분류의 내용들 저장
 	}
 
-	for(i=0; i<placeCount; i++)  //소분류 출력
-		printf("%d. %s",i+1,subcategory[i]);
+	while(1){
+		system("cls");
+		for(i=0; i<placeCount; i++)  //소분류 출력
+			printf("%d. %s",i+1,subcategory[i]);
 
-	printf("소분류 선택>>"); scanf("%d",&placeSelect); fflush(stdin);
+		printf("소분류 선택>>"); scanf("%d",&placeSelect); fflush(stdin);
+
+		if(1 <= placeSelect && placeSelect <= placeCount-1) break;
+		printf("리스트에 있는 것중에 고르시오\n");
+		getch();
+	}
 
 	strcpy(sp.promisePlace,subcategory[placeSelect]);  //구조체에 저장
 
@@ -77,8 +91,3 @@ void promisePlace(){
 
 	fclose(fp1);	
 }
-
-
-
-
-
