@@ -22,8 +22,9 @@ void login(structMember *s){
 			password[i] = '\0';
 			printf("\n"); break;
 		}
-		else if(ch == 8){
+		else if(ch == 8){  //키보드의 backspace동작
 			i -= 2;
+			printf("\b \b");  
 			fflush(stdin);  //좌표설정해서 printf("*");로 backspace처럼 지울수있게 좌표 x로 -1한다음에 거기서부터공백1칸출력
 		}
 		else{
