@@ -1,20 +1,46 @@
 #include"structHeader.h"
 
+<<<<<<< HEAD
 
 
 void login(){
 	char id[8], password[14], fid[8], fname[13];  //fid,fname 파일에서 불러온 학번,이름
 	structMember s;  //멤버 구조체	
+=======
+void login(structMember *s){
+	char id[8],password[14],fid[8],fname[13];  //fid,fname 파일에서 불러온 학번,이름
+	//structMember s;  //멤버 구조체	
+>>>>>>> 621e311dcf005304b617c9e2ae3aadb755b5ced3
 	FILE *fp1,*fp2=NULL;
 	char txt[]=".txt";  //확장자
 	char fileName[20];  //열기할 파일이름
-	int loginCount;  //로그인 횟수
+	int loginCount;  //로그인 횟수	
+	char ch;
+	int i=0;
 
 	printf("*togedule*\n");
 	printf("-Login-\n");
 	//로그인 정보 입력
-	printf("학번 : "); scanf("%s",id);  
-	printf("P  W : "); scanf("%s",password);
+	printf("학번 : "); scanf("%s",id); fflush(stdin);    
+	printf("P  W : "); 
+
+	for(i=0; i<14; i++){  //비밀번호 입력시 ***로 출력부분
+		ch=getch();		
+		if(ch == 13){  //enter키(비밀번호입력끝부분) 확인
+			password[i] = '\0';
+			printf("\n"); break;
+		}
+		else if(ch == 8){  //키보드의 backspace동작
+			i -= 2;
+			printf("\b \b");  
+			fflush(stdin);  //좌표설정해서 printf("*");로 backspace처럼 지울수있게 좌표 x로 -1한다음에 거기서부터공백1칸출력
+		}
+		else{
+			password[i] = ch;
+			printf("*");
+			fflush(stdin);
+		}
+	}	
 
 	//회원가입여부 확인	
 	fp1=fopen("회원목록.txt","r");  //회원목록 열고
@@ -37,33 +63,38 @@ void login(){
 	}
 	//회원정보입력
 	fseek(fp2,10,SEEK_CUR);  //파일의 첫 "회원정보"때문에 커서 이동
-	fscanf(fp2,"%s %s %s %s",s.ID,s.name,s.password,s.backupPassword);  //개인별 회원정보입력
+	fscanf(fp2,"%s %s %s %s",s->ID,s->name,s->password,s->backupPassword);  //개인별 회원정보입력
 
 	fclose(fp2);
 	fp2=NULL;
+
 	loginCount=0;
 	while(loginCount<4){  //로그인 횟수 5가 넘을 경우 고유코드로 초기화
-		if(strcmp(password,s.password)==0) //로그인		
-			mainMenu();
+		if(strcmp(password,s->password)==0) //로그인		
+			mainMenu(s);
 		else{  //로그인 실패
 			loginCount++;
-			printf("로그인 실패\nPW재입력 : "); scanf("%s",password); fflush(stdin);
+			printf("로그인 실패\nPW재입력 : "); 
+			for(i=0; i<14; i++){  //비밀번호 입력시 ***로 출력부분
+				ch=getch();
+				checkInput();
+				if(ch == 13){  //enter키(비밀번호입력끝부분) 확인 
+					password[i] = '\0';
+					printf("\n"); break;
+				}
+				password[i] = ch;
+				printf("*");
+				fflush(stdin);   
+			}			
 		}
 	}
 
-	//PW를 고유코드로 설정->에러
+	//PW를 고유코드로 설정->에러->파일에 출력시 널값은 출력안되게.. 수정바람
 	printf("PW 고유코드로 초기화\n");
-	fp2=fopen(fileName,"a");
-	fseek(fp2,0,SEEK_SET);
-	while(!feof(fp2)){  //파일끝까지 확인
-		fscanf(fp2,"%s",fname);  //비밀번호가 있는 커서의 위치를 찾는다. 
-		if(!strcmp(s.name,fname))  
-			fprintf(fp2,"%s",s.backupPassword);
-	}
-	fclose(fp2);
-	//getch();
+	fp2=fopen(fileName,"w");
+	fprintf(fp2,"%s\n","회원정보");
+	fprintf(fp2,"%s\n%s\n%s\n%s\n",s->ID,s->name,s->backupPassword,s->backupPassword);  //개인별 회원정보파일 갱신
+	fclose(fp2);	
+	getch();
+
 }
-
-
-
-

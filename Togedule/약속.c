@@ -2,22 +2,23 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
+#include <time.h>
 
 char dayOfWeek[5][4] = {"¿ù","È­","¼ö","¸ñ","±Ý"};
-
+ 
 struct structMember{
 	char name [13];   //È¸¿øÀÌ¸§          
 	char ID [8];           // ÇÐ¹ø
 	char password [14];
 	char backupPassword [14];    //°íÀ¯ÄÚµå
 };
-
+ 
 struct structSubject{
 	char subjectName[15];     //°ú¸ñÀÌ¸§
 	char subjectClass[10];     //ÀÔ·Â¹Þ´Â °ú¸ñ±³½Ã  ->1,2,3 ->ÇÔ¼ö·Î Ã³¸®ÇØ¾ßÇÔ.
 };
-
-
+ 
+ 
 struct structPromise {
 	char promiseName [41];    // ³»°¡ ÀÔ·ÂÇÒ ÀÌ¸§
 	char promisePlace[30];         //Àå¼Ò ÀÌ¸§À» ¸ð¸£±â ¶§¹®¿¡ Æ÷ÀÎÅÍ DBÀÇ ¹®ÀÚ¿­À» °¡¸®Å³ °ÍÀÌ´Ù //Àå¼ÒDB °èÈ¹ÀÌ ¾ÆÁ÷ ±¸Ã¼ÀûÀ¸·Î ¾È³ª¿Í¼­ ÀÏ´Ü ¹è¿­·Î ºÐ¹è.
@@ -26,18 +27,18 @@ struct structPromise {
 	char promiseFreindsCount[2];//Ãß°¡
 	char **promiseFriendsName; //ÀÎ¿ø¼öÀÇ ÀÔ·ÂÀ» ¹Þ¾Æ {¡°±èµ¿Èñ¡±, ¡°ÀÌ¼³Èñ¡±}
 };
-
+ 
 struct structTimetable{
 	struct structSubject timetable[5][13];
 };
-
+ 
 struct structCost{
 	char cost;  
 };
-
+ 
 int login(char *name,struct structMember *loginID) {		// ·Î±×ÀÎÇÑ È¸¿øÀÇ Á¤º¸¸¦ ÀÐ¾î¿Ã¼ö ÀÖ°Ô ¸¸µå´Â ÇÔ¼ö	,name¿¡ ÇöÀç ·Î±×ÀÎÇÑ È¸¿øÀÇ ÀÌ¸§À» Ã¤¿ö³ÖÀ¸¸é µÈ´Ù.
 	FILE *fp;
-	char openDB[22];										// ÀÌ¸§À» Åä´ë·Î txt ÆÄÀÏÀ» ºÒ·¯¿Í¼­ Á¤º¸¸¦ ÀÐ´Â´Ù.
+	char openDB[30];										// ÀÌ¸§À» Åä´ë·Î txt ÆÄÀÏÀ» ºÒ·¯¿Í¼­ Á¤º¸¸¦ ÀÐ´Â´Ù.
 	char textFile[]=".txt";
 	char ID[8];
 	char listName[13];
@@ -49,6 +50,10 @@ int login(char *name,struct structMember *loginID) {		// ·Î±×ÀÎÇÑ È¸¿øÀÇ Á¤º¸¸¦ 
 	strcpy(openDB,"È¸¿ø¸ñ·Ï");
 	strcat(openDB,textFile);
 	fp = fopen(openDB, "r");
+	if ( !fp ) {
+			printf("ERROR : %s cannot open!\n",openDB );
+			return -1;
+		}
 	while (!feof(fp)) {
 		fscanf(fp, "%s %s", &ID, &listName);
 		if(!strcmp(listName,name)){
@@ -58,6 +63,7 @@ int login(char *name,struct structMember *loginID) {		// ·Î±×ÀÎÇÑ È¸¿øÀÇ Á¤º¸¸¦ 
 	fclose(fp);
 	strcpy(openDB,ID);
 	strcat(openDB,name);
+	strcat(openDB,"PromiseList");
 	strcat(openDB,textFile);
 	fp = fopen(openDB, "r");
 	if ( fp == NULL ) {
@@ -73,7 +79,7 @@ int login(char *name,struct structMember *loginID) {		// ·Î±×ÀÎÇÑ È¸¿øÀÇ Á¤º¸¸¦ 
 			fscanf(fp,"%s", loginID->backupPassword);
 		}
 	
-	
+		
 		if(!strcmp(check,"¾à¼Ó¸®½ºÆ®")){
 			fscanf(fp,"%d", &listCount);
 			promiseList=(struct structPromise*)malloc(sizeof(struct structPromise)*listCount);
@@ -87,7 +93,7 @@ int login(char *name,struct structMember *loginID) {		// ·Î±×ÀÎÇÑ È¸¿øÀÇ Á¤º¸¸¦ 
 				fgets(check,2,fp);
 				fgets(check,30,fp);
 				//printf("%s",check);
-
+ 
 				/*for(j=0; j<5; j++){
 					fgets(check,30,fp);
 					promiseList[i].promiseFriendsName[j]=(char *)malloc(sizeof(char)*13);
@@ -115,6 +121,18 @@ int login(char *name,struct structMember *loginID) {		// ·Î±×ÀÎÇÑ È¸¿øÀÇ Á¤º¸¸¦ 
 		free(promiseList[i].promiseFriendsName);
 	free(promiseList);
 }
+ 
+ void changeLocation( char* str ) 
+{ 
+	int len = strlen( str ); 
+    int i;
+	char temp = str[0]; 
+	for( i = 0; i < len; i++ ) 
+    { 
+		str[ i ] = str[ i + 1]; 
+	} 
+   str[ len - 1 ] = '\0'; 
+} 
 
 
 int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13]){		//ÀÌ¸§ °Ë»öÇÔ¼ö. txtÆÄÀÏÀÇ Áßº¹ÀÌ¸§Àº ±èÁø»ï.txt ±èÁø»ï1.txt ±èÁø»ï2.txt ÀÌ·±ÇüÅÂ·Î °¡Á¤ÇØ¼­ Ç®¾î³ª°¨.
@@ -130,12 +148,13 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 	int limit=0;
 	int i,j;
 	int dayweek,time;
+	char comma[1]={','};
 	struct structMember friendID;	//¿©±â¼­ ±»ÀÌ structMember¸¦ ¸¸µç ÀÌÀ¯´Â ³ªÁß¿¡ ÀÚ·áÀúÀåºÎºÐ¿¡¼­ È¤½Ã ¾²ÀÏ±î ÇØ¼­...
-
+ 
 	FILE *fp;
 	FILE *fp1;
 	
-
+ 
 	while(1){		//ÀÌ¸§Áßº¹ÀÌ ÀÖ´ÂÁö È®ÀÎÇÏ°í ÀÖÀ¸¸é ÆÄÀÏÀ» ¿­¾î ÀÌ¸§À» °¡Á®¿À´Â ¹Ýº¹¹® (¹Ù±ù ·çÇÁ)
 		char textFile[]=".txt";
 		strcpy(openDB,"È¸¿ø¸ñ·Ï");
@@ -144,16 +163,16 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 		
 		while (!feof(fp)) {
 			fscanf(fp, "%s %s", &ID, &listName);
-
+ 
 			if(!strcmp(listName,name)){
 				strcpy(openDB,ID);
 				strcat(openDB,name);
 				strcat(openDB,textFile);
 	
 				fp1 = fopen(openDB, "r");
-				if ( fp1 == NULL ) {         //¸¸¾à ÀÌ¸§ÀÌ ¾Æ¿¹ ¾ø´Â È¸¿øÀÇ °æ¿ì ¹Ù·Î ¹Ù±ù·çÇÁ¸¦ Å»Ãâ
-					printf("%sÈ¸¿øÀÇ Á¤º¸°¡ ¾ø½À´Ï´Ù",name,openDB );
-					exist=1;         //¹ÝÈ¯°ªÀ» 1·Î º¯°æÇØ¼­ ÀÌ¸§ÀÌ ÀÖÀ» °æ¿ì¿Í ±¸ºÐ/
+				if ( !fp1 ) {         
+					printf("%sÈ¸¿øÀÇ Á¤º¸°¡ ¾ø½À´Ï´Ù.",name );
+					exist=1;
 					break;
 				}
 				
@@ -171,6 +190,11 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 			}
 		}
 		fclose(fp);
+		if(!strcmp(openDB,"È¸¿ø¸ñ·Ï.txt")){
+			printf("%sÈ¸¿øÀÇ Á¤º¸°¡ ¾ø½À´Ï´Ù.",name);
+			exist=1;
+			break;
+		}
 		printf("¡æ ÀÌ¸§¹øÈ£ ¼±ÅÃ : ");		//¸ðµç ¸®½ºÆ®°¡ Ãâ·ÂµÇ¸é ¸®½ºÆ®¹øÈ£¸¦ ¼±ÅÃ¹Þ´Â´Ù.
 		limit=overlap-1;
 		while(1) {						//¸®½ºÆ® ¹øÈ£ ¹üÀ§ ³»ÀÇ ¼ö¸¸ ÀÔ·Â¹Þ±â
@@ -195,16 +219,13 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 		fclose(fp);
 		strcpy(openDB,ID);
 		strcat(openDB,name);		//ÀÌ ºÎºÐÀ» ¸¸µç ÀÌÀ¯´Â ³ªÁß¿¡ °¢ È¸¿øÀÇ txtÆÄÀÏ¿¡ Á¤º¸¸¦ ÀúÀåÇÏ±â À§ÇØ¼­ ¶Ç ÅëÇÕ½Ã°£Ç¥ »ý¼ºÀ» À§ÇØ...
+		strcat(openDB,"timetable");
 		strcat(openDB,textFile);	//µÚ¿¡ Àå¼Ò¼±ÅÃ±îÁö ³¡¸¶Ä¡°í txtÆÄÀÏ¿¡ ÀúÀåÇÏ´Â ºÎºÐÀº ¾ÆÁ÷ ±¸Çö¾ÈÇÔ ±×‹š ¿©±æ ¼ÕºÁ¼­ ÇØ´çÈ¸¿øtxtÆÄÀÏÀ» µÚ·Î ³Ñ°ÜÁÖ´ø°¡ ¿©±â ÄÚµå¸¦ º¹»çÇØ¼­ ¾²¸é µÉµí
 		fp = fopen(openDB, "r");
 		while (!feof(fp)) {
 				fscanf(fp, "%s", &check);
-				if(!strcmp(check,"È¸¿øÁ¤º¸")){
-					fscanf(fp,"%s", friendID.ID);
-					fscanf(fp,"%s", friendID.name);
-				}
-				if(!strcmp(check,"½Ã°£Ç¥")){ 
-					while(strcmp(dayWeek,"¾à¼Ó¸®½ºÆ®")){
+				if(!strcmp(check,"½Ã°£Ç¥")){  //8 ½Ã°£Ç¥ °³¼ö·Î ¹Ù²ãÁà¾ßÇÔ
+					while(!feof(fp)){
 						fscanf(fp,"%s", &dayWeek);
 						if(!strcmp(dayWeek,"¿ù"))
 							dayweek=0;
@@ -219,18 +240,28 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 						fscanf(fp,"%s", &check);
 						fscanf(fp,"%s",&check);
 						for(i=0;i<strlen(check);i++) {
-							if(check[i]!=','){
-								if(i%2==0){
-									time = (int) check[i]-48;
-									CombineTimetable[dayweek][time-1]=1;
-								}
+							if(strncmp(check,comma,1)!=0){
+								strncat(Time,check,1);
+								changeLocation(check);
 							}
-						}
+							if(strncmp(check,comma,1)==0) {	
+								changeLocation(check);
+								time=atoi(Time);
+								CombineTimetable[dayweek][time-1]=1;
+								for(j=0; j<strlen(Time); j++)
+									Time[j]='\0';	
+							}		
+						}						
+						time=atoi(check);
+						CombineTimetable[dayweek][time-1]=1;
+						for(j=0; j<strlen(Time); j++)
+							Time[j]='\0';
+						
 					}
 				}
 			}			
 			fclose(fp);
-
+ 
 		
 		
 		for(i=0; i<5; i++) {		//ÀÐ¾î¿ÔÀ¸¸é È¸¿ø ÀÌ¸§À» strcpy¸¦ ÀÌ¿ë ±¸Á¶Ã¼ nwePromise ÀÇ promiseFriendsName ¿¡ º¹»çºÙ¿©³Ö±â 
@@ -243,12 +274,16 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 	}	
 	return exist;
 }
-void callendar() {
+int callendar(int Month) {
 	int last,th,year,day,date,x,z,y,m;
-	printf("³âµµ¸¦ ÀÔ·ÂÇÏ¼¼¿ä : ");
-	scanf("%d",&y);
-	printf("¿ùÀ» ÀÔ·ÂÇÏ¼¼¿ä : ");
-	scanf("%d",&m);
+	time_t curr;
+
+	struct tm *d;
+	curr=time(NULL);
+	d=localtime(&curr);
+	year = d->tm_year;
+	y=year+1900;
+	m=Month;
 	if((m>=1)&&(m<=12))
 	{
 		if((m==1)||(m==3)||(m==5)||(m==7)||(m==8)||(m==10)||(m==12))
@@ -304,22 +339,38 @@ void callendar() {
 				else if(date>=last)
 				{
 					printf("\n");
-					return;
+					
+					return y;
 				}
 			}
 		}
 		printf("\n");
 		
 	}
+
+}
+    
+  
+       
+int weekday(int year, int month, int day) //¿äÀÏ Ã£´Â ÇÔ¼ö ¸®ÅÏ Á¤¼ö
+{
+    int year_1 = year / 100;
+    int year_2 = year - year_1 * 100;
+     
+    return (day + (month + 1) * 26 / 10 + year_2 + (year_2 / 4) + (year_1 / 4) - 2 * year_1 - 2) % 7;
 }
 void selectDate(int CombineTimetable[5][13]){	//¿äÀÏ, ½Ã°£, ³¯Â¥ ÀÔ·Â¹Þ´Â ÇÔ¼ö
 	
 	char dayofweek[3];
 	char time[27];
-	char date[10];
+	char month[10];
+	char day[10];
+	char temp[10]={0};
 	int dayofWeek;
 	int Time;
-	int Date;
+	int Day;
+	int Month;
+	int year;
 	int i,j;
 	int errorCheck;
 	char dayOfWeek[5][4] = {"¿ù","È­","¼ö","¸ñ","±Ý"};
@@ -331,18 +382,56 @@ void selectDate(int CombineTimetable[5][13]){	//¿äÀÏ, ½Ã°£, ³¯Â¥ ÀÔ·Â¹Þ´Â ÇÔ¼ö
 	printf("¿¹) 5, 6, 7\n");
 	printf("¿¹) 10¿ù 30ÀÏ\n");
 	
-	callendar();
+	
 	for (i=0; i<5; i++) {
 		for(j=0; j<13; j++)
 			printf("%d ",CombineTimetable[i][j]);
 	printf("\n");
 	}
-	printf("¿äÀÏ");
-	scanf("%s",dayofweek);
+	
+	
+	printf("¾à¼ÓÀ» ÀâÀ» ¿ù ÀÔ·Â");		//¿ùÀ» ÀÔ·ÂÇÏ¸é ÀÚµ¿À¸·Î ÇöÀç ¿¬µµ ÇØ´ç ¿ùÀÇ ´Þ·Â Ãâ·Â
+	scanf("%s",&month);
+	
+	for(i=0;i<strlen(month);i++) {
+		if(strncmp(month,"¿ù",1)!=0){
+			
+			strncat(temp,month,1);
+			changeLocation(month);
+		}
+		if(strncmp(month,"¿ù",1)==0) {	
+			Month=atoi(temp);
+			break;
+		}		
+	}
+	year=callendar(Month);			
+	printf("¾à¼ÓÀ» ÀâÀ» ÀÏ ÀÔ·Â");		//ÀÏÀ» ÀÔ·ÂÇÏ¸é
+	scanf("%s",&day);
+	for(i=0; i<strlen(temp); i++)
+		temp[i]='\0';
+	for(i=0;i<strlen(day);i++) {
+		if(strncmp(day,"ÀÏ",1)!=0){
+			strncat(temp,day,1);
+			changeLocation(day);
+		}
+		if(strncmp(day,"ÀÏ",1)==0) {
+			Day=atoi(temp);
+			break;
+		}		
+	} 
+	switch(weekday(year,Month,Day)){		//ÇØ´ç ¿¬µµ ¿ù ÀÏ¿¡ ÇØ´çÇÏ´Â ¿äÀÏÀ» °è»êÇØ¼­ »ðÀÔ.
+	case 0: strcpy(dayofweek,"¿ù"); break;
+	case 1: strcpy(dayofweek,"È­"); break;
+	case 2: strcpy(dayofweek,"¼ö"); break;
+	case 3: strcpy(dayofweek,"¸ñ"); break;
+	case 4: strcpy(dayofweek,"±Ý"); break;
+	case 5: strcpy(dayofweek,"Åä"); break;
+	case 6: strcpy(dayofweek,"ÀÏ"); break;
+	}
+	
 	printf("½Ã°£");
 	scanf("%s",time);
-	printf("³¯Â¥");
-	scanf("%s",date);
+
 	if(!strcmp(dayofweek,dayOfWeek[0]))
 		dayofWeek=0;
 	else if(!strcmp(dayofweek,dayOfWeek[1]))
@@ -353,20 +442,20 @@ void selectDate(int CombineTimetable[5][13]){	//¿äÀÏ, ½Ã°£, ³¯Â¥ ÀÔ·Â¹Þ´Â ÇÔ¼ö
 		dayofWeek=3;
 	else if(!strcmp(dayofweek,dayOfWeek[4]))
 		dayofWeek=4;
-	while(1){
+	while(1){		//½Ã°£ÀÌ ÅëÇÕ½Ã°£Ç¥¿¡ °ãÄ¡´Â ½Ã°£ÀÌ¸é ÀçÀÔ·Â. Á¦´ë·Î ÀÔ·Â½Ã ³Ñ±è
 		errorCheck=0;
-		Time = atoi(time);
-		printf("%d",Time);
+		Time = atoi(time);		
 		if(CombineTimetable[dayofWeek][Time-1]==1){
 			errorCheck=1;
 		}					
 		if(errorCheck==0)
 			break;
-		printf("½Ã°£ÀçÀÔ·Â");
-		scanf("%s",time);
+		printf("ÅëÇÕ ½Ã°£Ç¥¸¦ º¸°í ÀÔ·ÂÇÑ ¿äÀÏÀÇ ºó½Ã°£À» ÀÔ·ÂÇÏ¼¼¿ä: ");
+		scanf("%s",&time);
 	}
+	printf("´ÙÀ½ÀåÀ¸·Î ³Ñ¾î°©´Ï´Ù.\n");
 }
-
+ 
 void promiseCreatConsole() {	//¾à¼Ó¸¸µé±â ÇÔ¼ö (¾à¼Ó¸í, ÀÎ¿ø¼ö ÀÔ·Â  .ÀÌ¸§ °Ë»öÇÔ¼ö ³»ºÎ Æ÷ÇÔ. ¾à¼Ó ¸®½ºÆ® Ãâ·Â)
 	char Name[13];
 	int i,j;
@@ -374,13 +463,13 @@ void promiseCreatConsole() {	//¾à¼Ó¸¸µé±â ÇÔ¼ö (¾à¼Ó¸í, ÀÎ¿ø¼ö ÀÔ·Â  .ÀÌ¸§ °Ë»öÇ
 	struct structPromise newPromise;	//»õ·Î¿î ¾à¼ÓÀ» À§ÇÑ ±¸Á¶Ã¼ »ý¼º newPromise
 	int CombineTimetable[5][13]={0};
 	char control[3]={0};
-
+ 
 	printf(" ¾à¼Ó ¸¸µé±â ");
 	printf(" ¾à¼Ó¸í : ");
 	scanf("%s",&newPromise.promiseName);
 	printf(" ÀÎ¿ø¼ö : ");
 	scanf("%s",&newPromise.promiseFreindsCount);
-
+ 
 	Count=atoi(newPromise.promiseFreindsCount);		//ÀÎ¿ø¼ö¸¦ intÇüÀ¸·Î ¹Ù²ãÁÖ°í newPromiseÀÇ promiseFriendsCount ¿¡ µ¿ÀûÇÒ´ç
 	newPromise.promiseFriendsName=(char **)malloc(sizeof(char*)*Count+2);	//¿ä°Ç +1·Î ÇÏ¸é ¿À·ù.. ¿Ö±×·±Áö ÀÌÀ¯ ¸ø¾Ë¾Æ³¿.
 	for(i=0; i<Count; i++){
@@ -400,7 +489,7 @@ void promiseCreatConsole() {	//¾à¼Ó¸¸µé±â ÇÔ¼ö (¾à¼Ó¸í, ÀÎ¿ø¼ö ÀÔ·Â  .ÀÌ¸§ °Ë»öÇ
 			printf("%d",CombineTimetable[i][j]);
 			printf("\n");
 	}
-
+ 
 	printf("\n ¾à¼Ó¸â¹ö");			//¸®½ºÆ® Ãâ·ÂºÎºÐ
 	Count=atoi(newPromise.promiseFreindsCount);			//Count¸¦ À§¿¡¼­ 0À¸·Î ¸¸µé¾úÀ¸¹Ç·Î ´Ù½Ã intÇüÀ¸·Î Àç¹èÄ¡.
 	for(i=0; i<Count; i++) {		
@@ -411,14 +500,14 @@ void promiseCreatConsole() {	//¾à¼Ó¸¸µé±â ÇÔ¼ö (¾à¼Ó¸í, ÀÎ¿ø¼ö ÀÔ·Â  .ÀÌ¸§ °Ë»öÇ
 	if(control)
 		selectDate(CombineTimetable);
 	
-
+ 
 	for(i=0; i<Count; i++)		//µ¿ÀûÇÒ´ç ÇØÁ¦
 	free(newPromise.promiseFriendsName[i]);
 	free(newPromise.promiseFriendsName);
-
+ 
 }
-
-
+ 
+ 
 void showMenu() {
 	printf("¡Ù ¾à¼Ó ¸Þ´º ¡Ù\n");
 	printf("1. ¾à¼Ó¸¸µé±â\n");
@@ -426,15 +515,15 @@ void showMenu() {
 	printf("3. ¾à¼Ó »èÁ¦\n");	
 	printf("¢¹ ¸Þ´º ¼±ÅÃ : ");
 }
-
+ 
 int main() {
 	char logID[8];
 	struct structMember loginID;		//ÇöÀç È¸¿øÁ¤º¸¸¦ °¡Á®¿Ã ±¸Á¶Ã¼ »ý¼º
 	char menuControl;
 	strcpy(logID,"±èÁø»ï");				//ÀÌ¸§À» ±â¹ÝÀ¸·Î txtÆÄÀÏÀ» Ã£´Â Çü½Ä. ÀÌ¸§À» logID¿¡ º¹»çÇØÁØ´Ù.
-
+ 
 	showMenu();
-
+ 
 	login(logID,&loginID);				//ÇöÀçÈ¸¿øÁ¤º¸ ÇÔ¼ö ½ÇÇà
 	
 	scanf("%c",&menuControl);
@@ -443,6 +532,6 @@ int main() {
 	case '2': system("cls"); break;
 	case '3': system("cls"); break;
 	}
-
-
+ 
+ 
 }
