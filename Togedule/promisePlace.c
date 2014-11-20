@@ -88,8 +88,8 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 		printf("리스트에 있는 것중에 고르시오\n");
 		getch();
 	}
-	strcpy(newPromise->promisePlace,subcategory[placeSelect]);  //구조체에 저장
-	printf("%s",newPromise->promisePlace);
+	strcpy(newPromise->promisePlace,subcategory[placeSelect]);  //기존의 다른 약속정보들이 저장되있는 newPromise 구조체에 장소 정보도 저장
+	
 	strcpy(openDB,DBname);
 	strcat(openDB,"PromiseList.txt");				//학번+이름+PromiseList.txt 가 각 회원의 약속리스트파일
 	fp=fopen(openDB,"r");							//읽기버전으로 우선 연다.
@@ -131,8 +131,8 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 						for(j=0; j<60; j++)
 							strcpy(&friendsName[i][j],"\0");
 					}
-					oldPromisePlace=(char**)malloc(sizeof(char*)*promiseCount);						//동적할당 오류 해결. char뒤에 포인터 표시 빼먹음....
-					for(i=0; i<promiseCount; i++) {
+					oldPromisePlace=(char**)malloc(sizeof(char*)*promiseCount);						//장소가 띄어쓰기 포함이기 때문에 structPromise구조체의 장소멤버 사용하기 힘드므로 
+					for(i=0; i<promiseCount; i++) {													//그냥 이중포인터 문자배열 사용
 						oldPromisePlace[i]=(char*)malloc(sizeof(char)*60);
 						strcpy(oldPromisePlace[i],"\0");
 						for(j=0; j<60; j++)
@@ -141,10 +141,9 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 					for(i=0; i<promiseCount; i++) {								//일단 약속리스트개수만큼 약속을 읽어와서 oldPromise구조체에 순서대로 저장
 						fscanf(fp,"%s",&oldPromise[i].promiseName);
 						fflush(stdin);
-						fgets(check,40,fp);
-						fgets(check,40,fp);
-						strcpy(oldPromisePlace[i],check);
-						
+						fgets(check,40,fp);						//요건 꼭 두번씩 넣어줘야 제대로 읽음... 포인터위치때문인것 같지만 
+						fgets(check,40,fp);						//포인터 위치를 셋하려면 이 부분이 리스트 수만큼 for문을 돌기에 귀찮을듯...그냥 두번읽으면 되니 넘어감... 
+						strcpy(oldPromisePlace[i],check);						
 						fscanf(fp,"%s",&oldPromise[i].promiseTime);
 						fscanf(fp,"%s",&oldPromise[i].Promisedate);
 						fscanf(fp,"%s",&check);
@@ -159,13 +158,13 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 		fprintf(fp,"%s\n",promisecount);
 		for(i=0; i<promiseCount; i++) {			
 			fprintf(fp,"%s\n",oldPromise[i].promiseName);
-			fprintf(fp,"%s",oldPromisePlace[i]);
+			fprintf(fp,"%s",oldPromisePlace[i]);			//장소DB에서 읽어올때 맨뒤에 null이 하나 포함되서 읽어오는 모양.. 그래서 여기엔 null을 안찍어도 된다.
 			fprintf(fp,"%s\n",oldPromise[i].promiseTime);
 			fprintf(fp,"%s\n",oldPromise[i].Promisedate);
 			fprintf(fp,"%s\n",friendsName[i]);
 		}
 		fprintf(fp,"%s\n",newPromise->promiseName);
-		fprintf(fp,"%s",newPromise->promisePlace);				//위와 동일하게 가 들어갈 자리. 아직 장소가 없으므로 '임시장소'로 출력
+		fprintf(fp,"%s",newPromise->promisePlace);				//마찬가지로 null안찍어도됨.
 		fprintf(fp,"%s시\n",newPromise->promiseTime);
 		fprintf(fp,"%s\n",newPromise->Promisedate);
 		promiseCount=atoi(newPromise->promiseFreindsCount);
