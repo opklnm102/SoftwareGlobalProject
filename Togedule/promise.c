@@ -2,7 +2,7 @@
 //개인파일로 만들시 꼭 위의 헤더랑 function.c 포함해서 작업해야함
 //extern char dayOfWeek[5][4];  헤더로 옮김 지워도 됨
 
-int promiseList(char *DBname){	// 로그인한 회원의 약속리스트를 불러오는 함수 , 출력만 한다. 없을경우 없다고 출력해준다.
+void promiseList(char *DBname){	// 로그인한 회원의 약속리스트를 불러오는 함수 , 출력만 한다. 없을경우 없다고 출력해준다.
 	FILE *fp;
 	char openDB[30];
 	char textFile[]=".txt";
@@ -11,16 +11,14 @@ int promiseList(char *DBname){	// 로그인한 회원의 약속리스트를 불러오는 함수 , �
 	char promiseDate[10];
 	int listCount=0;
 	int i;
-
 	
 	strcpy(openDB,DBname);
 	strcat(openDB,"PromiseList");
 	strcat(openDB,textFile);
 	fp = fopen(openDB, "r");
 	if ( fp == NULL ) {
-		printf("ERROR : %s cannot open!\n",openDB );
 		printf("현재 생성된 약속리스트가 없습니다.");
-		return -1;
+		return ;
 	}
 	while (!feof(fp)) {			//약속리스트 열어서 리스트에 적혀진 개수만큼 이름과 날짜를 읽어서 출력하는 부분
 		printf("나의 약속\n");
@@ -58,6 +56,7 @@ int recordCombineTimetable(int CombineTimetable[5][13], char *DBname){		//통합시
 	char Time[5]={0};
 	int dayweek,time,i,j;
 	char comma[1]={','};
+	int length;
 	FILE *fp;
 	strcpy(openDB,DBname);
 	strcat(openDB,"timetable.txt");		
@@ -81,6 +80,7 @@ int recordCombineTimetable(int CombineTimetable[5][13], char *DBname){		//통합시
 				dayweek=4;
 			fscanf(fp,"%s", &check);		//과목을 읽는다. 과목도 통합시간표에서 안쓰이는 변수이므로 읽기만 한다.
 			fscanf(fp,"%s",&check);			//시간을 읽는다.
+
 			for(i=0;i<strlen(check);i++) {			//시간 문자열의 길이를 알아내서 for문으로 한단어씩 개별처리를 한다.
 				if(strncmp(check,comma,1)!=0){		//시간문자열의 첫단어가 "," 가 아니면 
 					strncat(Time,check,1);			//Time이라는 문자열에 시간문자열의 첫단어를 삽입. 덮어씌우는게 아니라 뒤에 덧붙이는 삽입이다. 
@@ -90,18 +90,47 @@ int recordCombineTimetable(int CombineTimetable[5][13], char *DBname){		//통합시
 					changeLocation(check);			//함수이용. ","삭제후 한칸씩 땡긴다.
 					time=atoi(Time);				//지금까지 삽입한 Time 문자열을 정수형 time 변수에 삽입
 					CombineTimetable[dayweek][time-1]=1;		//위에서 변환해준 정수형 요일과 시간을 이용. 통합시간표에 체크
-					for(j=0; j<strlen(Time); j++)
+					length=strlen(Time);
+					for(j=0; j<length; j++)
 						Time[j]='\0';	
 					}		
 				}						
 			time=atoi(check);					//마지막시간뒤에는 ","가 안붙으므로 여기서 다시한번 처리
 			CombineTimetable[dayweek][time-1]=1;
-			for(j=0; j<strlen(Time); j++)
+			length=strlen(Time);
+			for(j=0; j<length; j++)
 				Time[j]='\0';
 		}
 	}			
 	fclose(fp);
 	return 0;		//정상적으로 읽었으면 0리턴 
+}
+
+void setMajor(char ID[8],char Major[20])	{		//학번 3,4자리를 바탕으로 학과 알아내는 함수
+	char IDCopy[8];					
+	char keyWord[3]={0};
+	char major[20];
+	char number[3];
+	char noMajor[13];
+	FILE *fp;
+
+	strcpy(noMajor,"학과정보없음");		//학과정보와 일치하는게 없을때 출력해줄 문장
+	strcpy(IDCopy,ID);
+	changeLocation(IDCopy);
+	changeLocation(IDCopy);
+	strncpy(keyWord,IDCopy,2);
+	fp=fopen("major.txt","r");			//major.txt 여기에 학번, 학과 정보가 저장되어있음 
+	
+	while(!feof(fp)){					
+		fscanf(fp,"%s %s",&number,&major);
+		if(!strcmp(number,keyWord))	{			//일치하는 학번일 경우 학과 정보를 Major에 저장
+			fclose(fp);
+			strcpy(Major,major);
+			return;
+		}
+	}
+	fclose(fp);
+	strcpy(Major,noMajor);		//없을경우 "학과정보없음" 을 Major에 저장		
 }
 
 int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13]){		//이름검색함수.. (검색할이름, 함께하는회원중 리스트에 안올라간 회원수,새약속구조체,통합시간표) 를 변수로 받는다.
@@ -112,6 +141,7 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 	char select[2];
 	char ID[8];
 	char listName[13];
+	char major[20]={0};
 	int overlap=1;
 	int limit=0;
 	int i;
@@ -149,8 +179,9 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 						fscanf(fp1,"%s", friendID.name);
 					}
 				}
+				setMajor(friendID.ID,major);		//setMajor함수 이용. 학과정보를 알아와서 major에 저장
 				fclose(fp1);					//그뒤 회원정보파일을 닫고
-				printf("%d %s %s %s\n",overlap,friendID.ID,friendID.ID,friendID.name);		//중복목록을 띄워주기 위해 출력을 해준다. 현재 학번을 학과로 바꾸는 부분이 빠져서 학번을 두번 출력하게 되있다.
+				printf("%d %s %s %s\n",overlap,major,friendID.ID,friendID.name);		//중복목록을 띄워주기 위해 출력을 해준다. 현재 학번을 학과로 바꾸는 부분이 빠져서 학번을 두번 출력하게 되있다.
 				overlap++;						//리스트 번호를 증가시키고 반복...반복해서 같은 이름을 계속 찾아나간다.
 			}
 		}
@@ -294,13 +325,8 @@ void selectDate(int CombineTimetable[5][13],char *DBname,structPromise *newPromi
 	int year;
 	int i,j;
 	int errorCheck;
-	FILE *fp;
 	int promiseCount=0;
-	char promisecount[5];
-	char openDB[40];
-	char check[40];
-	char **friendsName;
-	struct structPromise *oldPromise;
+	int length;
 
 	system("cls");				//이 함수 바로 전단계에서 화면에 출력된 문자들을 지워준다.
 	printf("- 약속 / 날짜 / 시간 -\n");
@@ -319,11 +345,10 @@ void selectDate(int CombineTimetable[5][13],char *DBname,structPromise *newPromi
 		printf("\n");
 	}
 
-
 	printf("약속을 잡을 달 입력(ex 3월) :");	
 	scanf("%s",&month);								//월을 입력하면
-
-	for(i=0;i<strlen(month);i++) {
+	length=strlen(month);
+	for(i=0;i<length;i++) {
 		if(strncmp(month,"월",1)!=0){
 
 			strncat(temp,month,1);
@@ -339,9 +364,11 @@ void selectDate(int CombineTimetable[5][13],char *DBname,structPromise *newPromi
 	year=callendar(Month);							//입력받은 월을 가지고 callendar함수사용. 올해 달력을 출력 
 	printf("약속을 잡을 날짜 입력(ex 10일) :");		//일을 입력하면
 	scanf("%s",&day);
-	for(i=0; i<strlen(temp); i++)
+	length=strlen(temp);
+	for(i=0; i<length; i++)
 		temp[i]='\0';
-	for(i=0;i<strlen(day);i++) {
+	length=strlen(day);
+	for(i=0;i<length;i++) {
 		if(strncmp(day,"일",1)!=0){
 			strncat(temp,day,1);
 			changeLocation(day);
@@ -380,6 +407,7 @@ void selectDate(int CombineTimetable[5][13],char *DBname,structPromise *newPromi
 		errorCheck=0;
 		Time = atoi(time);		
 		if(CombineTimetable[dayofWeek][Time-1]==1){
+			printf("%d %d",dayofWeek,Time-1);
 			errorCheck=1;
 		}					
 		if(errorCheck==0)
@@ -387,10 +415,9 @@ void selectDate(int CombineTimetable[5][13],char *DBname,structPromise *newPromi
 		printf("해당 시간은 비어있지 않습니다. 통합 시간표를 다시 한번 보고 선택한 날짜의 빈시간을 입력하세요: ");
 		scanf("%s",&time);
 	}
-
 	strcpy(newPromise->promiseTime,time);			//자료 저장을 위한부분 임시로 여기에 삽입. 뒤에 장소DB가 만들어지고 장소함수도 만들어지면 그쪽으로 옮길 예정
 	
-	promisePlace(DBname,newPromise);
+	promisePlace(DBname,newPromise);				//약속장소 선택함수 사용, (학번+이름, newPromise 구조체)를 인수로 넘긴다.
 
 	printf("다음장으로 넘어갑니다.\n");
 }
@@ -449,9 +476,9 @@ void promiseCreatConsole(char *DBname) {	//약속만들기 함수. 약속명, 인원수, 이름
 		selectDate(CombineTimetable,DBname,&newPromise);		//selectDate함수를 호출한다. 날짜,요일,시간을 정하는 함수
 
 
-	for(i=0; i<Count; i++)		//동적할당 해제
+	for(i=0; i<Count+2; i++)		//동적할당 해제
 		free(newPromise.promiseFriendsName[i]);
-		free(newPromise.promiseFriendsName);
+	free(newPromise.promiseFriendsName);
 
 }
 
@@ -469,7 +496,6 @@ void promise(structMember *s){		//약속만들기 메인함수. (현재로그인되한 회원구조�
 	char logName[13];
 	char menuControl;
 	char DBname[20];
-	printf("%s %s",s->ID, s->name);
 
 	strcpy(logID,s->ID);
 	strcpy(logName,s->name);			
