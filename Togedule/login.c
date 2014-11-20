@@ -1,16 +1,8 @@
 #include"structHeader.h"
 
-<<<<<<< HEAD
-
-
-void login(){
-	char id[8], password[14], fid[8], fname[13];  //fid,fname 파일에서 불러온 학번,이름
-	structMember s;  //멤버 구조체	
-=======
 void login(structMember *s){
 	char id[8],password[14],fid[8],fname[13];  //fid,fname 파일에서 불러온 학번,이름
 	//structMember s;  //멤버 구조체	
->>>>>>> 621e311dcf005304b617c9e2ae3aadb755b5ced3
 	FILE *fp1,*fp2=NULL;
 	char txt[]=".txt";  //확장자
 	char fileName[20];  //열기할 파일이름
@@ -33,7 +25,7 @@ void login(structMember *s){
 		else if(ch == 8){  //키보드의 backspace동작
 			i -= 2;
 			printf("\b \b");  
-			fflush(stdin);  //좌표설정해서 printf("*");로 backspace처럼 지울수있게 좌표 x로 -1한다음에 거기서부터공백1칸출력
+			fflush(stdin);
 		}
 		else{
 			password[i] = ch;
@@ -76,16 +68,22 @@ void login(structMember *s){
 			loginCount++;
 			printf("로그인 실패\nPW재입력 : "); 
 			for(i=0; i<14; i++){  //비밀번호 입력시 ***로 출력부분
-				ch=getch();
-				checkInput();
-				if(ch == 13){  //enter키(비밀번호입력끝부분) 확인 
+				ch=getch();		
+				if(ch == 13){  //enter키(비밀번호입력끝부분) 확인
 					password[i] = '\0';
 					printf("\n"); break;
 				}
-				password[i] = ch;
-				printf("*");
-				fflush(stdin);   
-			}			
+				else if(ch == 8){  //키보드의 backspace동작
+					i -= 2;
+					printf("\b \b");  
+					fflush(stdin);
+				}
+				else{
+					password[i] = ch;
+					printf("*");
+					fflush(stdin);
+				}
+			}	
 		}
 	}
 

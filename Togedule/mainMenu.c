@@ -4,7 +4,7 @@ void mainMenu(structMember *s){
 	char menuSelect;
 	system("cls");
 
-	printf("  님 안녕하세요!\n");
+	printf("%s님 안녕하세요!\n",s->name);
 	printf("1. 내 상태보기\n"); 
 	printf("2. 시간표 만들기\n");
 	printf("3. 약속 잡아주세요\n"); 

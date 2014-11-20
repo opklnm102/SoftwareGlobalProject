@@ -7,21 +7,10 @@ int main()
 
 	system("mode con:cols=130 lines=46");  //가로 130, 세로 45 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 621e311dcf005304b617c9e2ae3aadb755b5ced3
 	while(1){
 
 		printf("*togedule*\n");
 		printf("1. 로그인\n");
-<<<<<<< HEAD
-		printf("2. 회원가입\n");
-		printf("3. 비밀번호재설정\n");
-		printf("메뉴선택>> "); scanf("%c",&menuSelect);
-=======
->>>>>>> 621e311dcf005304b617c9e2ae3aadb755b5ced3
-
 		printf("2. 회원가입\n");
 		printf("3. 비밀번호재설정\n");
 		printf("메뉴선택 >> "); scanf("%c",&menuSelect); fflush(stdin);
@@ -37,9 +26,6 @@ int main()
 			pwFind();
 			break;
 		}
-
 		system("cls");
-
 	}
-
 }
