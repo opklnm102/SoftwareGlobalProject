@@ -32,6 +32,8 @@ void promiseList(char *DBname){	// 로그인한 회원의 약속리스트를 불러오는 함수 , 
 				fgets(check,41,fp);
 				fscanf(fp,"%s", promiseDate);
 				fscanf(fp,"%s", check);
+				fgets(check,41,fp);			//비용들어갈 자리 추가.
+				fgets(check,41,fp);
 				printf("○ %s ",promiseName);
 				printf("/ %s\n",promiseDate);
 			}
@@ -476,7 +478,7 @@ void promiseCreatConsole(char *DBname) {	//약속만들기 함수. 약속명, 인원수, 이름
 		selectDate(CombineTimetable,DBname,&newPromise);		//selectDate함수를 호출한다. 날짜,요일,시간을 정하는 함수
 
 
-	for(i=0; i<Count+2; i++)		//동적할당 해제
+	for(i=0; i<Count; i++)		//동적할당 해제
 		free(newPromise.promiseFriendsName[i]);
 	free(newPromise.promiseFriendsName);
 

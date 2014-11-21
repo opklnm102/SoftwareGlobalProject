@@ -16,7 +16,7 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 	char **oldPromisePlace;
 	char **friendsName;		//친구이름 저장공간 구조체멤버 friendsName을 안쓰는 이유는 굳이 그럴필요없이 그냥 한줄통째로 읽어서 임시로 저장만 하는 공간이 필요하므로...
 	struct structPromise *oldPromise;		//기존 약속리스트정보를 저장할 구조체
-
+	char **cost;
 
 	fp1=fopen("place.txt","r");  //장소리스트DB 열고
 
@@ -100,9 +100,9 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 		fprintf(fp,"1\n");
 		fprintf(fp,newPromise->promiseName);
 		fprintf(fp,"\n");
-		fprintf(fp,newPromise->promisePlace);						//이게 들어가야함 장소는 아직 없으므로 빼놓고 '임시장소'를 파일에 출력하게함
+		fprintf(fp,newPromise->promisePlace);						
 		fprintf(fp,newPromise->promiseTime);
-		fprintf(fp,"\n");
+		fprintf(fp,"시\n");
 		fprintf(fp,newPromise->Promisedate);
 		fprintf(fp,"\n");
 		promiseCount=atoi(newPromise->promiseFreindsCount);			//serchName함수에서 저장한 이름검색이 된 회원의 학번을 하나씩 삽입.  
@@ -113,6 +113,7 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 			if(i!=promiseCount-1)
 				fprintf(fp,",");									//","도 찍어준다.띄어쓰기 없이 쉼표로 구분
 		}
+		fprintf(fp,"\n");								//비용들어가는 부분 한줄 삽입
 		fclose(fp);
 		
 	}		
@@ -138,6 +139,13 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 						for(j=0; j<60; j++)
 							strcpy(&oldPromisePlace[i][j],"\0");
 					}
+					cost=(char**)malloc(sizeof(char*)*promiseCount);						//장소가 띄어쓰기 포함이기 때문에 structPromise구조체의 장소멤버 사용하기 힘드므로 
+					for(i=0; i<promiseCount; i++) {													//그냥 이중포인터 문자배열 사용
+						cost[i]=(char*)malloc(sizeof(char)*10);
+						strcpy(cost[i],"\0");
+						for(j=0; j<10; j++)
+							strcpy(&cost[i][j],"\0");
+					}
 					for(i=0; i<promiseCount; i++) {								//일단 약속리스트개수만큼 약속을 읽어와서 oldPromise구조체에 순서대로 저장
 						fscanf(fp,"%s",&oldPromise[i].promiseName);
 						fflush(stdin);
@@ -148,6 +156,9 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 						fscanf(fp,"%s",&oldPromise[i].Promisedate);
 						fscanf(fp,"%s",&check);
 						strcpy(friendsName[i],check);
+						fgets(check,40,fp);
+						fgets(check,40,fp);
+						strcpy(cost[i],check);
 					}
 				}
 		}
@@ -162,7 +173,10 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 			fprintf(fp,"%s\n",oldPromise[i].promiseTime);
 			fprintf(fp,"%s\n",oldPromise[i].Promisedate);
 			fprintf(fp,"%s\n",friendsName[i]);
+			fprintf(fp,"%s",cost[i]);
 		}
+		if(strlen(cost[i-1])!=1&&i-1!=0)
+			fprintf(fp,"\n");
 		fprintf(fp,"%s\n",newPromise->promiseName);
 		fprintf(fp,"%s",newPromise->promisePlace);				//마찬가지로 null안찍어도됨.
 		fprintf(fp,"%s시\n",newPromise->promiseTime);
@@ -175,6 +189,7 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 			if(i!=promiseCount-1)
 				fprintf(fp,",");
 		}
+		fprintf(fp,"\n");
 		fclose(fp);	
 		for(i=0;i<promiseCount; i++)			//동적할당 해제
 			free(friendsName[i]);				
@@ -182,6 +197,9 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 		for(i=0;i<promiseCount; i++)			//동적할당 해제
 			free(oldPromisePlace[i]);				
 		free(oldPromisePlace);
+		for(i=0;i<promiseCount; i++)			//동적할당 해제
+			free(cost[i]);				
+		free(cost);
 		free(oldPromise);
 	}
 
