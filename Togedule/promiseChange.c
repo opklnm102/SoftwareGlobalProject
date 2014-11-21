@@ -194,21 +194,16 @@ void promiseChange(char *DBname){
 	for(i=0;i<listCount; i++)			//동적할당 해제
 		free(friendsName[i]);				
 	free(friendsName);
-
 	for(i=0; i<4; i++)			
 		free(transName[i]);				
 	free(transName);
-
 	for(i=0;i<listCount; i++){
 		for(j=0; j<4; j++)
 			free(oldPromise[i].promiseFriendsName[j]);				
 		free(oldPromise[i].promiseFriendsName);
-	}
-		
+	}		
 	for(i=0;i<listCount; i++)			
 		free(cost[i]);				
 	free(cost);
-	free(oldPromise);
-	
-	
+	free(oldPromise);	
 }
