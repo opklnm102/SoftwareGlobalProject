@@ -340,10 +340,14 @@ void selectDate(int CombineTimetable[5][13],char *DBname,structPromise *newPromi
 	printf("예) 30일\n");
 	printf("예) 1\n");
 
-
-	for (i=0; i<5; i++) {		//통합시간표를 출력 (임시). 시간표 출력하는 부분과 연관해서 제대로 표를 짜서 출력해야함
-		for(j=0; j<13; j++)
-			printf("%d ",CombineTimetable[i][j]);
+	printf(" 월   화   수   목   금\n");
+	for(j=0; j<13; j++) {		//통합시간표를 출력 (임시). 시간표 출력하는 부분과 연관해서 제대로 표를 짜서 출력해야함
+		for (i=0; i<5; i++){
+			if(CombineTimetable[i][j]==1)
+				printf("■■ ",CombineTimetable[i][j]);
+			if(CombineTimetable[i][j]==0)
+				printf("□□ ",CombineTimetable[i][j]);
+		}
 		printf("\n");
 	}
 
@@ -510,7 +514,7 @@ void promise(structMember *s){		//약속만들기 메인함수. (현재로그인되한 회원구조�
 	scanf("%c",&menuControl);
 	switch(menuControl) {		//system("cls") 요건 화면을 지우고 다시 출력하게 하는 명령 <windows.h>필요
 	case '1': system("cls"); promiseCreatConsole(DBname); break;
-	case '2': system("cls"); break;
+	case '2': system("cls"); promiseChange(DBname); break;
 	case '3': system("cls"); break;
 	}
 

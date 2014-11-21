@@ -80,6 +80,7 @@ void selectDate(int CombineTimetable[5][13],char *DBname,structPromise *newPromi
 void promiseCreatConsole(char *DBname);	//약속만들기 함수 (약속명, 인원수 입력  .이름 검색함수 내부 포함. 약속 리스트 출력)
 void promisePlace(char *DBname, struct structPromise *newPromise);  //약속장소 선택
 void setMajor(char ID[8], char Major[20]);
+void promiseChange(char *DBname);
 //비용관련
 void moneyShare();  //돈나눠주세요 시작
 
