@@ -1,76 +1,97 @@
-#include "structHeader.h"
+#include<stdio.h>
+#include<Windows.h>
 
-void moneyShare(){
-	/*
-	54000¿øÀÌ ³ª¿Ô´Ù. 5¸íÀÌ´Ù.
-	(54000 / (5 * 1000))*1000 = 50000 / 5 = 10000¿ø¾¿ ³ª´©¾î °®°ÔµÈ´Ù.
-	ÀÌ ¶§ restMoney = 4000¿ø
-	*/
-
-	//³ª´©±â Àü µ·, »ç¶÷ ¼ö, ³ª´©´Â ¼ö, ÃÖÁ¾ µ·, ³²´Â µ·, i, ¸ô¾ÆÁÖ´Â »ç¶÷ Á¦¿ÜÇÏ°í ³ª¸ÓÁö
-
-	int beforeDivideMoney; // ³ª´©±â Àü µ·
-	int finalMoney; // ÃÖÁ¾ µ·
-	int peopleCnt; // »ç¶÷ ¼ıÀÚ
-	int divisionNumber; // ³ª´©´Â ¼ö
-	int i;
-	int arrMoney[5]={0};
-	int baseMoney ;
-	int restPeople;
-	int restMoney;	
-
-	printf("³ª´©±â Àü µ·, »ç¶÷ ¼ıÀÚ, 1000\n");
-	printf("³ª´©±â Àü µ·, »ç¶÷ ¼ıÀÚ, Àı»çÇÒ ÃÖ¼Ò µ·\n");
-
-	scanf("%d %d %d",&beforeDivideMoney , &peopleCnt, &divisionNumber);
-
-	baseMoney = (beforeDivideMoney / (peopleCnt * divisionNumber))*divisionNumber;
-	/*int beforeDivideMoney, peopleCnt=0, divisionNumber, baseMoney = 0, finalMoney, restMoney, i, restPeople;
-	int arrMoney[5] = {0, 0, 0, 0, 0};*/
-	
-	
-	restMoney = beforeDivideMoney - ( baseMoney * peopleCnt );
-
-	/*¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¾Ë°í¸®Áò ½ÃÀÛ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ*/
-	if (restMoney == 0) {
-		finalMoney = baseMoney+ (restMoney / (peopleCnt * divisionNumber) * divisionNumber);
-
-		for(i=0; i<5; i++)
-			arrMoney[i] = finalMoney;
-	} 
-	else {
-		restPeople = ( restMoney / divisionNumber );
-		finalMoney = baseMoney + divisionNumber;
-
-		if (restMoney % divisionNumber == 0) {
-			for(i = 0 ;i<restPeople;i++){
-				arrMoney[i] = finalMoney;
-			}
-			for(i=restPeople;i<5;i++){
-				arrMoney[i] = (baseMoney + (restMoney % divisionNumber));
-			}
-		} 
-		else {
-			if (restPeople != 0)
-				for(i=0;i<restPeople;i++)
-					arrMoney[i] = finalMoney;
-			if (peopleCnt - restPeople - 1 != 0)
-				for(i=restPeople;i<peopleCnt-1;i++)
-					arrMoney[i] = baseMoney;
-			arrMoney[i] = (baseMoney + (restMoney % divisionNumber));
-		}
-	}
-
-	/*¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¾Ë°í¸®Áò ³¡¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ¤Ñ*/
-
-	for(i=0; i<5; i++){ //for (i=0; i<peopleCnt; i++)
-		printf("%d\n", arrMoney[i]);
-	}
+void gotoxy(int x,int y)
+{	
+	COORD pos={x,y};
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos); 
 }
 
-int main(void){
+void printMold() {
 
-	moneyShare();
+	int i;
 
-	return 0;
+	printf("â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– ");
+	
+	for(i=0;i<44;i++){
+		gotoxy(0,i+1);
+		printf("â–                                                                                                                               â– ");
+	}
+
+	gotoxy(0,44);
+	printf("â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– ");
+	gotoxy(38,i+14);
+		printf("â”‚                                                    â”‚");
+	}
+	gotoxy(38,32);
+	printf("â””");
+	gotoxy(92,32);
+	printf("â”˜");
+	gotoxy(40,13);
+	printf("â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€");
+	gotoxy(40,32);
+	printf("â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€");
+
+}
+
+//í…Œë‘ë¦¬ ê·¸ë¦¬ê¸°(ì‹œì‘ì¢Œí‘œ(x,y), í¬ê¸°(width X height)) 
+void list_border_draw(int x,int y,int width,int height){  
+   int i,j;   
+
+   gotoxy(x,y);  //ì‹œì‘ì¢Œí‘œ   
+   i=y;
+   while(i<y+height){ //ì„¸ë¡œ
+      j=x;
+      gotoxy(j,i+1);
+      while(j<x+width){  //ê°€ë¡œ
+         if(i==y && j==x)  //ì™¼ìª½ìœ„ êµ¬ì„
+            printf("%s","â”Œ");
+         else if(i==y && j==x+width-1)  //ì˜¤ë¥¸ìª½ìœ„ êµ¬ì„
+            printf("%s","â”");
+         else if(i==y+height-1 && j==x)  //ì™¼ìª½ì•„ë˜ êµ¬ì„
+            printf("%s","â””");
+         else if(i==y+height-1 && j==x+width-1)  //ì˜¤ë¥¸ìª½ ì•„ë˜ êµ¬ì„
+            printf("%s","â”˜");
+         else if(i==y || i==y+height-1)  //ê°€ë¡œ ê·¸ë¦¬ê¸°
+            printf("%s","â”€");
+         else if(j==x || j==x+width-1)  //ì„¸ë¡œ ê·¸ë¦¬ê¸°
+            printf("%s","â”‚");
+         else
+            printf("  ");
+         j++;
+      }
+      i++;
+   }
+}
+
+int main() 
+{
+
+	int tmp;
+	int x=71,y=23;
+
+	
+	system("mode con:cols=130 lines=46");  //ê°€ë¡œ 130, ì„¸ë¡œ 46 
+
+	printMold();
+
+
+	gotoxy(60,10);
+	printf("*Togedule*");
+
+	
+
+	gotoxy(50, 15);
+	printf("1. ë¡œ  ê·¸  ì¸");
+	gotoxy(50, 18);
+	printf("2. íšŒ ì› ê°€ ì…");
+	gotoxy(50, 21);
+	printf("3. ë¹„ë°€ë²ˆí˜¸ì°¾ê¸°");
+
+	gotoxy(73,24);
+	printf("ë©”ë‰´ì„ íƒ : ");
+	gotoxy(84,24);
+	scanf("%d",&tmp);
+
+	gotoxy(50,27);
 }
