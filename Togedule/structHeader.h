@@ -73,14 +73,23 @@ void promise(structMember *s);  //약속 시작
 void showMenu();  //약속메뉴들 출력
 void promiseList(char *DBname);	// 로그인한 회원의 약속리스트를 불러오는 함수 , 출력만 한다. 없을경우 없다고 출력해준다.
 void changeLocation( char* str );
-int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13]);
-int callendar(int Month);  //달력
-int weekday(int year, int month, int day);  //요일 찾는 함수 리턴 정수
-void selectDate(int CombineTimetable[5][13],char *DBname,structPromise *newPromise);  //요일, 시간, 날짜 입력받는 함수
+
+void selectChange(char *DBname, struct structPromise *old, int listnumber, char **name,int CombineTimetable[5][13]);
+int recordCombineTimetable(int CombineTimetable[5][13], char *DBname);
+int checkDateTime(int CombineTimetable[5][13], struct structPromise *old);
+void changePromiseName(struct structPromise *old);
 void promiseCreatConsole(char *DBname);	//약속만들기 함수 (약속명, 인원수 입력  .이름 검색함수 내부 포함. 약속 리스트 출력)
 void promisePlace(char *DBname, struct structPromise *newPromise);  //약속장소 선택
 void setMajor(char ID[8], char Major[20]);
-void promiseChange(char *DBname);
+void promiseChange(char *DBname);					
+int callendar(int Month);																	       //달력
+int weekday(int year, int month, int day);															 //요일 찾는 함수 리턴 정수
+void saveNewpromise(char *DBname,struct structPromise *newPromise);									//약속을 저장해서 txt 파일을 만드는 함수
+void selectName(char *DBname,struct structPromise *newPromise);											//약속명을 입력받는 함수
+int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13]);		//이름 검색하는 함수
+int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise *newPromise);			//함께할 회원수를 입력하고 검색함수 콜해서 검색후 선택하는 함수
+void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofWeek);		//  시간 입력받는 함수
+int selectDate(int CombineTimetable[5][13],structPromise *newPromise);				//  날짜입력받는 함수
 //비용관련
 void moneyShare();  //돈나눠주세요 시작
 

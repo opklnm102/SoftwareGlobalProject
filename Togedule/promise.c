@@ -313,20 +313,17 @@ int weekday(int year, int month, int day) //³âµµ, ¿ù, ÀÏ À» ÀÔ·Â¹Ş¾Æ ¿äÀÏ Ã£´Â Ç
 
 	return (day + (month + 1) * 26 / 10 + year_2 + (year_2 / 4) + (year_1 / 4) - 2 * year_1 - 2) % 7;
 }
-void selectDate(int CombineTimetable[5][13],char *DBname,structPromise *newPromise){	//¸¸µé ¾à¼ÓÀÇ ¿äÀÏ, ½Ã°£, ³¯Â¥ ÀÔ·Â¹Ş´Â ¿ªÇÒÀ» ÇÏ´Â ÇÔ¼ö (ÅëÇÕ½Ã°£Ç¥, ÇĞ¹ø+ÀÌ¸§ ¹®ÀÚ¿­, »õ¾à¼Ó±¸Á¶Ã¼)¸¦ ÀÎ¼ö·Î ¹Ş´Â´Ù.
+int selectDate(int CombineTimetable[5][13],structPromise *newPromise){	//¸¸µé ¾à¼ÓÀÇ ¿äÀÏ, ½Ã°£, ³¯Â¥ ÀÔ·Â¹Ş´Â ¿ªÇÒÀ» ÇÏ´Â ÇÔ¼ö (ÅëÇÕ½Ã°£Ç¥, ÇĞ¹ø+ÀÌ¸§ ¹®ÀÚ¿­, »õ¾à¼Ó±¸Á¶Ã¼)¸¦ ÀÎ¼ö·Î ¹Ş´Â´Ù.
 
 	char dayofweek[3];
-	char time[27];
 	char month[10];
 	char day[10];
 	char temp[10]={0};
 	int dayofWeek;
-	int Time;
 	int Day;
 	int Month;
 	int year;
 	int i,j;
-	int errorCheck;
 	int promiseCount=0;
 	int length;
 
@@ -394,10 +391,6 @@ void selectDate(int CombineTimetable[5][13],char *DBname,structPromise *newPromi
 	case 5: strcpy(dayofweek,"Åä"); break;
 	case 6: strcpy(dayofweek,"ÀÏ"); break;
 	}
-	
-	printf("¾à¼Ó½Ã°£À» ÀÔ·Â(ex 3)");
-	scanf("%s",time);
-	printf("%s",dayofweek);				//°è»êÇÑ ¿äÀÏÀ» ÅëÇÕ½Ã°£Ç¥¿¡ ÀÌ¿ëÇÏ±â À§ÇØ ¼ıÀÚ·Î ¹Ù²Ş
 	if(!strcmp(dayofweek,dayOfWeek[0]))
 		dayofWeek=0;
 	else if(!strcmp(dayofweek,dayOfWeek[1]))
@@ -408,10 +401,21 @@ void selectDate(int CombineTimetable[5][13],char *DBname,structPromise *newPromi
 		dayofWeek=3;
 	else if(!strcmp(dayofweek,dayOfWeek[4]))
 		dayofWeek=4;
-	
+
+	return dayofWeek;
+}
+void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofWeek){
+	int errorCheck;
+	char time[27];
+	int Time;
+
+	printf("¾à¼Ó½Ã°£À» ÀÔ·Â(ex 3)");
+	scanf("%s",time);
+		
 	while(1){						//½Ã°£ÀÌ ÅëÇÕ½Ã°£Ç¥¿¡ °ãÄ¡´Â ½Ã°£ÀÌ¸é ÀçÀÔ·Â. Á¦´ë·Î ÀÔ·Â½Ã ³Ñ±è
 		errorCheck=0;
-		Time = atoi(time);		
+		Time = atoi(time);
+		printf("%d ",Time);
 		if(CombineTimetable[dayofWeek][Time-1]==1){
 			printf("%d %d",dayofWeek,Time-1);
 			errorCheck=1;
@@ -423,39 +427,56 @@ void selectDate(int CombineTimetable[5][13],char *DBname,structPromise *newPromi
 	}
 	strcpy(newPromise->promiseTime,time);			//ÀÚ·á ÀúÀåÀ» À§ÇÑºÎºĞ ÀÓ½Ã·Î ¿©±â¿¡ »ğÀÔ. µÚ¿¡ Àå¼ÒDB°¡ ¸¸µé¾îÁö°í Àå¼ÒÇÔ¼öµµ ¸¸µé¾îÁö¸é ±×ÂÊÀ¸·Î ¿Å±æ ¿¹Á¤
 	
-	promisePlace(DBname,newPromise);				//¾à¼ÓÀå¼Ò ¼±ÅÃÇÔ¼ö »ç¿ë, (ÇĞ¹ø+ÀÌ¸§, newPromise ±¸Á¶Ã¼)¸¦ ÀÎ¼ö·Î ³Ñ±ä´Ù.
-
-	printf("´ÙÀ½ÀåÀ¸·Î ³Ñ¾î°©´Ï´Ù.\n");
 }
-
-void promiseCreatConsole(char *DBname) {	//¾à¼Ó¸¸µé±â ÇÔ¼ö. ¾à¼Ó¸í, ÀÎ¿ø¼ö, ÀÌ¸§°Ë»ö(ÇÔ¼öÈ£Ãâ)À» ¿©±â¼­ ÇÑ´Ù. (ÇĞ¹ø+ÀÌ¸§)À» ÀÎ¼ö·Î ¹Ş´Â´Ù.
+void promiseCreatConsole(char *DBname) {	//¾à¼Ó¸¸µé±â ÇÔ¼ö.¾à¼ÓÀ» ¸¸µå´Âµ¥ ÇÊ¿äÇÔ ÇÔ¼öµéÀ» È£Ãâ. 
 	char Name[13];
+	char select[3];
+	struct structPromise newPromise;	//»õ·Î¿î ¾à¼ÓÀ» À§ÇÑ ±¸Á¶Ã¼ »ı¼º newPromise
+	int CombineTimetable[5][13]={0};
+	int count,i;
+	int dayofWeek;
+
+	selectName(DBname,&newPromise);
+	count=selectFriends(DBname,CombineTimetable,&newPromise);
+	scanf("%s",&select);
+	dayofWeek=selectDate(CombineTimetable,&newPromise);		//selectDateÇÔ¼ö¸¦ È£ÃâÇÑ´Ù. ³¯Â¥,¿äÀÏ,½Ã°£À» Á¤ÇÏ´Â ÇÔ¼ö
+	selectTime(CombineTimetable,&newPromise,dayofWeek);
+	promisePlace(DBname,&newPromise);				//¾à¼ÓÀå¼Ò ¼±ÅÃÇÔ¼ö »ç¿ë, (ÇĞ¹ø+ÀÌ¸§, newPromise ±¸Á¶Ã¼)¸¦ ÀÎ¼ö·Î ³Ñ±ä´Ù.
+	saveNewpromise(DBname,&newPromise);
+
+	for(i=0; i<count; i++)		//µ¿ÀûÇÒ´ç ÇØÁ¦
+		free(newPromise.promiseFriendsName[i]);
+	free(newPromise.promiseFriendsName);
+
+}
+void selectName(char *DBname,struct structPromise *newPromise) {	//¾à¼Ó¸í ÇÔ¼ö. (ÇĞ¹ø+ÀÌ¸§)À» ÀÎ¼ö·Î ¹Ş´Â´Ù.
+	printf(" ¾à¼Ó ¸¸µé±â ");
+	printf(" ¾à¼Ó¸í : ");
+	scanf("%s",&newPromise->promiseName);
+}
+int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise *newPromise) {	//¾à¼Ó¸¸µé±â ÇÔ¼ö. ¾à¼Ó¸í, ÀÎ¿ø¼ö, ÀÌ¸§°Ë»ö(ÇÔ¼öÈ£Ãâ)À» ¿©±â¼­ ÇÑ´Ù. (ÇĞ¹ø+ÀÌ¸§)À» ÀÎ¼ö·Î ¹Ş´Â´Ù.
 	int i,j;
 	int Count=0;
 	int CountCopy;
-	struct structPromise newPromise;	//»õ·Î¿î ¾à¼ÓÀ» À§ÇÑ ±¸Á¶Ã¼ »ı¼º newPromise
-	int CombineTimetable[5][13]={0};
+	char Name[13];
 	char control[3]={0};
 	char nameList[70]={0};
 
-	printf(" ¾à¼Ó ¸¸µé±â ");
-	printf(" ¾à¼Ó¸í : ");
-	scanf("%s",&newPromise.promiseName);
 	printf(" ÀÎ¿ø¼ö : ");
-	scanf("%s",&newPromise.promiseFreindsCount);
-	Count=atoi(newPromise.promiseFreindsCount);				//ÀÎ¿ø¼ö¸¦ intÇüÀ¸·Î ¹Ù²ãÁÖ°í newPromiseÀÇ promiseFriendsCount ¿¡ µ¿ÀûÇÒ´ç
+	scanf("%s",&newPromise->promiseFreindsCount);
+	Count=atoi(newPromise->promiseFreindsCount);				//ÀÎ¿ø¼ö¸¦ intÇüÀ¸·Î ¹Ù²ãÁÖ°í newPromiseÀÇ promiseFriendsCount ¿¡ µ¿ÀûÇÒ´ç
 	CountCopy=Count;
-	newPromise.promiseFriendsName=(char **)malloc(sizeof(char*)*Count+2);	//¿ä°Ç +1·Î ÇÏ¸é ¿À·ù.. ¿Ö±×·±Áö ÀÌÀ¯ ¸ø¾Ë¾Æ³¿.
+	newPromise->promiseFriendsName=(char **)malloc(sizeof(char*)*Count+2);	//¿ä°Ç +1·Î ÇÏ¸é ¿À·ù.. ¿Ö±×·±Áö ÀÌÀ¯ ¸ø¾Ë¾Æ³¿.
 	for(i=0; i<Count; i++){
-		newPromise.promiseFriendsName[i]=(char *)malloc(sizeof(char)*20);
+		newPromise->promiseFriendsName[i]=(char *)malloc(sizeof(char)*20);
 		for(j=0; j<13; j++)
-			newPromise.promiseFriendsName[i][j]=NULL;
+			newPromise->promiseFriendsName[i][j]=NULL;
 	}
 	
 	while(Count>0) {		//ÀÎ¿ø¼ö¸¸Å­ °Ë»öÇÔ¼ö¸¦ µ¹¸°´Ù.
 		printf(" ÀÌ¸§°Ë»ö : ");
 		scanf("%s",&Name);
-		if(!searchName(Name,Count,newPromise,CombineTimetable))	{	//ÀÌ¸§ °Ë»öÇÔ¼ö¿¡¼­ ¸®ÅÏ°ªÀ» ¹Ş¾Æ¿Â´Ù. ¹Ş¾Æ¿Â ¸®ÅÏ°ªÀÌ 1ÀÌ¸é ÀÌ¸§ÀÌ ¾ø¾ú´ø °æ¿ìÀÌ¹Ç·Î Count°ªÀ» °¨¼ÒÇÏÁö ¾Ê´Â´Ù.
+		if(!searchName(Name,Count,*newPromise,CombineTimetable))	{	//ÀÌ¸§ °Ë»öÇÔ¼ö¿¡¼­ ¸®ÅÏ°ªÀ» ¹Ş¾Æ¿Â´Ù. ¹Ş¾Æ¿Â ¸®ÅÏ°ªÀÌ 1ÀÌ¸é ÀÌ¸§ÀÌ ¾ø¾ú´ø °æ¿ìÀÌ¹Ç·Î Count°ªÀ» °¨¼ÒÇÏÁö ¾Ê´Â´Ù.
 			Count--;
 		strcat(nameList,Name);		
 		printf("\n ¾à¼Ó¸â¹ö\n");		//¸®½ºÆ®À» À§ÇØ nameList ¹®ÀÚ¿­¿¡ ÀÌ¸§°Ë»ö¿¡ ¼º°øÇÑ È¸¿øÀÇ ÀÌ¸§À» ÀúÀåÇÑ´Ù.					
@@ -474,18 +495,9 @@ void promiseCreatConsole(char *DBname) {	//¾à¼Ó¸¸µé±â ÇÔ¼ö. ¾à¼Ó¸í, ÀÎ¿ø¼ö, ÀÌ¸§
 	}
 
 	printf("\n ¾à¼Ó¸â¹ö");			//¸®½ºÆ® Ãâ·ÂºÎºĞ
-	printf("\n%s",nameList);
-
-	printf("´ÙÀ½ÀåÀ¸·Î");
-	scanf("%s",control);
-	if(control)
-		selectDate(CombineTimetable,DBname,&newPromise);		//selectDateÇÔ¼ö¸¦ È£ÃâÇÑ´Ù. ³¯Â¥,¿äÀÏ,½Ã°£À» Á¤ÇÏ´Â ÇÔ¼ö
-
-
-	for(i=0; i<Count; i++)		//µ¿ÀûÇÒ´ç ÇØÁ¦
-		free(newPromise.promiseFriendsName[i]);
-	free(newPromise.promiseFriendsName);
-
+	printf("\n%s",nameList);		
+	
+	return CountCopy;
 }
 
 void showMenu() {				//¾à¼Ó¸¸µé±â ¸ŞÀÎ ¸Ş´ºÃâ·ÂÇÔ¼ö.
@@ -513,7 +525,7 @@ void promise(structMember *s){		//¾à¼Ó¸¸µé±â ¸ŞÀÎÇÔ¼ö. (ÇöÀç·Î±×ÀÎµÇÇÑ È¸¿ø±¸Á¶Ã
 	
 	scanf("%c",&menuControl);
 	switch(menuControl) {		//system("cls") ¿ä°Ç È­¸éÀ» Áö¿ì°í ´Ù½Ã Ãâ·ÂÇÏ°Ô ÇÏ´Â ¸í·É <windows.h>ÇÊ¿ä
-	case '1': system("cls"); promiseCreatConsole(DBname); break;
+	case '1': system("cls"); promiseCreatConsole(DBname);  break;
 	case '2': system("cls"); promiseChange(DBname); break;
 	case '3': system("cls"); break;
 	}

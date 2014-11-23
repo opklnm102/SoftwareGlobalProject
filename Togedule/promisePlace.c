@@ -3,20 +3,12 @@
 //약속장소 고르기 함수
 void promisePlace(char *DBname,struct structPromise *newPromise){
 	FILE *fp1;
-	FILE *fp;
-	int promiseCount=0;
-	char promisecount[5];
-	char openDB[40];
-	char check[40];
 	char place[20],DBplace[30];
 	int placeSelect;  //장소선택
 	int placeCount;  //소분류의 수
 	char **subcategory;  //소분류 저장공간
 	int i,j,len;
-	char **oldPromisePlace;
-	char **friendsName;		//친구이름 저장공간 구조체멤버 friendsName을 안쓰는 이유는 굳이 그럴필요없이 그냥 한줄통째로 읽어서 임시로 저장만 하는 공간이 필요하므로...
-	struct structPromise *oldPromise;		//기존 약속리스트정보를 저장할 구조체
-	char **cost;
+	
 
 	fp1=fopen("place.txt","r");  //장소리스트DB 열고
 
@@ -88,8 +80,27 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 		printf("리스트에 있는 것중에 고르시오\n");
 		getch();
 	}
-	strcpy(newPromise->promisePlace,subcategory[placeSelect]);  //기존의 다른 약속정보들이 저장되있는 newPromise 구조체에 장소 정보도 저장
+	strcpy(newPromise->promisePlace,subcategory[placeSelect-1]);  //기존의 다른 약속정보들이 저장되있는 newPromise 구조체에 장소 정보도 저장
 	
+
+	for(i=0; i<placeCount; i++)
+		free(subcategory[i]);
+	free(subcategory);
+
+	fclose(fp1);	
+
+}
+void saveNewpromise(char *DBname,struct structPromise *newPromise) {
+	char openDB[40];
+	FILE *fp;
+	char promisecount[5];
+	int promiseCount=0;
+	char check[40];
+	char **oldPromisePlace;
+	char **friendsName;		//친구이름 저장공간 구조체멤버 friendsName을 안쓰는 이유는 굳이 그럴필요없이 그냥 한줄통째로 읽어서 임시로 저장만 하는 공간이 필요하므로...
+	struct structPromise *oldPromise;		//기존 약속리스트정보를 저장할 구조체
+	char **cost;
+	int i,j;
 	strcpy(openDB,DBname);
 	strcat(openDB,"PromiseList.txt");				//학번+이름+PromiseList.txt 가 각 회원의 약속리스트파일
 	fp=fopen(openDB,"r");							//읽기버전으로 우선 연다.
@@ -202,11 +213,4 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 		free(cost);
 		free(oldPromise);
 	}
-
-
-	for(i=0; i<placeCount; i++)
-		free(subcategory[i]);
-	free(subcategory);
-
-	fclose(fp1);	
 }

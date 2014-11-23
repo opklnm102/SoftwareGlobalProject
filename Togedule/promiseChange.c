@@ -1,22 +1,180 @@
 #include"structHeader.h"
 
-void selectChange(struct structPromise *old, int listnumber, char **name){
+void changePlace(char *DBname, struct structPromise *old) {
+	char blank[1]={0};
+	promisePlace(DBname,old);
+	old->promisePlace[strlen(old->promisePlace)-1]=blank[0];           //장소DB에서 읽어올때 \n 하나 들어있는거 없애서 자동줄바꿈 방지
+}
+// 이름수정과 수정된 멤버로 약속생성되있는게 가능한가, 약속장소 수정 까지 완료..
+void changeTime(struct structPromise *old,int newCombineTimetable[5][13],int dayofweek) {
+	int i,j;
+	char dayofWeek[5];
+	printf(" 월   화   수   목   금\n");
+	for(j=0; j<13; j++) {		//통합시간표를 출력 (임시). 시간표 출력하는 부분과 연관해서 제대로 표를 짜서 출력해야함
+		for (i=0; i<5; i++){
+			if(newCombineTimetable[i][j]==1)
+				printf("■■ ",newCombineTimetable[i][j]);
+			if(newCombineTimetable[i][j]==0)
+				printf("□□ ",newCombineTimetable[i][j]);
+		}
+		printf("\n");
+	}
+	switch(dayofweek){		//weekday함수사용, 해당 연도 월 일에 해당하는 요일을 계산해서 삽입.
+	case 0: strcpy(dayofWeek,"월"); break;
+	case 1: strcpy(dayofWeek,"화"); break;
+	case 2: strcpy(dayofWeek,"수"); break;
+	case 3: strcpy(dayofWeek,"목"); break;
+	case 4: strcpy(dayofWeek,"금"); break;
+	}
+	printf("현재 약속요일>> %s\n",dayofWeek);
+	printf("현재 약속시간>> %s\n",old->promiseTime);
+	printf("%d",dayofweek);
+	selectTime(newCombineTimetable,old,dayofweek);
+}
+int changeDate(struct structPromise *old,int newCombineTimetable[5][13]) {
+	int dayofweek;
+	int time;
+	dayofweek=selectDate(newCombineTimetable,old);
+	time=atoi(old->promiseTime);
+	if(newCombineTimetable[dayofweek][time-1]==1) {
+		printf("현재 정해진 시간에는 약속을 잡을 수 없습니다. 시간을 수정하겠습니다.\n");
+		changeTime(old,newCombineTimetable,dayofweek);
+	}
+	return dayofweek;
+}
+void changePromiseName(struct structPromise *old){
+	printf("수정할 약속명 입력 >> ");
+	scanf("%s",&old->promiseName);
+}
+int checkDateTime(int CombineTimetable[5][13], struct structPromise *old){
+	char month[3]={0};
+	char date[3];
 	int i;
+	char Date[10];
+	char stime[10];
+	char slash[1]={'/'};
+	int year;
+	int Month,Day,Time;
+	int dayofweek;
+	time_t curr;
+
+	struct tm *d;
+	curr=time(NULL);
+	d=localtime(&curr);
+	year = d->tm_year;
+	year=year+1900;
+
+	strcpy(Date,old->Promisedate);
+	for(i=0;i<strlen(Date);i++) {			//시간 문자열의 길이를 알아내서 for문으로 한단어씩 개별처리를 한다.
+		if(strncmp(Date,slash,1)!=0){		//시간문자열의 첫단어가 "," 가 아니면 
+			strncat(month,Date,1);			//Time이라는 문자열에 시간문자열의 첫단어를 삽입. 덮어씌우는게 아니라 뒤에 덧붙이는 삽입이다. 
+			changeLocation(Date);			//changeLocatioin 함수를 사용. 시간문자열은 첫단어를 지우고 한칸씩 땡긴다.
+		}
+		if(strncmp(Date,slash,1)==0) {		//시간문자열의 첫단어가 "," 이면
+			changeLocation(Date);			//함수이용. ","삭제후 한칸씩 땡긴다.
+			strcpy(date,Date);
+		}		
+	}						
+	printf("%s %s",month,date);
+	Month=atoi(month);
+	Day=atoi(date);
+	dayofweek=weekday(year,Month,Day);
+	strcpy(stime,old->promiseTime);
+	Time=atoi(stime);
+	if(CombineTimetable[dayofweek][Time-1]==1)
+		return -1;
+	return 0;
+}
+void changeName(char *DBname,int CombineTimetable[5][13],int newCombineTimetable[5][13] ,struct structPromise *old){
 	char select[3];
+	
+	int i;
+	int count;
+	int check;
+	count=selectFriends(DBname, newCombineTimetable,old);
+	for(i=0; i<count; i++)
+		printf("%s ",old->promiseFriendsName[i]);
+	scanf("%s",&select);
+
+	check=checkDateTime(newCombineTimetable,old);  //기존의 시간과 현재 바뀐 통합시간표와 비교시 약속시간이 가능한지 검사.....
+	if(check!=0){
+		printf("해당 멤버들의 시간표로는 현재 약속을 잡을 수 없습니다. 날짜와 시간을 수정하겠습니다.\n");
+		changeDate(old,newCombineTimetable);
+	}
+	for(i=0; i<count; i++)		//동적할당 해제
+		free(old->promiseFriendsName[i]);
+	free(old->promiseFriendsName);
+}
+
+void selectChange(char *DBname, struct structPromise *old, int listnumber, char **name,int CombineTimetable[5][13]){
+	int i,j;
+	char select[3];
+	char month[3]={0};
+	int newCombineTimetable[5][13]={0};
+	char date[3];
+	int year;
+	char Date[10];
+	char stime[10];
+	char slash[1]={'/'};
+	int Month,Day,Time;
+	int dayofweek;
+	time_t curr;
+
+	struct tm *d;
+	curr=time(NULL);
+	d=localtime(&curr);
+	year = d->tm_year;
+	year=year+1900;
+
+	strcpy(Date,old->Promisedate);
+	for(i=0;i<strlen(Date);i++) {			//시간 문자열의 길이를 알아내서 for문으로 한단어씩 개별처리를 한다.
+		if(strncmp(Date,slash,1)!=0){		//시간문자열의 첫단어가 "," 가 아니면 
+			strncat(month,Date,1);			//Time이라는 문자열에 시간문자열의 첫단어를 삽입. 덮어씌우는게 아니라 뒤에 덧붙이는 삽입이다. 
+			changeLocation(Date);			//changeLocatioin 함수를 사용. 시간문자열은 첫단어를 지우고 한칸씩 땡긴다.
+		}
+		if(strncmp(Date,slash,1)==0) {		//시간문자열의 첫단어가 "," 이면
+			changeLocation(Date);			//함수이용. ","삭제후 한칸씩 땡긴다.
+			strcpy(date,Date);
+		}		
+	}						
+	Month=atoi(month);
+	Day=atoi(date);
+	dayofweek=weekday(year,Month,Day);
 
 	system("cls");
+	for(i=0;i<5;i++){
+		for(j=0; j<13; j++)
+			printf("%d",CombineTimetable[i][j]);
+		printf("\n");
+	}
 	printf("약속수정\n");
 	printf("1. 약속명   : %s\n",old[listnumber].promiseName);
 	printf("2. 약속장소 : %s\n",old[listnumber].promisePlace);
 	printf("3. 약속날짜 : %s\n",old[listnumber].Promisedate);
 	printf("4. 약속시간 : %s\n",old[listnumber].promiseTime);
 	printf("5. 함께할 친구 : ");
+	while(1){
 	for(i=0; i<4; i++)
 		printf("%s ",name[i]);
 	printf("\n");
 	printf("수정할 내용을 선택하세요.\n");
 	scanf("%s",&select);
-
+	if(!strcmp(select,"1"))
+		changePromiseName(old);
+	if(!strcmp(select,"2"))
+		changePlace(DBname,old);
+	if(!strcmp(select,"3"))
+		dayofweek=changeDate(old,CombineTimetable);
+	if(!strcmp(select,"4"))
+		changeTime(old,CombineTimetable,dayofweek);
+	if(!strcmp(select,"5"))
+		changeName(DBname,CombineTimetable,newCombineTimetable,old);
+	printf("1. 약속명   : %s\n",old[listnumber].promiseName);
+	printf("2. 약속장소 : %s\n",old[listnumber].promisePlace);
+	printf("3. 약속날짜 : %s\n",old[listnumber].Promisedate);
+	printf("4. 약속시간 : %s\n",old[listnumber].promiseTime);
+	printf("5. 함께할 친구 : ");
+	}
 	/*여기서부터 이제 선택한 번호에 따라 직접 수정에 들어가야함...오랜시간이 걸릴듯해서 아직 손못댐...
 	어떤식으로 짜야할지 생각해보면..
 	약속명 같은경우 그냥 이자리에서 수정하게 하고
@@ -71,7 +229,8 @@ void promiseChange(char *DBname){
 	char ID[8];
 	char listName[13];
 	char blank[1]={0};
-
+	int CombineTimetable[5][13]={0};
+	recordCombineTimetable(CombineTimetable,DBname);
 	strcpy(openDB,DBname);
 	strcat(openDB,"PromiseList");
 	strcat(openDB,textFile);
@@ -175,6 +334,20 @@ void promiseChange(char *DBname){
 		}
 		fclose(fp);
 	}
+	for(i=0;i<5;i++){
+		for(j=0; j<13; j++)
+			printf("%d",CombineTimetable[i][j]);
+		printf("\n");
+	}
+	for(i=0;i<4;i++){
+		if(!strcmp(transName[i],"\0"))
+			break;
+		strcpy(openDB,oldPromise[listnumber].promiseFriendsName[i]);
+		strcat(openDB,transName[i]);
+		
+		k=recordCombineTimetable(CombineTimetable,openDB);
+
+	}
 	
 	oldPromise[listnumber].promisePlace[strlen(oldPromise[listnumber].promisePlace)-1]=blank[0];           //장소DB에서 읽어올때 \n 하나 들어있는거 없애서 자동줄바꿈 방지
 	printf("\n");
@@ -187,9 +360,9 @@ void promiseChange(char *DBname){
 	scanf("%s",&select);
 	
 	if(!strcmp(select,"y"))									//y나 Y일때 수정 단계로 넘어감
-		selectChange(oldPromise,listnumber,transName);		//selectChange 함수사용, (현재읽어온 약속리스트정보구조체, 사용자가 선택한 약속리스트번호, 함께하는 회원 이름)을 인수로 넘겨준다.
+		selectChange(DBname,oldPromise,listnumber,transName,CombineTimetable);		//selectChange 함수사용, (현재읽어온 약속리스트정보구조체, 사용자가 선택한 약속리스트번호, 함께하는 회원 이름)을 인수로 넘겨준다.
 	else if(!strcmp(select,"Y"))
-		selectChange(oldPromise,listnumber,transName);
+		selectChange(DBname,oldPromise,listnumber,transName,CombineTimetable);
 
 	for(i=0;i<listCount; i++)			//동적할당 해제
 		free(friendsName[i]);				
@@ -197,11 +370,11 @@ void promiseChange(char *DBname){
 	for(i=0; i<4; i++)			
 		free(transName[i]);				
 	free(transName);
-	for(i=0;i<listCount; i++){
+	/*for(i=0;i<listCount; i++){			위에서 해제해줌
 		for(j=0; j<4; j++)
 			free(oldPromise[i].promiseFriendsName[j]);				
 		free(oldPromise[i].promiseFriendsName);
-	}		
+	}*/		
 	for(i=0;i<listCount; i++)			
 		free(cost[i]);				
 	free(cost);
