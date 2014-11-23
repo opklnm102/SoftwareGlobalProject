@@ -10,13 +10,22 @@ void pwFind(){
 	FILE *fp1,*fp2=NULL;  //fp1은 회원목록, fp2는 개인파일
 	char txt[]=".txt";  //확장자
 	char fileName[20];  //열기할 파일이름
-	int con=1;
+	int con=1;  
+	int x=34, y=3;  //좌표
 
 	while(con){
-		printf("-비밀번호 재설정-\n");
-		printf("학번 : "); scanf("%s",id); fflush(stdin);
-		printf("고유코드 : "); scanf("%s",backupPassword); fflush(stdin);
-		printf("새로운P  W : "); scanf("%s",newPassword); fflush(stdin);
+
+		//----------------------------UI그리기-----------------------------------------------
+		screenBorderDraw();  //전체틀출력
+		listBorderDraw(40,13);  //메뉴틀출력
+		gotoxy(56,10);	printf("-비밀번호 재설정-\n");
+		gotoxy(20+x, 15+y); printf("학    번  : ");   
+		gotoxy(20+x, 18+y); printf("고유코드  : ");
+		gotoxy(20+x, 21+y); printf("새로운 PW : ");
+
+		gotoxy(34+x,15+y); scanf("%s",id); fflush(stdin);
+		gotoxy(34+x,18+y); scanf("%s",backupPassword); fflush(stdin);
+		gotoxy(34+x,21+y); scanf("%s",newPassword); fflush(stdin);
 
 		fp1=fopen("회원목록.txt","r");  //회원목록 열고
 
@@ -32,14 +41,15 @@ void pwFind(){
 			}
 		}
 		if(fp2 == NULL){  //개인별 회원정보파일을 못열었을 경우(회원가입안되어있을경우)
-			printf("회원가입하세요\n");
+			gotoxy(56, 29); printf("회원가입하세요"); 
+			Sleep(2000);
 			return;
 		}
 		//회원정보입력
 		fseek(fp2,10,SEEK_CUR);  //파일의 첫 "회원정보"때문에 커서 이동
 		fscanf(fp2,"%s %s %s %s",s.ID,s.name,s.password,s.backupPassword);  //개인별 회원정보입력	
 
-		printf("모든 입력이 끝났습니까? (Y/N)");
+		gotoxy(17+x,24+y); printf("모든 입력이 끝났습니까? (Y/N) ");
 		scanf("%c",&ask);
 		fclose(fp2);
 		fp2=NULL;
@@ -52,8 +62,17 @@ void pwFind(){
 				fprintf(fp2,"%s\n%s\n%s\n%s\n",s.ID,s.name,newPassword,s.backupPassword);  //개인별 회원정보파일 갱신
 				con=0;
 				fclose(fp2);
-				printf("비밀번호 재설정 완료!!! \n");
-			}		
+				gotoxy(56, 29); printf("비밀번호 재설정 완료!!!");
+				Sleep(2000);
+			}	
+			else{
+			gotoxy(56, 29); printf("비밀번호 재설정 실패!!!");
+			Sleep(2000);
+			}
+		}
+		else{
+			gotoxy(56, 29); printf("다시입력하시길바랍니다.");
+			Sleep(2000);
 		}
 	}
 }

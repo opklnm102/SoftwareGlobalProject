@@ -98,7 +98,7 @@ void gotoxy(int x, int y);  //좌표설정
 void screenBorderDraw(); //전체화면틀출력함수
 void listBorderDraw(); //메뉴틀출력함수
 void checkInput();  //버퍼에 남아있는거 체크
-
+void setcolor(int color, int bgcolor);  //글자색,글자배경색 변경
 
 /*-------------------------------함수원형선언 끝--------------------------------*/
 

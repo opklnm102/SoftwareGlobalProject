@@ -22,22 +22,22 @@ void screenBorderDraw(){
 	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 
 	gotoxy(88,41);
-	printf("뒤로가기 B, 종료 X, 계속하기 S");
+	printf("상위메뉴로 B, 종료 X, 계속하기 S");
 }
 
 //메뉴틀출력
-void listBorderDraw(){  
+void listBorderDraw(int x, int y){  
 	int i;   
 
-	gotoxy(3,10);
+	gotoxy(x,y);
 	printf("┌─────────────────────────┐");
 
 	for(i=0; i<20; i++) { 
-		gotoxy(3,11+i);
+		gotoxy(x,y+1+i);
 		printf("│                                                  │");
 	}
 
-	gotoxy(3,30);
+	gotoxy(x,y+20);
 	printf("└─────────────────────────┘");
 }
 
@@ -50,5 +50,7 @@ void checkInput(){
 		exit(0);
 	}
 }
-
-
+//글자색,글자배경색 변경
+void setcolor(int color, int bgcolor){
+ SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), ((bgcolor&0xf)<<4) | (color&0xf));
+} 

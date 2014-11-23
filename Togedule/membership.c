@@ -1,7 +1,7 @@
 #include"structHeader.h"
 
 void membership(){
-
+	int x=32, y=7;
 	structMember s;  //멤버 구조체	
 	char txt[]=".txt";  //확장자
 	char ask;  //저장 여부
@@ -9,15 +9,24 @@ void membership(){
 	char fileName[30];
 	int con=1;
 
-	printf("-회원가입-\n");
+	//----------------------------UI그리기-----------------------------------------------
+	screenBorderDraw();  //전체틀출력
+	listBorderDraw(40,13);  //메뉴틀출력
+
+	gotoxy(60,10); printf("-회원가입-\n");
 
 	while(con){
-		printf("학번 : "); scanf("%s",s.ID);  fflush(stdin);
-		printf("P  W : "); scanf("%s",s.password);  fflush(stdin);
-		printf("이름 : "); scanf("%s",s.name);  fflush(stdin);
-		printf("고유코드 : "); scanf("%s",s.backupPassword);  fflush(stdin);
+		gotoxy(22+x,11+y); printf("학    번 : "); 
+		gotoxy(22+x,13+y); printf("P      W : "); 
+	    gotoxy(22+x,15+y); printf("이    름 : "); 
+	    gotoxy(22+x,17+y); printf("고유코드 : ");
 
-		printf("모든 입력이 끝났습니까? (Y/N)");
+		gotoxy(34+x,11+y); scanf("%s",s.ID);  fflush(stdin);
+		gotoxy(34+x,13+y); scanf("%s",s.password);  fflush(stdin);
+		gotoxy(34+x,15+y); scanf("%s",s.name);  fflush(stdin);
+		gotoxy(34+x,17+y); scanf("%s",s.backupPassword);  fflush(stdin);
+
+		gotoxy(19+x,20+y); printf("모든 입력이 끝났습니까? (Y/N) ");
 		scanf("%c",&ask); fflush(stdin);
 
 		if(ask == 'y' || ask == 'Y'){
@@ -35,14 +44,15 @@ void membership(){
 				con=0;
 				fclose(fp1);
 				fclose(fp2);
-				printf("회원 가입 완료!!! \n");
+				gotoxy(60, 29); printf("회원 가입 완료!!!");
+				getch();
 			}
 			else{  //파일이 있을 경우
-				printf("이미 회원가입하셨습니다.\n");
+				gotoxy(60, 29); printf("이미 회원가입하셨습니다.");
 				getch();
 				return;
 			}
-		}
+		}			
 	}
 }
 
