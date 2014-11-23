@@ -409,7 +409,7 @@ void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofW
 	char time[27];
 	int Time;
 
-	printf("약속시간을 입력(ex 3)");
+	printf("약속시간을 입력(ex 3시)");
 	scanf("%s",time);
 		
 	while(1){						//시간이 통합시간표에 겹치는 시간이면 재입력. 제대로 입력시 넘김

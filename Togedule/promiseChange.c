@@ -65,13 +65,13 @@ int checkDateTime(int CombineTimetable[5][13], struct structPromise *old){
 	year=year+1900;
 
 	strcpy(Date,old->Promisedate);
-	for(i=0;i<strlen(Date);i++) {			//시간 문자열의 길이를 알아내서 for문으로 한단어씩 개별처리를 한다.
-		if(strncmp(Date,slash,1)!=0){		//시간문자열의 첫단어가 "," 가 아니면 
-			strncat(month,Date,1);			//Time이라는 문자열에 시간문자열의 첫단어를 삽입. 덮어씌우는게 아니라 뒤에 덧붙이는 삽입이다. 
-			changeLocation(Date);			//changeLocatioin 함수를 사용. 시간문자열은 첫단어를 지우고 한칸씩 땡긴다.
+	for(i=0;i<strlen(Date);i++) {			
+		if(strncmp(Date,slash,1)!=0){		
+			strncat(month,Date,1);			
+			changeLocation(Date);			
 		}
-		if(strncmp(Date,slash,1)==0) {		//시간문자열의 첫단어가 "," 이면
-			changeLocation(Date);			//함수이용. ","삭제후 한칸씩 땡긴다.
+		if(strncmp(Date,slash,1)==0) {		
+			changeLocation(Date);			
 			strcpy(date,Date);
 		}		
 	}						
@@ -114,9 +114,9 @@ void selectChange(char *DBname, struct structPromise *old, int listnumber, char 
 	char date[3];
 	int year;
 	char Date[10];
-	char stime[10];
+
 	char slash[1]={'/'};
-	int Month,Day,Time;
+	int Month,Day;
 	int dayofweek;
 	time_t curr;
 
@@ -127,13 +127,13 @@ void selectChange(char *DBname, struct structPromise *old, int listnumber, char 
 	year=year+1900;
 
 	strcpy(Date,old->Promisedate);
-	for(i=0;i<strlen(Date);i++) {			//시간 문자열의 길이를 알아내서 for문으로 한단어씩 개별처리를 한다.
-		if(strncmp(Date,slash,1)!=0){		//시간문자열의 첫단어가 "," 가 아니면 
-			strncat(month,Date,1);			//Time이라는 문자열에 시간문자열의 첫단어를 삽입. 덮어씌우는게 아니라 뒤에 덧붙이는 삽입이다. 
-			changeLocation(Date);			//changeLocatioin 함수를 사용. 시간문자열은 첫단어를 지우고 한칸씩 땡긴다.
+	for(i=0;i<strlen(Date);i++) {			
+		if(strncmp(Date,slash,1)!=0){		
+			strncat(month,Date,1);			
+			changeLocation(Date);			
 		}
-		if(strncmp(Date,slash,1)==0) {		//시간문자열의 첫단어가 "," 이면
-			changeLocation(Date);			//함수이용. ","삭제후 한칸씩 땡긴다.
+		if(strncmp(Date,slash,1)==0) {		
+			changeLocation(Date);			
 			strcpy(date,Date);
 		}		
 	}						
@@ -153,10 +153,10 @@ void selectChange(char *DBname, struct structPromise *old, int listnumber, char 
 	printf("3. 약속날짜 : %s\n",old[listnumber].Promisedate);
 	printf("4. 약속시간 : %s\n",old[listnumber].promiseTime);
 	printf("5. 함께할 친구 : ");
-	while(1){
 	for(i=0; i<4; i++)
 		printf("%s ",name[i]);
 	printf("\n");
+	while(1){
 	printf("수정할 내용을 선택하세요.\n");
 	scanf("%s",&select);
 	if(!strcmp(select,"1"))
@@ -174,41 +174,15 @@ void selectChange(char *DBname, struct structPromise *old, int listnumber, char 
 	printf("3. 약속날짜 : %s\n",old[listnumber].Promisedate);
 	printf("4. 약속시간 : %s\n",old[listnumber].promiseTime);
 	printf("5. 함께할 친구 : ");
+	for(i=0; i<4; i++)
+		printf("%s ",name[i]);
+	printf("\n");
+	printf("수정을 완료했으면 y를 입력하세요. 계속하려면 다른키를 입력하세요.");
+	scanf("%s",&select);
+	if(!strcmp(select,"y"))
+		break;
 	}
-	/*여기서부터 이제 선택한 번호에 따라 직접 수정에 들어가야함...오랜시간이 걸릴듯해서 아직 손못댐...
-	어떤식으로 짜야할지 생각해보면..
-	약속명 같은경우 그냥 이자리에서 수정하게 하고
-	장소부터는 함수를 이동시켜야하는데 ... 그럴경우 기존 정보들은 어떻게 유지한채로 그리로 넘어갈지 이해불가...
-	저번에 이야기한걸 기억해보면 해당 정보에 맞는 함수를 불르면 된다고 했었는데..
-	예를들어 지금   조별과제
-					학생식당(창의관 지하1층)
-					4시
-					11/3
-					1092011,2344010,3434324
-					이런 약속리스트 정보에서 장소를 수정한다고 가정하면
-					promisePlace 함수로 이동하게 되는데 void promisePlace(char *DBname,struct structPromise *newPromise) 이것이 현재 함수형태...
-					이런경우 약속이름, 시간, 날짜, 학번 정보가 들어간 현재 old라는 약속구조체를 넘겨버리면 새로운 약속을 만들어버리는게 되어버림...
-					기존약속과 중복처리는 없으므로...덮어씌워지는게 아니라 새로운 약속리스트로 추가됨... 그럴경우 수정이 끝난후
-					다시 약속리스트를 읽어 수정되기전 약속을 찾아내서 그걸 지우고 나머지 약속들을 떙겨서 써줘야하는 상황...
-					그걸 약속을 공유하는 모든 회원들의 약속리스트에 반복해야함...
-					함수들이 지금 따로따로 분리가 완벽하게 되있지 않고 서로 연결하듯이 되어있어서 날짜같은것을 고치려면 어떻게 해야할지 감도 안잡히는 상태
-					
-					함수들을 싹 정리해서 이쪽으로 나갈지 아니면 새로 함수를 짜는게 빠를지 고민중..
 
-	새로 함수를 짠다고 쳐도 애초 계획대로 화면 이동이 되는 형식으로 사용자가 약속정보를 쉽게 바꾼다는 조건을 만족시키려면 
-	기존에 있던 함수들과 똑같은 인터페이스로 화면 출력이 되야하기때문에 거의 복사하듯이 하나를 만들어야함.. 이쪽도 난항이 예상됨...
-	예상을 해보면
-					약속명은 따로 출력할 정보가 필요없으므로 여기서 고칠수 있음.
-					장소는 장소분류를 출력하는 함수가 필요 거기서 선택을 받고 바로 여기로 되돌아와야함.
-					날짜는 바꿀경우 시간을 다시 설정해줘야 하는경우가 생기므로 달력만 출력하고 날짜만 따로 입력받는 경우는 있을수 없음..
-					통합시간표도 출력하고 시간도 재입력 받게 만들어야함.. 그리고 시간까지 입력받으면 여기로 바로 되돌아와야함
-					시간은 바꿀경우 통합시간표만 출력해주고 다시 선택받게만 하고 이 창으로 돌아와야함
-					함께할 친구.......
-					회원수를 입력받고 다시 이름 검색 함수를 불러서 이름을 선택받고 선택받은 회원의 학번정보를 읽어와 이창으로 돌아와야함.. 그런뒤 학번을 이름으로 변경해서 바뀐이름을 출력해주고
-					바뀐 회원들과 기존에 겹치는 회원이 있는지 체크하고 겹치는 회원이 없으면 기존회원들의 약속리스트에서 해당 약속을 전부 삭제... 바뀐회원들의 약속리스트에는 약속추가...
-
-	일단 기존 함수들을 정리하는 방향으로 나갈계획인데 누군가 더 좋은 방법이 있으면 꼭 알려주길...
-	*/
 }
 
 void promiseChange(char *DBname){
