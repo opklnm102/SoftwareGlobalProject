@@ -1,14 +1,44 @@
+//#include <stdio.h>
+//#include <windows.h>
+//#include <malloc.h>
+//#include <string.h>
+//#
+////과목 구조체
+//typedef struct Subject{
+//	char dayOfWeek[4]; //요일
+//	char subjectName[15]; //이름
+//	char subjectClass[10]; //교시
+//}Subject;
+//
+//
+//void gotoxy(int x, int y);
+//void timetableMenu(); //시간표메뉴함수
+//void timetableDraw(); //시간표그리기함수
+//void saveTimetalbe(Subject* subjectPointer, int subjectTotalCnt); //시간표 txt로 저장하는 함수
+//void classAtoi(char *dayOfWeek, int *savedClass); //교시를 char->int으로 바꾸어주는 함수
+//bool checkOverlappingClass(Subject* subjectPointer,Subject subject,int subjectTotalCnt); //중복교시체크함수
+//void InputSubjectCnt(); // 시간표만들기 - 월~금 과목갯수 입력 함수
+//void InputSubjectNameAndClass( int* SubjectCntOfday, int subjectTotalCnt) ; // 시간표만들기 - 이름/교시 입력함수
+//void modifyMenu(); //시간표수정메뉴함수
+//void modifySubjectInfo(); // 시간표 과목정보 수정함수
+//void addSubject(); //시간표 과목 추가
+//void removeSubject(); //시간표 과목 삭제
+//void sortTimetable(Subject* subjectPointer,int subjectTotalCnt); // 시간표 (요일)정렬 함수
+//void removeTimetable(); //시간표삭제함수(시간표txt파일삭제)
+//void screenBorderDraw(); // 전체화면틀출력함수
+//void listBorderDraw(); //메뉴틀출력함수
+
+
 #include"structHeader.h"
-//개인파일로 만들시 꼭 위의 헤더랑 function.c 포함해서 작업해야함
-char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"};  //전역변수
+
+char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"};
 
 //int main() {
-//
-//	system("mode con:cols=130 lines=46");  //가로 130, 세로 45  //지워도됨 
+//	system("mode con:cols=130 lines=46");  //가로 130, 세로 45 
 //	timetableMenu();
 //	gotoxy(50,50);
 //}
-
+//
 //void gotoxy(int x, int y) { 
 //	COORD Cur;
 //	Cur.X=x;
@@ -17,16 +47,15 @@ char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"};  //전역변수
 //}
 
 //시간표메뉴함수
-void timetableMenu(structMember *s) {
 
+void timetableMenu(structMember *s) {
 	int i;
 	int choiceMenu;
-
 	while(1) {
 		screenBorderDraw() ;
-		listBorderDraw();
+		listBorderDraw(3,10);
 		timetableDraw();
-		
+
 		gotoxy(20, 18);
 		printf(" 1. 시간표 만들기 ");
 		gotoxy(20,20);
@@ -36,29 +65,23 @@ void timetableMenu(structMember *s) {
 		gotoxy(20,24);
 		printf(">> ");
 		scanf("%d", &choiceMenu);
-
 		switch (choiceMenu) {
-
-		case 1: InputSubjectCnt(s);  break; // 시간표만들기시작
-		case 2: modifyTimetable(s); break; //시간표수정
-		case 3: removeTimetable(s); break; //시간표삭제
-
+		case 1: InputSubjectCnt();  break; // 시간표만들기시작
+		case 2: modifyMenu(); break; //시간표수정
+		case 3: removeTimetable(); break; //시간표삭제
 		}
-		
+
 	}
 }
-
 //시간표그리기함수
-void timetableDraw(){  
-
+void timetableDraw(){ 
 
 	FILE *fp1;
-	int i,j,stringCnt=0;
+	int i,j,k;
 	int Subjectcnt;
-	structSubject* subjectPointer;
-	int tmpClassCnt;
+	Subject* subjectPointer;
+	int tmpClassCnt[10]={0};
 	int b=0;
-	
 
 	gotoxy(57,7); 
 	printf("┌───┬─────┬─────┬─────┬─────┬─────┐");
@@ -71,86 +94,164 @@ void timetableDraw(){
 		printf("│  %2d  │          │          │          │          │          │",i/2+1);
 		gotoxy(57,10+i+1);
 		if(i!= 24)
-		printf("├───┼─────┼─────┼─────┼─────┼─────┤");
+			printf("├───┼─────┼─────┼─────┼─────┼─────┤");
 	}
 	gotoxy(57,35);
 	printf("└───┴─────┴─────┴─────┴─────┴─────┘");
-
 	fp1=fopen("timetable.txt","r");
-
 	if(fp1 == NULL ) {
 		gotoxy(83,20);
 		printf("*시간표를 만들어주세요*");
 	}
 	//timetable.txt가 있는 경우
 	else {
-	
-	fscanf(fp1, "%d", &Subjectcnt);
 
-	subjectPointer = (structSubject*)malloc(sizeof(structSubject)*Subjectcnt);
-
-	for(i=0;i<Subjectcnt;i++) 
-	fscanf(fp1,"%s %s %s", subjectPointer[i].dayOfWeek, subjectPointer[i].subjectName, subjectPointer[i].subjectClass);
+		fscanf(fp1, "%d", &Subjectcnt);
+		subjectPointer = (Subject*)malloc(sizeof(Subject)*Subjectcnt);
+		for(i=0;i<Subjectcnt;i++) 
+			fscanf(fp1,"%s %s %s", subjectPointer[i].dayOfWeek, subjectPointer[i].subjectName, subjectPointer[i].subjectClass);
 
 
+		for(j=0;j<5;j++) {
+			for(i=0;i<Subjectcnt;i++) {
 
-	//58,13
-	for(j=0;j<5;j++) {
-		for(i=0;i<Subjectcnt;i++) {
-			if( strstr(subjectPointer[i].dayOfWeek, dayOfWeek[j]) ) {
+				if( strstr(subjectPointer[i].dayOfWeek, dayOfWeek[j]) ) {
 
-				/*for(k=1;k<=13; k++ ) {
-					
-				}*/
+					classAtoi(subjectPointer[i].subjectClass, tmpClassCnt);
 
-				while( subjectPointer[i].subjectClass[stringCnt] != '\0' ) {
-					if(subjectPointer[i].subjectClass[stringCnt] >= '0' && subjectPointer[i].subjectClass[stringCnt] <='9'){
-						tmpClassCnt =  subjectPointer[i].subjectClass[stringCnt] - '0';
+					for(k=0;k<10 ; k++) {
+
+						if(tmpClassCnt[k] >= 1 && tmpClassCnt[k] <= 13) {
+							gotoxy(67+12*j,8+tmpClassCnt[k]*2);
+							printf("%s",subjectPointer[i].subjectName);
+						}
+
+						else
+							break;
 					}
 
-					gotoxy(67+12*j,8+tmpClassCnt*2); //67+6*j, 12+tmpClassCnt
-					printf("%s",subjectPointer[i].subjectName);
-				stringCnt++;
+					for(k=0;k<10; k++)
+						tmpClassCnt[k] = 0;
 				}
-				stringCnt = 0;
 			}
-
 		}
 	}
-	}
-	
+
 }
-
 //시간표 txt로 저장하는 함수
-void saveTimetalbe(structSubject* subjectPointer, int subjectSum) {
-
+void saveTimetalbe(Subject* subjectPointer, int subjectTotalCnt) {
 	FILE *fp1,*fp2;   
 	char fileName[30];
 	int i;
 
-
 	fp1=fopen("timetable.txt","w");
-
-	fprintf(fp1,"%d\n",subjectSum);
-	for(i=0;i<subjectSum; i++) {
+	fprintf(fp1,"%d\n",subjectTotalCnt);
+	for(i=0;i<subjectTotalCnt; i++) {
 		fprintf(fp1,"%s ",subjectPointer[i].dayOfWeek);
 		fprintf(fp1,"%s ",subjectPointer[i].subjectName);
 		fprintf(fp1,"%s\n", subjectPointer[i].subjectClass);
 	}
 	fclose(fp1);
+}
 
+
+void checkInput(){
+	int ch;
+	ch = getchar();
+	if(ch == 32){
+		printf("please check the input whether it is valld or not.\n");
+		exit(0);
+	}
 }
 
 
 
-//시간표 월~금 과목갯수 입력 함수
-void InputSubjectCnt(structMember *s) {
+//교시에 저장된 char형의 숫자를 int형의 숫자로 바뀌어주는 함수.
+void classAtoi(char *subjectClass, int *savedClass) {
 
-	int i, subjectSum=0;
+
+	int i, k=0, num=0;
+
+
+	for(i=0; subjectClass[i] != '\0'; i++) {
+
+			 if(subjectClass[i] == ' ' || subjectClass[i] == ',') {
+
+				 savedClass[k]=num;
+				 num = 0;
+				 k++;
+			 }
+
+			 else if (48 <= subjectClass[i] && subjectClass[i] <= 57) {
+
+				 if(num != 0) {
+					 num = num*10 + (subjectClass[i]-48);
+
+					 if(subjectClass[i+1] == '\0')
+						 savedClass[k] = num;
+				 }
+
+				 else {
+					 num = (subjectClass[i]-48);
+
+					 if(subjectClass[i+1] == '\0')
+						 savedClass[k] = num;
+				 }
+
+			 }			
+
+		 }
+
+}
+
+
+///시간표 교시중복검사 함수
+bool checkOverlappingClass(Subject* subjectPointer, Subject subject,int subjectTotalCnt) {
+
+	int i,j,k;
+	int savedClass[10]={0},puttingClass[10]={0};
+
+
+	classAtoi(subject.subjectClass,puttingClass);
+
+	for(i=0;i<subjectTotalCnt;i++) {
+
+		if(strstr(subjectPointer[i].dayOfWeek, subject.dayOfWeek)){
+			if(subjectPointer[i].subjectClass[0] >= '0' && subjectPointer[i].subjectClass[0] <= '9'){
+
+				classAtoi(subjectPointer[i].subjectClass,savedClass);
+				
+				for(j=0; puttingClass[j] != 0 ; j++){
+					for(k=0; savedClass[k] != 0 ; k++) {
+						if(puttingClass[j] == savedClass[k]){
+							return false;
+						}
+							
+					}
+				}
+				
+
+			}
+
+		}
+	}
+
+	
+	return true;
+
+
+}
+
+//시간표 월~금 과목갯수 입력 함수
+void InputSubjectCnt() {
+
+	int i, subjectTotalCnt=0;
 	int SubjectCntOfday[5]={0};
 
-	screenBorderDraw();  //전체화면틀출력함수
-	listBorderDraw();  //메뉴틀출력함수
+
+	screenBorderDraw() ;
+	listBorderDraw(3,10);
+
 
 	gotoxy(6, 31);
 	printf("** 하루 최대과목 갯수는 5개이하.");
@@ -162,81 +263,79 @@ void InputSubjectCnt(structMember *s) {
 		printf("- 시간표 만들기 -");
 
 		for(i=0;i<5;i++){
-			gotoxy(15, 18+i*2);
+			gotoxy(10, 18+i*2);
 			printf(" %s요일 과목 갯수 : ", dayOfWeek[i]);
 		}
 
 		for(i=0;i<5;i++){
-			gotoxy(35,18+i*2);
+			gotoxy(30,18+i*2);
 			scanf("%d", &SubjectCntOfday[i]);
 
 			//하루과목갯수가 초과할 경우
 			if(SubjectCntOfday[i] > 5 ) {
-				gotoxy(38, 18+i*2);
+				gotoxy(30, 18+i*2);
 				printf(" ◀하루최대과목갯수초과!");
 				Sleep(1000);
-				gotoxy(38, 18+i*2);
+				gotoxy(30, 18+i*2);
 				printf("                        ");
-				gotoxy(35, 18+i*2);
+				gotoxy(30, 18+i*2);
 				printf("   ");
 				i--;
 			}
+
 			else {
-				subjectSum += SubjectCntOfday[i];
+				subjectTotalCnt += SubjectCntOfday[i];
 			}
+
 		}
-
 		//총과목갯수가 초과할 경우
-		if(subjectSum > 13 ){
-			for(i=0;i<5;i++){
+		if(subjectTotalCnt > 13 ){
 
+			for(i=0;i<5;i++){
 				gotoxy(35, 18+i*2);
 				printf("    ");
 			}
-			gotoxy(15, 28);
+
+			gotoxy(8, 28);
 			printf(" ※ 총 최대 과목수(13개)를 초과하셨습니다. ※\n");
 			Sleep(1000);
-			gotoxy(15, 28);
-			printf("                                          ");
-			subjectSum =0;
+			gotoxy(8, 28);
+			printf("                                              ");
+			subjectTotalCnt =0;
 		}
 		else {
 			break;
 		}
 	}
-	InputSubjectNameAndClass(s,SubjectCntOfday,subjectSum) ;
-
+	InputSubjectNameAndClass(SubjectCntOfday,subjectTotalCnt) ;
 }
 
 // 이름/교시 입력함수
-void InputSubjectNameAndClass(structMember *s,int* SubjectCntOfday, int subjectSum) {
+void InputSubjectNameAndClass(int* SubjectCntOfday, int subjectTotalCnt) {
 
-	int i, j, k=0, l;
-	structSubject* subjectPointer; 
-	int cnt=0 ,tmp=12;
-	int y=0;
+	Subject* subjectPointer;
+	Subject tmpSubject;
+	int i, j;
+	int tmp=12;
+	int y=0, k=0;
 
-	subjectPointer = (structSubject*)malloc(sizeof(structSubject)*subjectSum);
 
+	subjectPointer = (Subject*)malloc(sizeof(Subject)*subjectTotalCnt);
 
 	for( i = 0; i < 5; i++){
-
 		if( SubjectCntOfday[i] != 0 ) {
 			y++;
 			gotoxy(64,10+y);
 			printf("*＊＊＊＊＊＊＊＊＊＊＊- %s요일 -＊＊＊＊＊＊*＊＊＊＊＊\n", dayOfWeek[i]);
 
-
 			for(j=0; j <SubjectCntOfday[i] ; j++){
 				// 과목 구조체에 시간표 요일 입력
 				strcpy(subjectPointer[k].dayOfWeek,dayOfWeek[i]);
 				k++;
-
 				y++;
 				gotoxy(65,10+y);
 				printf(" %d. 과목명 :                       교시 :       \n",j+1);
 			}
-
 			y++;
 			gotoxy(65,10+y);
 			printf("\n");
@@ -250,105 +349,354 @@ void InputSubjectNameAndClass(structMember *s,int* SubjectCntOfday, int subjectS
 	printf("** ex) 교시 : 1,2,3 으로 입력.");
 
 	k=0;
-
 	//과목 이름/교시 입력
 	for( i = 0; i < 5; i++){
+
+		strcpy(tmpSubject.dayOfWeek,dayOfWeek[i]);
+
 		for(j=0; j <SubjectCntOfday[i] ; j++){
 
-
 			y = j+tmp;
-
+			//과목이름
 			gotoxy(78,y);
-			scanf("%s",&subjectPointer[k].subjectName);
+			scanf("%s",&tmpSubject.subjectName);
 
-			gotoxy(107,y);
-			scanf("%s",&subjectPointer[k].subjectClass);
+			//과목교시 ★
+			while(1) {
+				gotoxy(107,y);
+				scanf("%s",&tmpSubject.subjectClass);
+
+				//과목중복교시 검사
+				if (checkOverlappingClass(subjectPointer,tmpSubject,subjectTotalCnt) == false){
+					gotoxy(107,y);
+					printf("◀교시중복!");
+					Sleep(1000);
+					gotoxy(107,y);
+					printf("           ");
+					strcpy(tmpSubject.subjectClass,"");
+					//scanf("%s",&subjectPointer[k].subjectClass);
+				}
+				else
+					break;
+
+			}
+			
+			strcpy(subjectPointer[k].subjectName,tmpSubject.subjectName);
+			strcpy(subjectPointer[k].subjectClass,tmpSubject.subjectClass);
+
+			strcpy(tmpSubject.subjectName,"");
+			strcpy(tmpSubject.subjectClass,"");
+			
+
 
 			if(j+1 == SubjectCntOfday[i]){
 				tmp = 3+y; 
 			}
-
 			k++;
 		}
 		printf("\n");
 	}
 
-	saveTimetalbe(s,subjectPointer,subjectSum);
 
+	saveTimetalbe(subjectPointer,subjectTotalCnt);
 	free(subjectPointer);
-	system("cls");  
+	system("cls"); 
 
 }
 
+//시간표 수정메뉴
+void modifyMenu () {
 
-//시간표 수정
-void modifyTimetable(structMember *s) {
+	int choiceMenu;
 
-	char tmp[100];
-	int modifyDay[5] ={0};
-	int modifySubjectN[5]={0};
-	int i,j=0,cnt=0;
+	fflush(stdin);
+	listBorderDraw(3,10);
+
+	gotoxy(22,15);
+	printf("*시간표 수정메뉴*");
+
+
+	gotoxy(17, 18);
+	printf(" 1. 시간표 과목정보 수정 ");
+	gotoxy(17,20);
+	printf(" 2. 시간표 과목 추가 ");
+	gotoxy(17,22);
+	printf(" 3. 시간표 과목 삭제 ");
+	gotoxy(17,24);
+	printf(">> ");
+	scanf("%d", &choiceMenu);
+
+	switch (choiceMenu) {
+	case 1: modifySubjectInfo();  break; //시간표 과목정보 수정
+	case 2: addSubject(); break; //시간표 과목 추가
+	case 3: removeSubject(); break; //시간표 과목 삭제
+	}
+
+}
+
+//시간표 과목정보 수정
+void modifySubjectInfo() {
+
+	FILE *fp;
+	Subject* subjectPointer;//시간표포인터
+	Subject tmpSubject;
+	int subjectTotalCnt; //과목총갯수
+	char charModifyDay[15]; //char형수정요일변수 
+	int intModifyDay[5] ={0}; //int형수정요일변수
+	char charModifySubjectNum[5]={0}; //수정과목번호
+	int intModifySubjectNum;
+	int i,j=0,k=0;
+
+
+	fflush(stdin);
+	listBorderDraw(3,10);
+
+
+	gotoxy(20,12);
+	printf("- 시간표 수정 -");
+	gotoxy(15, 14);
+	printf("수정할 과목 요일 : ");
+	gotoxy(33, 14);
+	gets(charModifyDay);
+
+	//txt파일에 저장된 시간표 읽어오기
+	fp=fopen("timetable.txt","r");
+	fscanf(fp, "%d", &subjectTotalCnt);
+	subjectPointer = (Subject*)malloc(sizeof(Subject)*subjectTotalCnt);
+
+
+	for(i=0;i<subjectTotalCnt;i++) {
+		fscanf(fp,"%s %s %s", subjectPointer[i].dayOfWeek, subjectPointer[i].subjectName, subjectPointer[i].subjectClass);
+	}
+
+	fclose(fp);
+
+	//수정할 해당 요일 과목출력 
+	for(k=0; k<5; k++) {
+		if ( strstr(charModifyDay, dayOfWeek[k]) ) { //어떤 요일인지 체크
+			for(i=0;i<subjectTotalCnt;i++) {
+				if(strstr(dayOfWeek[k],subjectPointer[i].dayOfWeek)) { //입력된 시간표에서 과목정보를 찾고 해당 요일 과목출력
+					intModifyDay[j] = i; //시간표 몇번째에 과목이 있는지 저장
+					gotoxy(15, 17+j*2);
+					printf("%d) %s %s %s교시", j+1, subjectPointer[i].dayOfWeek, subjectPointer[i].subjectName, subjectPointer[i].subjectClass);
+					j++;
+				}
+			}
+			break;
+		}
+	}
+
+
+	gotoxy(15,26);
+	printf(">> ");
+	gotoxy(18,26);
+	scanf("%s", &charModifySubjectNum);
+	intModifySubjectNum = atoi(charModifySubjectNum)-1;
+
+
+	//해당과목정보수정
+	listBorderDraw(3,10);
+
+	gotoxy(6, 12);
+	printf("＊＊＊＊＊＊＊＊＊＊＊현재＊＊＊＊＊＊＊＊＊＊＊");
+	gotoxy(9, 14);
+	printf("요  일 : %s",subjectPointer[intModifyDay[intModifySubjectNum]].dayOfWeek);
+	gotoxy(9, 16);
+	printf("과목명 : %s", subjectPointer[intModifyDay[intModifySubjectNum]].subjectName);
+	gotoxy(9, 18);
+	printf("교  시 : %s",subjectPointer[intModifyDay[intModifySubjectNum]].subjectClass);
+
+	gotoxy(6, 21);
+	printf("＊＊＊＊＊＊＊＊＊＊＊수정＊＊＊＊＊＊＊＊＊＊＊");
+	gotoxy(9, 23);
+	printf("요  일 :");
+	gotoxy(9, 25);
+	printf("과목명 :");
+	gotoxy(9, 27);
+	printf("교  시 :");
 
 	fflush(stdin);
 
-	screenBorderDraw();
-	listBorderDraw();
+	gotoxy(18, 23);
+	gets(tmpSubject.dayOfWeek);
+	gotoxy(18, 25);
+	gets(tmpSubject.subjectName);
 
-	gotoxy(30,15);
-	printf("- 시간표 수정 -");
+	while(1) {
 
-	gotoxy(15, 17);
-	printf("수정하실 요일 : ");
+		gotoxy(18, 27);
+		gets(tmpSubject.subjectClass);
 
-	gotoxy(30, 17);
-	gets(tmp);
+		if (checkOverlappingClass(subjectPointer,tmpSubject,subjectTotalCnt) == false){
 
-	for(i=0; i<5; i++) {
-		if ( strstr(tmp, dayOfWeek[i]) ) { // 입력받은 수정요일을 월~금까지 비교해서 해당요일 별로 과목 갯수 받기
-			gotoxy(18, 19+j*2);
-			printf("%s요일 과목 갯수 : \n", dayOfWeek[i]);
-			modifyDay[i] = i+1; //월요일이 0부터 시작
-			j++;
+			gotoxy(18, 27);
+			printf("◀교시중복!");
+			Sleep(1000);
+			gotoxy(18, 27);
+			printf("              ");
+
 		}
+		else{
+			break;
+		}
+
 	}
 
+	strcpy(subjectPointer[intModifyDay[intModifySubjectNum]].dayOfWeek, tmpSubject.dayOfWeek);
+	strcpy(subjectPointer[intModifyDay[intModifySubjectNum]].subjectName, tmpSubject.subjectName);
+	strcpy(subjectPointer[intModifyDay[intModifySubjectNum]].subjectClass, tmpSubject.subjectClass);
 
-	j=0;
+	sortTimetable(subjectPointer,subjectTotalCnt);
+	free(subjectPointer);
+}
 
-	for(i=0; i<5; i++) {
+//시간표 과목 추가
+void addSubject() {
+	
+	FILE *fp;
+	Subject* subjectPointer;
+	Subject tmpSubject;
+	
+	int subjectTotalCnt;
+	int i;
 
-		if(modifyDay[i] != 0 ) {
-			gotoxy(37, 19+j*2);
-			scanf("%d", &modifySubjectN[modifyDay[i]-1]);
-			j++;
-			cnt++;
-		}
+	fflush(stdin);
+	listBorderDraw(3,10);
+
+
+	fp=fopen("timetable.txt","r");
+	fscanf(fp, "%d", &subjectTotalCnt);
+	subjectPointer = (Subject*)malloc(sizeof(Subject)*(subjectTotalCnt+1));
+
+
+
+	for(i=0;i<subjectTotalCnt;i++) {
+		fscanf(fp,"%s %s %s", subjectPointer[i].dayOfWeek, subjectPointer[i].subjectName, subjectPointer[i].subjectClass);
 	}
 
+	gotoxy(9, 17);
+	printf("요  일 :");
+	gotoxy(9, 19);
+	printf("과목명 :");
+	gotoxy(9, 21);
+	printf("교  시 :");
 
-	InputSubjectNameAndClass(s,modifySubjectN,cnt);
+	fflush(stdin);
+
+	gotoxy(18, 17);
+	gets(tmpSubject.dayOfWeek);
+	gotoxy(18, 19);
+	gets(tmpSubject.subjectName);
+
+	while(1) {
+
+		gotoxy(18, 21);
+		gets(tmpSubject.subjectClass);
+
+		if (checkOverlappingClass(subjectPointer,tmpSubject,subjectTotalCnt) == false){
+
+			gotoxy(18, 21);
+			printf("◀교시중복!");
+			Sleep(1000);
+			gotoxy(18, 21);
+			printf("              ");
+			strcpy(tmpSubject.subjectClass,"");
+
+		}
+		else{
+			break;
+		}
+
+	}
+
+	strcpy(subjectPointer[subjectTotalCnt].dayOfWeek, tmpSubject.dayOfWeek);
+	strcpy(subjectPointer[subjectTotalCnt].subjectName, tmpSubject.subjectName);
+	strcpy(subjectPointer[subjectTotalCnt].subjectClass, tmpSubject.subjectClass);
+
+	sortTimetable(subjectPointer,subjectTotalCnt+1);
+
+	free(subjectPointer);
+
+
+}
+
+void removeSubject() {
+
+	Subject* subjectPointer;
+
+
+
 
 }
 
 
-void removeTimetable(structMember *s) {
-     
+//시간표정렬함수
+void sortTimetable(Subject* subjectPointer,int subjectTotalCnt){
 
-	 int nResult = remove("timetable.txt"); //해당 파일을 지운다.
- 
+
+	Subject * tmpsubjectPointer;
+	int i,j,k=0;
+
+	tmpsubjectPointer = (Subject *)malloc(sizeof(Subject) * subjectTotalCnt);
+
+	for(i=0;i<5; i++ ) {
+		for(j=0;j<subjectTotalCnt; j++ ){
+
+			if (strstr(dayOfWeek[i], subjectPointer[j].dayOfWeek)){
+				strcpy(tmpsubjectPointer[k].dayOfWeek, subjectPointer[j].dayOfWeek);
+				strcpy(tmpsubjectPointer[k].subjectClass, subjectPointer[j].subjectClass);
+				strcpy(tmpsubjectPointer[k++].subjectName, subjectPointer[j].subjectName);
+			}
+		}
+	}
+
+	saveTimetalbe(tmpsubjectPointer,subjectTotalCnt);
+	gotoxy(15, 29);
+	printf("**시간표가 수정을 완료하였습니다**");
+	Sleep(1000);
+}
+
+
+void removeTimetable() {
+
+	int nResult = remove("timetable.txt"); //해당 파일을 지운다.
+
 	screenBorderDraw() ;
-
 	gotoxy(30,30);
- 
- if(nResult == 0)
- {
-  printf("succes");  //지우기 성공
- } else if (nResult == -1)
- {
-  printf("fail");  //지우기 실패
- }
 
+	if(nResult == 0)
+	{
+		printf("succes");  //지우기 성공
+	} else if (nResult == -1)
+	{
+		printf("fail");  //지우기 실패
+	}
 
 	Sleep(10000);
-
 }
+
+////틀 출력
+//void screenBorderDraw(){
+//	int i;
+//	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+//	for(i=0;i<44;i++){
+//		gotoxy(0,i+1);
+//		printf("■                                                                                                                              ■");
+//	}
+//	gotoxy(0,44);
+//	printf("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+//	gotoxy(88,41);
+//	printf("뒤로가기 B, 종료 X, 계속하기 S");
+//
+//}
+//void listBorderDraw(){ 
+//	int i;  
+//	gotoxy(3,10);
+//	printf("┌─────────────────────────┐");
+//	for(i=0; i<20; i++) { 
+//		gotoxy(3,11+i);
+//		printf("│                                                  │");
+//	}
+//	gotoxy(3,30);
+//	printf("└─────────────────────────┘");
+//}
