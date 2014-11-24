@@ -41,6 +41,24 @@ void listBorderDraw(int x, int y){
 	printf("└─────────────────────────┘");
 }
 
+//약속리스트틀출력
+void listBorderDraw1(int x, int y){  
+	int i;   
+
+	gotoxy(x,y);
+	printf("┌───────────────────────────────────────┐");
+
+	for(i=0; i<9; i++) { 
+		gotoxy(x,y+1+i);
+		printf("│                                                                              │");
+	}
+
+	gotoxy(x,y+10);
+	printf("└───────────────────────────────────────┘");
+}
+
+
+
 //버퍼에 남아있는거 체크
 void checkInput(){
 	int ch;

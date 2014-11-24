@@ -62,11 +62,18 @@ void pwFind();  //비밀번호 찾기
 //시간표관련
 void timetableMenu(structMember *s); //시간표메뉴함수->시간표 시작
 void timetableDraw(); //시간표그리기함수
-void InputSubjectCnt(structMember *s); //월~금 과목갯수 입력 함수
-void InputSubjectNameAndClass(structMember *s, int* SubjectCntOfday, int subjectSum) ; // 이름/교시 입력함수
-void saveTimetalbe(structMember *s,structSubject* subjectPointer, int subjectSum); //시간표 txt로 저장하는 함수
-void modifyTimetable(structMember *s); //시간표수정함수
-void removeTimetable(structMember *s); //시간표삭제함수(시간표txt파일삭제)
+void saveTimetalbe(structSubject* subjectPointer, int subjectTotalCnt); //시간표 txt로 저장하는 함수
+void classAtoi(char *dayOfWeek, int *savedClass); //교시를 char->int으로 바꾸어주는 함수
+//bool checkOverlappingClass(Subject* subjectPointer,Subject subject,int subjectTotalCnt); //중복교시체크함수
+void InputSubjectCnt(); // 시간표만들기 - 월~금 과목갯수 입력 함수
+void InputSubjectNameAndClass( int* SubjectCntOfday, int subjectTotalCnt) ; // 시간표만들기 - 이름/교시 입력함수
+void modifyMenu(); //시간표수정메뉴함수
+void modifySubjectInfo(); // 시간표 과목정보 수정함수
+void addSubject(); //시간표 과목 추가
+void removeSubject(); //시간표 과목 삭제
+void sortTimetable(structSubject* subjectPointer,int subjectTotalCnt); // 시간표 (요일)정렬 함수
+void removeTimetable(); //시간표삭제함수(시간표txt파일삭제)
+
 
 //약속관련
 void promise(structMember *s);  //약속 시작
@@ -89,14 +96,18 @@ void selectName(char *DBname,struct structPromise *newPromise);											//약속
 int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13]);		//이름 검색하는 함수
 int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise *newPromise);			//함께할 회원수를 입력하고 검색함수 콜해서 검색후 선택하는 함수
 void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofWeek);		//  시간 입력받는 함수
-int selectDate(int CombineTimetable[5][13],structPromise *newPromise);				//  날짜입력받는 함수
+int selectDate(int CombineTimetable[5][13],structPromise *newPromise);  //  날짜입력받는 함수
+
+
 //비용관련
-void moneyShare();  //돈나눠주세요 시작
+void moneyShare1(structMember *s);  //돈나눠주세요 시작
+void moneyShare2();  //돈나누는 모드 고르는 기능
 
 //공통으로 쓰이는 것들
 void gotoxy(int x, int y);  //좌표설정
 void screenBorderDraw(); //전체화면틀출력함수
-void listBorderDraw(); //메뉴틀출력함수
+void listBorderDraw(int x, int y); //메뉴틀출력함수
+void listBorderDraw1(int x, int y);  //약속리스트틀출력
 void checkInput();  //버퍼에 남아있는거 체크
 void setcolor(int color, int bgcolor);  //글자색,글자배경색 변경
 

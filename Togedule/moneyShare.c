@@ -1,6 +1,6 @@
 #include "structHeader.h"
 
-void moneyShare(){
+void moneyShare2(){
 	/*
 	54000원이 나왔다. 5명이다.
 	(54000 / (5 * 1000))*1000 = 50000 / 5 = 10000원씩 나누어 갖게된다.
@@ -46,7 +46,7 @@ void moneyShare(){
 		baseMoney = (beforeDivideMoney / (peopleCnt * divisionNumber)) * divisionNumber;
 		/*int beforeDivideMoney, peopleCnt=0, divisionNumber, baseMoney = 0, finalMoney, restMoney, i, restPeople;
 		int arrMoney[5] = {0, 0, 0, 0, 0};*/
-		
+
 		restMoney = beforeDivideMoney - ( baseMoney * peopleCnt );
 
 		/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ알고리즘 시작ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
@@ -91,7 +91,7 @@ void moneyShare(){
 		srand((unsigned)time(NULL));
 		printf("사람 수를 입력해주세요 :▶"); scanf("%d",&peopleCnt); fflush(stdin); 
 		randomPersonNumber = ( rand()%peopleCnt );
-		
+
 		printf("나눌 돈을 적어주세요 : ▶"); 
 		scanf("%d", &beforeDivideMoney);  fflush(stdin); 
 
@@ -107,9 +107,56 @@ void moneyShare(){
 	}
 }
 
-//int main(void){
-//
-//	moneyShare();
-//
-//	return 0;
-//}
+void moneyShare1(structMember *s){
+	int x=24, y=4;
+	char DBname[20];
+	char logID[8];
+	char logName[13];
+	int command;
+	char command1,command2;
+
+
+	strcpy(logID,s->ID);
+	strcpy(logName,s->name);			
+	strcpy(DBname,logID);
+	strcat(DBname,logName);	
+
+	screenBorderDraw();
+	listBorderDraw1(26,12);
+	listBorderDraw1(26,25);
+
+	gotoxy(58,10);
+	printf("--나의 약속 리스트--");
+	gotoxy( 6+x, 10+y );
+	printf("   약속명                 약속날짜 \n");
+
+
+	/*  gotoxy( 6+x, 12+y );
+	printf("1. 홍대가기                11/28\n");
+	gotoxy( 6+x, 14+y);
+	printf("2. 학교가기                11/12\n");*/
+
+	promiseList(DBname);
+
+	gotoxy( 6+x, 20+y );
+	printf("수정하실 약속>> ");
+	gotoxy( 6+x, 23+y );
+	printf(" 약속명          장소          날짜       시간       함께할친구");
+	gotoxy( 6+x, 25+y );
+	printf("학교가기      공학관(405)      11/4        2시         이정훈");
+	gotoxy( 5+x,32+y );
+	printf("수정하시겠습니까?(Y/N)");
+
+	gotoxy( 120, 41 );
+	scanf("%c", &command1 );
+
+	gotoxy( 47, 24);
+	scanf("%d", &command );
+	fflush(stdin);
+	gotoxy( 54, 36);
+	scanf("%c", &command2 );
+	gotoxy( 23, 38 );
+
+
+
+}
