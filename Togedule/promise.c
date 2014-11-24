@@ -428,9 +428,34 @@ void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofW
 	strcpy(newPromise->promiseTime,time);			//ÀÚ·á ÀúÀåÀ» À§ÇÑºÎºĞ ÀÓ½Ã·Î ¿©±â¿¡ »ğÀÔ. µÚ¿¡ Àå¼ÒDB°¡ ¸¸µé¾îÁö°í Àå¼ÒÇÔ¼öµµ ¸¸µé¾îÁö¸é ±×ÂÊÀ¸·Î ¿Å±æ ¿¹Á¤
 	
 }
+void saveFriendsID(char ID[8], char *DB) {
+	FILE *fp;
+	char openDB[40];
+	char listID[25]={0};
+	char listName[13];
+	int check=0;
+	while(check!=1){		
+								//È¸¿ø¸ñ·Ï ÆÄÀÏÀ» ¿¬´Ù.
+		strcpy(openDB,"È¸¿ø¸ñ·Ï.txt");
+		fp = fopen(openDB, "r");
+
+		while (!feof(fp)) {		
+			fscanf(fp, "%s %s", &listID, &listName);	//¿­¾î¼­ º¯¼ö·Î ¹ŞÀº ÀÌ¸§°ú ÇĞ¹øÀ» ÀĞ´Â´Ù
+
+			if(!strcmp(listID,ID)){				//°Ë»öÇÒ ÇĞ¹ø°ú °°Àº ÇĞ¹øÀ» Ã£À¸¸é ±×ÀÌ¸§À» ÇĞ¹øµÚ¿¡ ÀúÀå
+				strcat(listID,listName);
+				check=1;
+				break;
+			}
+		}
+	}
+	fclose(fp);	
+	strcpy(DB,listID);
+}
 void promiseCreatConsole(char *DBname) {	//¾à¼Ó¸¸µé±â ÇÔ¼ö.¾à¼ÓÀ» ¸¸µå´Âµ¥ ÇÊ¿äÇÔ ÇÔ¼öµéÀ» È£Ãâ. 
 	char Name[13];
 	char select[3];
+	char DB[25];
 	struct structPromise newPromise;	//»õ·Î¿î ¾à¼ÓÀ» À§ÇÑ ±¸Á¶Ã¼ »ı¼º newPromise
 	int CombineTimetable[5][13]={0};
 	int count,i;
@@ -443,6 +468,10 @@ void promiseCreatConsole(char *DBname) {	//¾à¼Ó¸¸µé±â ÇÔ¼ö.¾à¼ÓÀ» ¸¸µå´Âµ¥ ÇÊ¿äÇ
 	selectTime(CombineTimetable,&newPromise,dayofWeek);
 	promisePlace(DBname,&newPromise);				//¾à¼ÓÀå¼Ò ¼±ÅÃÇÔ¼ö »ç¿ë, (ÇĞ¹ø+ÀÌ¸§, newPromise ±¸Á¶Ã¼)¸¦ ÀÎ¼ö·Î ³Ñ±ä´Ù.
 	saveNewpromise(DBname,&newPromise);
+	for(i=0; i<count; i++) {
+		saveFriendsID(newPromise.promiseFriendsName[i],DB);
+		saveNewpromise(DB,&newPromise);
+	}
 
 	for(i=0; i<count; i++)		//µ¿ÀûÇÒ´ç ÇØÁ¦
 		free(newPromise.promiseFriendsName[i]);

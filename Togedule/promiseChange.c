@@ -101,12 +101,12 @@ void changeName(char *DBname,int CombineTimetable[5][13],int newCombineTimetable
 		printf("해당 멤버들의 시간표로는 현재 약속을 잡을 수 없습니다. 날짜와 시간을 수정하겠습니다.\n");
 		changeDate(old,newCombineTimetable);
 	}
-	for(i=0; i<count; i++)		//동적할당 해제
+	/*for(i=0; i<count; i++)		//동적할당 해제 잘 살펴봐야함 여기서 해제?아닌듯
 		free(old->promiseFriendsName[i]);
-	free(old->promiseFriendsName);
+	free(old->promiseFriendsName);*/
 }
 
-void selectChange(char *DBname, struct structPromise *old, int listnumber, char **name,int CombineTimetable[5][13]){
+int selectChange(char *DBname, struct structPromise *old, int listnumber, char **name,int CombineTimetable[5][13]){
 	int i,j;
 	char select[3];
 	char month[3]={0};
@@ -114,6 +114,7 @@ void selectChange(char *DBname, struct structPromise *old, int listnumber, char 
 	char date[3];
 	int year;
 	char Date[10];
+	int check=0;
 
 	char slash[1]={'/'};
 	int Month,Day;
@@ -169,8 +170,10 @@ void selectChange(char *DBname, struct structPromise *old, int listnumber, char 
 		dayofweek=changeDate(old,CombineTimetable);
 	if(!strcmp(select,"4"))
 		changeTime(old,CombineTimetable,dayofweek);
-	if(!strcmp(select,"5"))
+	if(!strcmp(select,"5")){
 		changeName(DBname,CombineTimetable,newCombineTimetable,old);
+		check=1;
+	}
 	printf("1. 약속명   : %s\n",old->promiseName);
 	printf("2. 약속장소 : %s\n",old->promisePlace);
 	printf("3. 약속날짜 : %s\n",old->Promisedate);
@@ -182,9 +185,9 @@ void selectChange(char *DBname, struct structPromise *old, int listnumber, char 
 	printf("수정을 완료했으면 y를 입력하세요. 계속하려면 다른키를 입력하세요.");
 	scanf("%s",&select);
 	if(!strcmp(select,"y"))
-		break;
+		break;		
 	}
-
+	return check;	//check 값을 리턴 check가 1이면 이름변경이 이루어진것, 0이면 이름변경이 없었던것
 }
 
 void promiseChange(char *DBname){
@@ -207,6 +210,8 @@ void promiseChange(char *DBname){
 	char listName[13];
 	char blank[1]={0};
 	int CombineTimetable[5][13]={0};
+	int Check;
+	int friendsCount;
 	recordCombineTimetable(CombineTimetable,DBname);
 	strcpy(openDB,DBname);
 	strcat(openDB,"PromiseList");
@@ -343,7 +348,7 @@ void promiseChange(char *DBname){
 				for(k=0; k<8; k++)
 					strcpy(&oldPromise[i].promiseFriendsName[j][k],"\0");
 	}
-
+	//changePromise 구조체에 수정하기로 선택된 약속의 정보만 빼서 저장
 	strcpy(changePromise.promiseName,oldPromise[listnumber].promiseName);
 	strcpy(changePromise.promisePlace,oldPromise[listnumber].promisePlace);
 	strcpy(changePromise.promiseTime,oldPromise[listnumber].promiseTime);
@@ -360,10 +365,23 @@ void promiseChange(char *DBname){
 	}
 	
 	if(!strcmp(select,"y"))									//y나 Y일때 수정 단계로 넘어감
-		selectChange(DBname,&changePromise,listnumber,transName,CombineTimetable);		//selectChange 함수사용, (현재읽어온 약속리스트정보구조체, 사용자가 선택한 약속리스트번호, 함께하는 회원 이름)을 인수로 넘겨준다.
+		Check=selectChange(DBname,&changePromise,listnumber,transName,CombineTimetable);		//selectChange 함수사용, (현재읽어온 약속리스트정보구조체, 사용자가 선택한 약속리스트번호, 함께하는 회원 이름)을 인수로 넘겨준다.
 	else if(!strcmp(select,"Y"))
-		selectChange(DBname,&changePromise,listnumber,transName,CombineTimetable);
-
+		Check=selectChange(DBname,&changePromise,listnumber,transName,CombineTimetable);
+	
+	friendsCount=atoi(changePromise.promiseFreindsCount);
+	//수정이 완료되었으므로 changePromise구조체의 정보를 원래 약속리스트 해당부분에 덮어씌운다.
+	strcpy(oldPromise[listnumber].promiseName,changePromise.promiseName);
+	strcpy(oldPromise[listnumber].promisePlace,changePromise.promisePlace);
+	strcpy(oldPromise[listnumber].promiseTime,changePromise.promiseTime);
+	strcpy(oldPromise[listnumber].Promisedate,changePromise.Promisedate);
+	if(Check==1) {
+		for(i=0;i<j; i++)
+			strcpy(oldPromise[listnumber].promiseFriendsName[i],"\0");
+		for(i=0; i<friendsCount; i++) {
+			strcpy(oldPromise[listnumber].promiseFriendsName[i],changePromise.promiseFriendsName[i]);
+		}
+	}
 
 
 	for(i=0;i<listCount; i++)			//동적할당 해제
