@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Togedule", "Togedule.vcxproj", "{87827712-A0D2-48AA-AC3C-E1051A6D2694}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Togedule", "Togedule.vcxproj", "{BCCB36A6-EF55-45BF-84DF-F64B306B7958}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{87827712-A0D2-48AA-AC3C-E1051A6D2694}.Debug|Win32.ActiveCfg = Debug|Win32
-		{87827712-A0D2-48AA-AC3C-E1051A6D2694}.Debug|Win32.Build.0 = Debug|Win32
-		{87827712-A0D2-48AA-AC3C-E1051A6D2694}.Release|Win32.ActiveCfg = Release|Win32
-		{87827712-A0D2-48AA-AC3C-E1051A6D2694}.Release|Win32.Build.0 = Release|Win32
+		{BCCB36A6-EF55-45BF-84DF-F64B306B7958}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BCCB36A6-EF55-45BF-84DF-F64B306B7958}.Debug|Win32.Build.0 = Debug|Win32
+		{BCCB36A6-EF55-45BF-84DF-F64B306B7958}.Release|Win32.ActiveCfg = Release|Win32
+		{BCCB36A6-EF55-45BF-84DF-F64B306B7958}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

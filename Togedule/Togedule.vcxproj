@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{87827712-A0D2-48AA-AC3C-E1051A6D2694}</ProjectGuid>
+    <ProjectGuid>{BCCB36A6-EF55-45BF-84DF-F64B306B7958}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Togedule</RootNamespace>
   </PropertyGroup>
