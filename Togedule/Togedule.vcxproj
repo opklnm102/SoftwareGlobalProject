@@ -80,8 +80,9 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="mainMenu.c" />
     <ClCompile Include="membership.c" />
-    <ClCompile Include="moneyTest.c" />
+    <ClCompile Include="moneyShare.c" />
     <ClCompile Include="promise.c" />
+    <ClCompile Include="promiseChange.c" />
     <ClCompile Include="promisePlace.c" />
     <ClCompile Include="pwFind.c" />
     <ClCompile Include="timeTable.c" />

@@ -57,17 +57,6 @@ void listBorderDraw1(int x, int y){
 	printf("└───────────────────────────────────────┘");
 }
 
-
-
-//버퍼에 남아있는거 체크
-void checkInput(){
-	int ch;
-	ch = getchar();
-	if(ch == 32){
-		printf("please check the input whether it is valld or not.\n");
-		exit(0);
-	}
-}
 //글자색,글자배경색 변경
 void setcolor(int color, int bgcolor){
  SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), ((bgcolor&0xf)<<4) | (color&0xf));

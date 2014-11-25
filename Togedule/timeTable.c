@@ -1,4 +1,3 @@
-
 #include"structHeader.h"
 
 char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"};

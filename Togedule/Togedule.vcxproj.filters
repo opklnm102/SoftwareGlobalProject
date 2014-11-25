@@ -30,9 +30,6 @@
     <ClCompile Include="membership.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="moneyTest.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="promise.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -43,6 +40,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="timeTable.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="moneyShare.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="promiseChange.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

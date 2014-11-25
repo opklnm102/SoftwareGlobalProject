@@ -34,7 +34,7 @@ void mainMenu(structMember *s){
 		promise(s);
 		break;
 	case '4' :  //돈 나눠주세요
-		moneyShare(); break;
+		moneyShare1(s); break;
 	case '5' :  //나갈래요
 		exit(1);
 	}

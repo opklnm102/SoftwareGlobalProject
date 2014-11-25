@@ -48,9 +48,8 @@ typedef struct structCost{
 
 /*-------------------------------구조체정의 끝--------------------------------*/
 
-//char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"}; // 전역변수.
 
-//extern char dayOfWeek[5][4]; // 전역변수.
+extern char dayOfWeek[5][4]; // 전역변수.
 
 /*-------------------------------함수원형선언--------------------------------*/
 //로그인관련
@@ -81,7 +80,7 @@ void showMenu();  //약속메뉴들 출력
 void promiseList(char *DBname);	// 로그인한 회원의 약속리스트를 불러오는 함수 , 출력만 한다. 없을경우 없다고 출력해준다.
 void changeLocation( char* str );
 
-void selectChange(char *DBname, struct structPromise *old, int listnumber, char **name,int CombineTimetable[5][13]);
+int selectChange(char *DBname, struct structPromise *old, int listnumber, char **name,int CombineTimetable[5][13]);
 int recordCombineTimetable(int CombineTimetable[5][13], char *DBname);
 int checkDateTime(int CombineTimetable[5][13], struct structPromise *old);
 void changePromiseName(struct structPromise *old);
