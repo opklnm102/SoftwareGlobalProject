@@ -50,7 +50,7 @@ typedef struct structCost{
 
 //char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"}; // 전역변수.
 
-extern char dayOfWeek[5][4]; // 전역변수.
+//extern char dayOfWeek[5][4]; // 전역변수.
 
 /*-------------------------------함수원형선언--------------------------------*/
 //로그인관련
@@ -64,7 +64,7 @@ void timetableMenu(structMember *s); //시간표메뉴함수->시간표 시작
 void timetableDraw(); //시간표그리기함수
 void saveTimetalbe(structSubject* subjectPointer, int subjectTotalCnt); //시간표 txt로 저장하는 함수
 void classAtoi(char *dayOfWeek, int *savedClass); //교시를 char->int으로 바꾸어주는 함수
-//bool checkOverlappingClass(Subject* subjectPointer,Subject subject,int subjectTotalCnt); //중복교시체크함수
+int checkOverlappingClass(structSubject* subjectPointer,structSubject subject,int subjectTotalCnt); //중복교시체크함수
 void InputSubjectCnt(); // 시간표만들기 - 월~금 과목갯수 입력 함수
 void InputSubjectNameAndClass( int* SubjectCntOfday, int subjectTotalCnt) ; // 시간표만들기 - 이름/교시 입력함수
 void modifyMenu(); //시간표수정메뉴함수
