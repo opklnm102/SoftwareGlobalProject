@@ -3,11 +3,11 @@
 //약속장소 고르기 함수
 void promisePlace(char *DBname,struct structPromise *newPromise){
 	FILE *fp1;
-	char place[20],DBplace[30];
+	char place[20],DBplace[40];
 	int placeSelect;  //장소선택
 	int placeCount;  //소분류의 수
 	char **subcategory;  //소분류 저장공간
-	int i,j,len;
+	int i,len;
 	
 
 	fp1=fopen("place.txt","r");  //장소리스트DB 열고
@@ -65,8 +65,8 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 
 	subcategory = (char **)malloc(sizeof(char*) *placeCount);  //소분류만큼 동적할당
 	for(i=0; i<placeCount; i++){
-		subcategory[i] = (char *)malloc(sizeof(char)*30);
-		fgets(subcategory[i],30,fp1);  //소분류의 내용들 저장
+		subcategory[i] = (char *)malloc(sizeof(char)*40);
+		fgets(subcategory[i],40,fp1);  //소분류의 내용들 저장
 	}
 
 	while(1){
@@ -76,7 +76,7 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 
 		printf("소분류 선택>>"); scanf("%d",&placeSelect); fflush(stdin);
 
-		if(1 <= placeSelect && placeSelect <= placeCount-1) break;
+		if(1 <= placeSelect && placeSelect <= placeCount) break;
 		printf("리스트에 있는 것중에 고르시오\n");
 		getch();
 	}
@@ -90,10 +90,11 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 	fclose(fp1);	
 
 }
-void saveNewpromise(char *DBname,struct structPromise *newPromise) {
+
+void saveNewpromise(char *DBname,struct structPromise *newPromise) {		//기존약속리스트에 새 약속을 추가하는 함수
 	char openDB[40];
 	FILE *fp;
-	char promisecount[5];
+	int friendCount=0;
 	int promiseCount=0;
 	char check[40];
 	char **oldPromisePlace;
@@ -113,7 +114,7 @@ void saveNewpromise(char *DBname,struct structPromise *newPromise) {
 		fprintf(fp,"\n");
 		fprintf(fp,newPromise->promisePlace);						
 		fprintf(fp,newPromise->promiseTime);
-		fprintf(fp,"시\n");
+		fprintf(fp,"\n");
 		fprintf(fp,newPromise->Promisedate);
 		fprintf(fp,"\n");
 		promiseCount=atoi(newPromise->promiseFreindsCount);			//serchName함수에서 저장한 이름검색이 된 회원의 학번을 하나씩 삽입.  
@@ -176,8 +177,7 @@ void saveNewpromise(char *DBname,struct structPromise *newPromise) {
 		fclose(fp);
 		fp=fopen(openDB,"w");												//w버전으로 약속리스트를 다시 열어 기존 파일을 날리고 새로 작성한다.
 		fprintf(fp,"약속리스트\n");
-		itoa(promiseCount+1,promisecount,10);
-		fprintf(fp,"%s\n",promisecount);
+		fprintf(fp,"%d\n",promiseCount+1);
 		for(i=0; i<promiseCount; i++) {			
 			fprintf(fp,"%s\n",oldPromise[i].promiseName);
 			fprintf(fp,"%s",oldPromisePlace[i]);			//장소DB에서 읽어올때 맨뒤에 null이 하나 포함되서 읽어오는 모양.. 그래서 여기엔 null을 안찍어도 된다.
@@ -190,14 +190,14 @@ void saveNewpromise(char *DBname,struct structPromise *newPromise) {
 			fprintf(fp,"\n");
 		fprintf(fp,"%s\n",newPromise->promiseName);
 		fprintf(fp,"%s",newPromise->promisePlace);				//마찬가지로 null안찍어도됨.
-		fprintf(fp,"%s시\n",newPromise->promiseTime);
+		fprintf(fp,"%s\n",newPromise->promiseTime);
 		fprintf(fp,"%s\n",newPromise->Promisedate);
-		promiseCount=atoi(newPromise->promiseFreindsCount);
-		for(i=0; i<promiseCount; i++) {		
+		friendCount=atoi(newPromise->promiseFreindsCount);
+		for(i=0; i<friendCount; i++) {		
 			if(strcmp(newPromise->promiseFriendsName[i],"\0")){
 				fprintf(fp,"%s",newPromise->promiseFriendsName[i]);				
 				}
-			if(i!=promiseCount-1)
+			if(i!=friendCount-1)
 				fprintf(fp,",");
 		}
 		fprintf(fp,"\n");

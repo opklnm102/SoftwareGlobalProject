@@ -21,7 +21,7 @@ typedef struct structMember{
 //약속 구조체
 typedef struct structPromise{ 
 	char promiseName [41];  //약속명
-	char promisePlace[30];  //장소 이름을 모르기 때문에 포인터 DB의 문자열을 가리킬 것이다 //장소DB 계획이 아직 구체적으로 안나와서 일단 배열로 분배.
+	char promisePlace[40];  //장소 이름을 모르기 때문에 포인터 DB의 문자열을 가리킬 것이다 //장소DB 계획이 아직 구체적으로 안나와서 일단 배열로 분배.
     char promiseTime[6];  //약속시간
 	char Promisedate[10];  //약속날짜
 	char promiseFreindsCount[2];//추가
@@ -75,29 +75,36 @@ void removeTimetable(); //시간표삭제함수(시간표txt파일삭제)
 
 
 //약속관련
-void promise(structMember *s);  //약속 시작
-void showMenu();  //약속메뉴들 출력
-void promiseList(char *DBname);	// 로그인한 회원의 약속리스트를 불러오는 함수 , 출력만 한다. 없을경우 없다고 출력해준다.
-void changeLocation( char* str );
-
-int selectChange(char *DBname, struct structPromise *old, int listnumber, char **name,int CombineTimetable[5][13]);
-int recordCombineTimetable(int CombineTimetable[5][13], char *DBname);
-int checkDateTime(int CombineTimetable[5][13], struct structPromise *old);
-void changePromiseName(struct structPromise *old);
-void promiseCreatConsole(char *DBname);	//약속만들기 함수 (약속명, 인원수 입력  .이름 검색함수 내부 포함. 약속 리스트 출력)
-void promisePlace(char *DBname, struct structPromise *newPromise);  //약속장소 선택
-void setMajor(char ID[8], char Major[20]);
-void promiseChange(char *DBname);					
-int callendar(int Month);																	       //달력
-int weekday(int year, int month, int day);															 //요일 찾는 함수 리턴 정수
-void saveNewpromise(char *DBname,struct structPromise *newPromise);									//약속을 저장해서 txt 파일을 만드는 함수
-void selectName(char *DBname,struct structPromise *newPromise);											//약속명을 입력받는 함수
-int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13]);		//이름 검색하는 함수
-int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise *newPromise);			//함께할 회원수를 입력하고 검색함수 콜해서 검색후 선택하는 함수
-void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofWeek);		//  시간 입력받는 함수
-int selectDate(int CombineTimetable[5][13],structPromise *newPromise);  //  날짜입력받는 함수
-
-
+//약속수정부분
+void promiseChange(char *DBname,char *logID);   //약속수정 시작-> 리스트 출력-> 리스트 선택-> 약속수정항목 선택함수 호출-> 약속저장함수들 호출 하는 함수
+int selectChange(char *DBname, struct structPromise *old, int listnumber, char **name,int CombineTimetable[5][13],char checkPlace[3]);    //약속수정항목 선택
+void changePromiseName(struct structPromise *old);   //약속수정-> 약속명 수정
+void changePlace(char *DBname, struct structPromise *old);  //약속수정-> 약속장소 수정
+int changeDate(struct structPromise *old,int newCombineTimetable[5][13]);    //약속수정-> 약속날짜 수정
+void changeTime(struct structPromise *old,int newCombineTimetable[5][13],int dayofweek);   //약속수정-> 약속시간 수정
+int changeName(char *DBname,int CombineTimetable[5][13],int newCombineTimetable[5][13] ,struct structPromise *old);    //약속수정-> 약속을 같이잡을 회원들 이름 수정
+int checkDateTime(int CombineTimetable[5][13], struct structPromise *old);   //약속수정-> 현재 약속이 가능한지 체크. 이름을 수정했을때 불러서 바뀐 통합시간표를 근거로 체크
+void saveMyPromiseList(struct structPromise *promiseList, char *DBname, int listCount,char **friendsName,char **cost,int listnumber);   //약속리스트 수정부분을 맞는 위치에 저장하는 함수
+void deletePromise(char *friendID,char *promiseName, char *promiseDate, char *promiseTime);    //약속리스트를 읽고 매개변수로 주어진 약속이름, 약속날짜, 약속시간과 같은 약속항목을 찾아 삭제하는 함수 약속이 그거 하나만 있었을 때는 파일을 날린다.
+//약속장소고르기,저장부분
+void promisePlace(char *DBname,struct structPromise *newPromise);   //약속 장소 고르기 함수
+void saveNewpromise(char *DBname,struct structPromise *newPromise);   //기존 약속리스트에 새 약속을 추가하는 함수
+//약속만들기부분
+void promise(structMember *s);   //약속만들기 메인함수. 메뉴선택을 입력받는다.
+void showMenu();    //약속만들기 메인메뉴출력함수
+void promiseList(char *DBname);   //회원의 약속리스트를 출력하는 함수
+void promiseCreatConsole(char *DBname, char *logID);    //약속만들기 함수. 입력받는 모든 함수들 호출, 저장하는 함수들 호출
+void selectName(char *DBname,struct structPromise *newPromise);   //약속명을 입력받는 함수
+int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise *newPromise);    //회원수를 입력받고 회원수만큼 이름을 입력받아 이름검색함수를 호출하는 함수
+int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13],char *MyDB);   //이름검색함수 (검색할이름, 함께하는회원중 리스트에 안올라간 회원수,새약속구조체,통합시간표) 를 매개변수로 받는다
+void setMajor(char ID[8],char Major[20]);   //학번 3번째,4번째 자리를 바탕으로 학과정보를 알아내는 함수
+int recordCombineTimetable(int CombineTimetable[5][13], char *DBname);   //통합시간표에 정보를 추가하는 함수, 통합시간표와 '학번+이름' 문자열을 매개변수로 받아서 처리
+int selectDate(int CombineTimetable[5][13],structPromise *newPromise);    //만들 약속의 날짜 입력받는 함수
+int callendar(int Month);    //달력출력함수. 월을 매개변수로 넘겨받는다. selectDate 함수에서 입력받은 달을 넘겨받음.
+int weekday(int year, int month, int day);   //년도, 월, 일 을 매개변수로 받아 요일 찾는 함수. 리턴값은 정수형태
+void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofWeek);    //만들 약속의 시간을 입력받는 함수
+void saveFriendsID(char ID[8], char *DB);    //학번을 매개변수로 받아 학번+이름을 알아내는 함수
+void changeLocation( char* str );    //문자열 처리함수 맨 앞의 글자를 없애고 한글자씩 땡기는 함수
 //비용관련
 void moneyShare1(structMember *s);  //돈나눠주세요 시작
 void moneyShare2();  //돈나누는 모드 고르는 기능

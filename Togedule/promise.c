@@ -135,7 +135,7 @@ void setMajor(char ID[8],char Major[20])	{		//ÇĞ¹ø 3,4ÀÚ¸®¸¦ ¹ÙÅÁÀ¸·Î ÇĞ°ú ¾Ë¾Æ³
 	strcpy(Major,noMajor);		//¾øÀ»°æ¿ì "ÇĞ°úÁ¤º¸¾øÀ½" À» Major¿¡ ÀúÀå		
 }
 
-int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13]){		//ÀÌ¸§°Ë»öÇÔ¼ö.. (°Ë»öÇÒÀÌ¸§, ÇÔ²²ÇÏ´ÂÈ¸¿øÁß ¸®½ºÆ®¿¡ ¾È¿Ã¶ó°£ È¸¿ø¼ö,»õ¾à¼Ó±¸Á¶Ã¼,ÅëÇÕ½Ã°£Ç¥) ¸¦ º¯¼ö·Î ¹Ş´Â´Ù.
+int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13],char *MyDB){		//ÀÌ¸§°Ë»öÇÔ¼ö.. (°Ë»öÇÒÀÌ¸§, ÇÔ²²ÇÏ´ÂÈ¸¿øÁß ¸®½ºÆ®¿¡ ¾È¿Ã¶ó°£ È¸¿ø¼ö,»õ¾à¼Ó±¸Á¶Ã¼,ÅëÇÕ½Ã°£Ç¥) ¸¦ º¯¼ö·Î ¹Ş´Â´Ù.
 	int exist=0;
 	char openDB[40];
 	char check[30];
@@ -165,26 +165,28 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 			if(!strcmp(listName,name)){				//°Ë»öÇÒ ÀÌ¸§°ú °°Àº ÀÌ¸§ÀÌ¸é
 				strcpy(openDB,ID);
 				strcat(openDB,name);
-				strcat(openDB,textFile);
-				fp1 = fopen(openDB, "r");			//ÇĞ¹ø°ú ÀÌ¸§À» ÀÌ¿ë ÇØ´çÈ¸¿øÁ¤º¸ÆÄÀÏÀ» ÀĞ´Â´Ù.
+				if(strcmp(openDB,MyDB)){
+					strcat(openDB,textFile);
+					fp1 = fopen(openDB, "r");			//ÇĞ¹ø°ú ÀÌ¸§À» ÀÌ¿ë ÇØ´çÈ¸¿øÁ¤º¸ÆÄÀÏÀ» ÀĞ´Â´Ù.
 
-				if ( !fp1 ) {						//¾øÀ¸¸é ºê·¹ÀÌÅ© Ã³¸®.. ¸¸¿¡ÇÏ³ª È¸¿ø¸ñ·Ï¿¡´Â ÀÖ°í È¸¿øÁ¤º¸°¡ ¾ø´Â °æ¿ì¸¦ Ã¼Å©ÇÔ
-					printf("%sÈ¸¿øÀÇ Á¤º¸°¡ ¾ø½À´Ï´Ù.",name );
-					exist=1;
-					break;
-				}
-
-				while (!feof(fp1)) {				//È¸¿øÁ¤º¸¿¡¼­ ÇĞ¹ø°ú ÀÌ¸§À» ÀĞ¾î¿Í ±¸Á¶Ã¼ friendID¿¡ ÀúÀåÇÑ´Ù.
-					fscanf(fp1, "%s", &check);
-					if(!strcmp(check,"È¸¿øÁ¤º¸")){
-						fscanf(fp1,"%s", friendID.ID);
-						fscanf(fp1,"%s", friendID.name);
+					if ( !fp1 ) {						//¾øÀ¸¸é ºê·¹ÀÌÅ© Ã³¸®.. ¸¸¿¡ÇÏ³ª È¸¿ø¸ñ·Ï¿¡´Â ÀÖ°í È¸¿øÁ¤º¸°¡ ¾ø´Â °æ¿ì¸¦ Ã¼Å©ÇÔ
+						printf("%sÈ¸¿øÀÇ Á¤º¸°¡ ¾ø½À´Ï´Ù.",name );
+						exist=1;
+						break;
 					}
+
+					while (!feof(fp1)) {				//È¸¿øÁ¤º¸¿¡¼­ ÇĞ¹ø°ú ÀÌ¸§À» ÀĞ¾î¿Í ±¸Á¶Ã¼ friendID¿¡ ÀúÀåÇÑ´Ù.
+						fscanf(fp1, "%s", &check);
+						if(!strcmp(check,"È¸¿øÁ¤º¸")){
+							fscanf(fp1,"%s", friendID.ID);
+							fscanf(fp1,"%s", friendID.name);
+						}
+					}
+					setMajor(friendID.ID,major);		//setMajorÇÔ¼ö ÀÌ¿ë. ÇĞ°úÁ¤º¸¸¦ ¾Ë¾Æ¿Í¼­ major¿¡ ÀúÀå
+					fclose(fp1);					//±×µÚ È¸¿øÁ¤º¸ÆÄÀÏÀ» ´İ°í
+					printf("%d %s %s %s\n",overlap,major,friendID.ID,friendID.name);		//Áßº¹¸ñ·ÏÀ» ¶ç¿öÁÖ±â À§ÇØ Ãâ·ÂÀ» ÇØÁØ´Ù. ÇöÀç ÇĞ¹øÀ» ÇĞ°ú·Î ¹Ù²Ù´Â ºÎºĞÀÌ ºüÁ®¼­ ÇĞ¹øÀ» µÎ¹ø Ãâ·ÂÇÏ°Ô µÇÀÖ´Ù.
+					overlap++;						//¸®½ºÆ® ¹øÈ£¸¦ Áõ°¡½ÃÅ°°í ¹İº¹...¹İº¹ÇØ¼­ °°Àº ÀÌ¸§À» °è¼Ó Ã£¾Æ³ª°£´Ù.
 				}
-				setMajor(friendID.ID,major);		//setMajorÇÔ¼ö ÀÌ¿ë. ÇĞ°úÁ¤º¸¸¦ ¾Ë¾Æ¿Í¼­ major¿¡ ÀúÀå
-				fclose(fp1);					//±×µÚ È¸¿øÁ¤º¸ÆÄÀÏÀ» ´İ°í
-				printf("%d %s %s %s\n",overlap,major,friendID.ID,friendID.name);		//Áßº¹¸ñ·ÏÀ» ¶ç¿öÁÖ±â À§ÇØ Ãâ·ÂÀ» ÇØÁØ´Ù. ÇöÀç ÇĞ¹øÀ» ÇĞ°ú·Î ¹Ù²Ù´Â ºÎºĞÀÌ ºüÁ®¼­ ÇĞ¹øÀ» µÎ¹ø Ãâ·ÂÇÏ°Ô µÇÀÖ´Ù.
-				overlap++;						//¸®½ºÆ® ¹øÈ£¸¦ Áõ°¡½ÃÅ°°í ¹İº¹...¹İº¹ÇØ¼­ °°Àº ÀÌ¸§À» °è¼Ó Ã£¾Æ³ª°£´Ù.
 			}
 		}
 		fclose(fp);
@@ -210,9 +212,13 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 		while (!feof(fp)) {					//¿­¾î¼­ À§¿¡ ÀÔ·Â¹ŞÀº ¸®½ºÆ® ¹øÈ£°¡ µÉ¶§±îÁö ÀĞ¾îÁÖ¸ç °ªÀ» Ã£´Â´Ù. ¸®½ºÆ® ¼ø¼­´Â È¸¿ø¸ñ·Ï ¼ø¼­¿Í °°À¸¹Ç·Î ÀÌ·¸°Ô Ã³¸®ÇÑ´Ù.
 			fscanf(fp, "%s %s", &ID, &listName);
 			if(!strcmp(listName,name)){
-				if(overlap==limit)
-					break;
-				limit++;
+				strcpy(openDB,ID);
+				strcat(openDB,listName);
+				if(strcmp(openDB,MyDB)){
+					if(overlap==limit)
+						break;
+					limit++;
+				}
 			}
 		}
 		fclose(fp);
@@ -230,6 +236,7 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 	}	
 	return exist;			//exist¸¦ ¸®ÅÏ°ªÀ¸·Î °¡Áø´Ù. ÀÌ¸§°Ë»öÀÌ ‰çÀ¸¸é 0ÀÌ ¸®ÅÏ, ¾ø´Â ÀÌ¸§ÀÌ¸é À§¿¡¼­ 1À» ¸®ÅÏÇÏ°Ô µÇÀÖ´Ù.
 }
+
 int callendar(int Month) {		//´Ş·ÂÃâ·ÂÇÔ¼ö. ¿ùÀ» ÀÎ¼ö·Î ³Ñ°Ü¹Ş´Â´Ù. selectDate ÇÔ¼ö¿¡¼­ ÀÔ·Â¹ŞÀº ´ŞÀ» ³Ñ°Ü¹ŞÀ½.
 	int last,th,year,day,date,x,z,y,m;
 	time_t curr;
@@ -313,7 +320,8 @@ int weekday(int year, int month, int day) //³âµµ, ¿ù, ÀÏ À» ÀÔ·Â¹Ş¾Æ ¿äÀÏ Ã£´Â Ç
 
 	return (day + (month + 1) * 26 / 10 + year_2 + (year_2 / 4) + (year_1 / 4) - 2 * year_1 - 2) % 7;
 }
-int selectDate(int CombineTimetable[5][13],structPromise *newPromise){	//¸¸µé ¾à¼ÓÀÇ ¿äÀÏ, ½Ã°£, ³¯Â¥ ÀÔ·Â¹Ş´Â ¿ªÇÒÀ» ÇÏ´Â ÇÔ¼ö (ÅëÇÕ½Ã°£Ç¥, ÇĞ¹ø+ÀÌ¸§ ¹®ÀÚ¿­, »õ¾à¼Ó±¸Á¶Ã¼)¸¦ ÀÎ¼ö·Î ¹Ş´Â´Ù.
+
+int selectDate(int CombineTimetable[5][13],structPromise *newPromise){	//¸¸µé ¾à¼ÓÀÇ ³¯Â¥ ÀÔ·Â¹Ş´Â ÇÔ¼ö
 
 	char dayofweek[3];
 	char month[10];
@@ -404,18 +412,36 @@ int selectDate(int CombineTimetable[5][13],structPromise *newPromise){	//¸¸µé ¾à
 
 	return dayofWeek;
 }
+
 void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofWeek){
 	int errorCheck;
 	char time[27];
+	char timeCopy[27];
+	char temp[10]={0};
+	int i;
 	int Time;
+	int length;
 
 	printf("¾à¼Ó½Ã°£À» ÀÔ·Â(ex 3½Ã)");
 	scanf("%s",time);
-		
+	strcpy(timeCopy,time);
+	length=strlen(temp);
+	for(i=0; i<length; i++)
+		temp[i]='\0';
+	length=strlen(time);
+	for(i=0;i<length;i++) {
+		if(strncmp(time,"½Ã",1)!=0){
+
+			strncat(temp,time,1);
+			changeLocation(time);
+		}
+		if(strncmp(time,"½Ã",1)==0) {				//'¿ù'ÀÌ¶ó´Â ´Ü¾î¸¦ Á¦¿ÜÇÏ°í ¼ıÀÚºÎºĞ¸¸ ¶¼³»¾î¼­ Á¤¼öÇü º¯¼ö Month¿¡ ÀúÀå  
+			Time=atoi(temp);
+			break;
+		}		
+	}	
 	while(1){						//½Ã°£ÀÌ ÅëÇÕ½Ã°£Ç¥¿¡ °ãÄ¡´Â ½Ã°£ÀÌ¸é ÀçÀÔ·Â. Á¦´ë·Î ÀÔ·Â½Ã ³Ñ±è
 		errorCheck=0;
-		Time = atoi(time);
-		printf("%d ",Time);
 		if(CombineTimetable[dayofWeek][Time-1]==1){
 			printf("%d %d",dayofWeek,Time-1);
 			errorCheck=1;
@@ -424,10 +450,22 @@ void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofW
 			break;
 		printf("ÇØ´ç ½Ã°£Àº ºñ¾îÀÖÁö ¾Ê½À´Ï´Ù. ÅëÇÕ ½Ã°£Ç¥¸¦ ´Ù½Ã ÇÑ¹ø º¸°í ¼±ÅÃÇÑ ³¯Â¥ÀÇ ºó½Ã°£À» ÀÔ·ÂÇÏ¼¼¿ä: ");
 		scanf("%s",&time);
+		strcpy(timeCopy,time);
+		for(i=0;i<length;i++) {
+			if(strncmp(time,"½Ã",1)!=0){
+				strncat(temp,time,1);
+				changeLocation(time);
+			}
+			if(strncmp(time,"½Ã",1)==0) {				//'¿ù'ÀÌ¶ó´Â ´Ü¾î¸¦ Á¦¿ÜÇÏ°í ¼ıÀÚºÎºĞ¸¸ ¶¼³»¾î¼­ Á¤¼öÇü º¯¼ö Month¿¡ ÀúÀå  
+				Time=atoi(temp);
+				break;
+			}		
+		}
 	}
-	strcpy(newPromise->promiseTime,time);			//ÀÚ·á ÀúÀåÀ» À§ÇÑºÎºĞ ÀÓ½Ã·Î ¿©±â¿¡ »ğÀÔ. µÚ¿¡ Àå¼ÒDB°¡ ¸¸µé¾îÁö°í Àå¼ÒÇÔ¼öµµ ¸¸µé¾îÁö¸é ±×ÂÊÀ¸·Î ¿Å±æ ¿¹Á¤
+	strcpy(newPromise->promiseTime,timeCopy);			//ÀÚ·á ÀúÀåÀ» À§ÇÑºÎºĞ ÀÓ½Ã·Î ¿©±â¿¡ »ğÀÔ. µÚ¿¡ Àå¼ÒDB°¡ ¸¸µé¾îÁö°í Àå¼ÒÇÔ¼öµµ ¸¸µé¾îÁö¸é ±×ÂÊÀ¸·Î ¿Å±æ ¿¹Á¤
 	
 }
+
 void saveFriendsID(char ID[8], char *DB) {
 	FILE *fp;
 	char openDB[40];
@@ -452,10 +490,11 @@ void saveFriendsID(char ID[8], char *DB) {
 	fclose(fp);	
 	strcpy(DB,listID);
 }
-void promiseCreatConsole(char *DBname) {	//¾à¼Ó¸¸µé±â ÇÔ¼ö.¾à¼ÓÀ» ¸¸µå´Âµ¥ ÇÊ¿äÇÔ ÇÔ¼öµéÀ» È£Ãâ. 
-	char Name[13];
+
+void promiseCreatConsole(char *DBname, char *logID) {	//¾à¼Ó¸¸µé±â ÇÔ¼ö.¾à¼ÓÀ» ¸¸µå´Âµ¥ ÇÊ¿äÇÔ ÇÔ¼öµéÀ» È£Ãâ. 
 	char select[3];
 	char DB[25];
+	char friendNameCopy[8]={0};		
 	struct structPromise newPromise;	//»õ·Î¿î ¾à¼ÓÀ» À§ÇÑ ±¸Á¶Ã¼ »ı¼º newPromise
 	int CombineTimetable[5][13]={0};
 	int count,i;
@@ -468,9 +507,12 @@ void promiseCreatConsole(char *DBname) {	//¾à¼Ó¸¸µé±â ÇÔ¼ö.¾à¼ÓÀ» ¸¸µå´Âµ¥ ÇÊ¿äÇ
 	selectTime(CombineTimetable,&newPromise,dayofWeek);
 	promisePlace(DBname,&newPromise);				//¾à¼ÓÀå¼Ò ¼±ÅÃÇÔ¼ö »ç¿ë, (ÇĞ¹ø+ÀÌ¸§, newPromise ±¸Á¶Ã¼)¸¦ ÀÎ¼ö·Î ³Ñ±ä´Ù.
 	saveNewpromise(DBname,&newPromise);
-	for(i=0; i<count; i++) {
-		saveFriendsID(newPromise.promiseFriendsName[i],DB);
+	for(i=0; i<count; i++) {		//¾à¼ÓÀ» ÇÔ²²ÇÒ È¸¿øµéÀÇ °³°³ÀÎÀÇ ¾à¼Ó ¸®½ºÆ®¿¡ ÇöÀç ¾à¼ÓÁ¤º¸¸¦ ÀúÀåÇÏ´Â ºÎºĞ 
+		saveFriendsID(newPromise.promiseFriendsName[i],DB);			//ex) a,b,c,d°¡ ¾à¼ÓÀ» Àâ¾Ò´Ù. a°¡ Áö±İ ·Î±×ÀÎÇØ¼­ ¾à¼ÓÀ» ¸¸µç È¸¿ø. aÈ¸¿øÀÇ ¸®½ºÆ®¿¡´Â b,c,d°¡ ÀúÀåµÇ¾îÀÖÀ½
+		strcpy(friendNameCopy,newPromise.promiseFriendsName[i]);	//Áö±İ ·Î±×ÀÎ µÇ¾îÀÖ´Â È¸¿øÀÇ ¾ÆÀÌµğ¿Í for¹®À¸·Î ¼±ÅÃµÈ ÇÔ²² ¾à¼ÓÀ» ÇÒ È¸¿øµéÁß ÇÏ³ªÀÇ ¾ÆÀÌµğ¸¦ ¹Ù²ãÄ¡±â ÇØ¼­ ÀúÀåÇÑ´Ù. 
+		strcpy(newPromise.promiseFriendsName[i],logID);					//ex) bÈ¸¿øÀÇ ¾à¼Ó¸®½ºÆ®¿¡´Â a,c,d || cÈ¸¿øÀÇ ¾à¼Ó¸®½ºÆ®¿¡´Â b,a,d || dÈ¸¿øÀÇ ¾à¼Ó¸®½ºÆ®¿¡´Â b,c,a ¶ó´Â Á¤º¸°¡ ÀúÀåµÈ´Ù.
 		saveNewpromise(DB,&newPromise);
+		strcpy(newPromise.promiseFriendsName[i],friendNameCopy);		
 	}
 
 	for(i=0; i<count; i++)		//µ¿ÀûÇÒ´ç ÇØÁ¦
@@ -478,11 +520,13 @@ void promiseCreatConsole(char *DBname) {	//¾à¼Ó¸¸µé±â ÇÔ¼ö.¾à¼ÓÀ» ¸¸µå´Âµ¥ ÇÊ¿äÇ
 	free(newPromise.promiseFriendsName);
 
 }
+
 void selectName(char *DBname,struct structPromise *newPromise) {	//¾à¼Ó¸í ÇÔ¼ö. (ÇĞ¹ø+ÀÌ¸§)À» ÀÎ¼ö·Î ¹Ş´Â´Ù.
 	printf(" ¾à¼Ó ¸¸µé±â ");
 	printf(" ¾à¼Ó¸í : ");
 	scanf("%s",&newPromise->promiseName);
 }
+
 int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise *newPromise) {	//¾à¼Ó¸¸µé±â ÇÔ¼ö. ¾à¼Ó¸í, ÀÎ¿ø¼ö, ÀÌ¸§°Ë»ö(ÇÔ¼öÈ£Ãâ)À» ¿©±â¼­ ÇÑ´Ù. (ÇĞ¹ø+ÀÌ¸§)À» ÀÎ¼ö·Î ¹Ş´Â´Ù.
 	int i,j;
 	int Count=0;
@@ -505,7 +549,7 @@ int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise 
 	while(Count>0) {		//ÀÎ¿ø¼ö¸¸Å­ °Ë»öÇÔ¼ö¸¦ µ¹¸°´Ù.
 		printf(" ÀÌ¸§°Ë»ö : ");
 		scanf("%s",&Name);
-		if(!searchName(Name,Count,*newPromise,CombineTimetable))	{	//ÀÌ¸§ °Ë»öÇÔ¼ö¿¡¼­ ¸®ÅÏ°ªÀ» ¹Ş¾Æ¿Â´Ù. ¹Ş¾Æ¿Â ¸®ÅÏ°ªÀÌ 1ÀÌ¸é ÀÌ¸§ÀÌ ¾ø¾ú´ø °æ¿ìÀÌ¹Ç·Î Count°ªÀ» °¨¼ÒÇÏÁö ¾Ê´Â´Ù.
+		if(!searchName(Name,Count,*newPromise,CombineTimetable,DBname))	{	//ÀÌ¸§ °Ë»öÇÔ¼ö¿¡¼­ ¸®ÅÏ°ªÀ» ¹Ş¾Æ¿Â´Ù. ¹Ş¾Æ¿Â ¸®ÅÏ°ªÀÌ 1ÀÌ¸é ÀÌ¸§ÀÌ ¾ø¾ú´ø °æ¿ìÀÌ¹Ç·Î Count°ªÀ» °¨¼ÒÇÏÁö ¾Ê´Â´Ù.
 			Count--;
 		strcat(nameList,Name);		
 		printf("\n ¾à¼Ó¸â¹ö\n");		//¸®½ºÆ®À» À§ÇØ nameList ¹®ÀÚ¿­¿¡ ÀÌ¸§°Ë»ö¿¡ ¼º°øÇÑ È¸¿øÀÇ ÀÌ¸§À» ÀúÀåÇÑ´Ù.					
@@ -554,8 +598,8 @@ void promise(structMember *s){		//¾à¼Ó¸¸µé±â ¸ŞÀÎÇÔ¼ö. (ÇöÀç·Î±×ÀÎµÇÇÑ È¸¿ø±¸Á¶Ã
 	
 	scanf("%c",&menuControl);
 	switch(menuControl) {		//system("cls") ¿ä°Ç È­¸éÀ» Áö¿ì°í ´Ù½Ã Ãâ·ÂÇÏ°Ô ÇÏ´Â ¸í·É <windows.h>ÇÊ¿ä
-	case '1': system("cls"); promiseCreatConsole(DBname);  break;
-	case '2': system("cls"); promiseChange(DBname); break;
+	case '1': system("cls"); promiseCreatConsole(DBname,logID);  break;
+	case '2': system("cls"); promiseChange(DBname,logID); break;
 	case '3': system("cls"); break;
 	}
 
