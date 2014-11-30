@@ -1,4 +1,4 @@
-#include"structHeader.h"
+#include "structHeader.h"
 
 void changePlace(char *DBname, struct structPromise *old) {
 	char blank[1]={0};

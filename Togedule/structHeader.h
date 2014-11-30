@@ -47,9 +47,7 @@ typedef struct structCost{
 }structCost;
 
 /*-------------------------------구조체정의 끝--------------------------------*/
-
-
-extern char dayOfWeek[5][4]; // 전역변수.
+ // 전역변수.
 
 /*-------------------------------함수원형선언--------------------------------*/
 //로그인관련
@@ -59,7 +57,7 @@ void mainMenu(structMember *s);  //로그인 후 메인메뉴
 void pwFind();  //비밀번호 찾기
 
 //시간표관련
-void timetableMenu(structMember *s); //시간표메뉴함수->시간표 시작
+void timetableMenu(); //시간표메뉴함수
 void timetableDraw(); //시간표그리기함수
 void saveTimetalbe(structSubject* subjectPointer, int subjectTotalCnt); //시간표 txt로 저장하는 함수
 void classAtoi(char *dayOfWeek, int *savedClass); //교시를 char->int으로 바꾸어주는 함수
@@ -73,9 +71,8 @@ void removeSubject(); //시간표 과목 삭제
 void sortTimetable(structSubject* subjectPointer,int subjectTotalCnt); // 시간표 (요일)정렬 함수
 void removeTimetable(); //시간표삭제함수(시간표txt파일삭제)
 
-
 //약속관련
-//약속수정부분
+
 void promiseChange(char *DBname,char *logID);   //약속수정 시작-> 리스트 출력-> 리스트 선택-> 약속수정항목 선택함수 호출-> 약속저장함수들 호출 하는 함수
 int selectChange(char *DBname, struct structPromise *old, int listnumber, char **name,int CombineTimetable[5][13],char checkPlace[3]);    //약속수정항목 선택
 void changePromiseName(struct structPromise *old);   //약속수정-> 약속명 수정
@@ -105,6 +102,7 @@ int weekday(int year, int month, int day);   //년도, 월, 일 을 매개변수로 받아 �
 void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofWeek);    //만들 약속의 시간을 입력받는 함수
 void saveFriendsID(char ID[8], char *DB);    //학번을 매개변수로 받아 학번+이름을 알아내는 함수
 void changeLocation( char* str );    //문자열 처리함수 맨 앞의 글자를 없애고 한글자씩 땡기는 함수
+
 //비용관련
 void moneyShare1(structMember *s);  //돈나눠주세요 시작
 void moneyShare2();  //돈나누는 모드 고르는 기능

@@ -1,6 +1,6 @@
 #include"structHeader.h"
 //개인파일로 만들시 꼭 위의 헤더랑 function.c 포함해서 작업해야함
-
+char dayOfWeek[5][4];
 
 void promiseList(char *DBname){	// 로그인한 회원의 약속리스트를 불러오는 함수 , 출력만 한다. 없을경우 없다고 출력해준다.
 	FILE *fp;

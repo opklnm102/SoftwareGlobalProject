@@ -48,6 +48,15 @@
     <ClCompile Include="timeTable.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="makeTimetable.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="modifyTimetable.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="removeTimetable.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="structHeader.h">
