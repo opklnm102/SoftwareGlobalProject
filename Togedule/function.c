@@ -56,7 +56,36 @@ void listBorderDraw1(int x, int y){
 	gotoxy(x,y+10);
 	printf("└───────────────────────────────────────┘");
 }
+//이름 검색틀 출력
+void listBorderDraw2(int x, int y){  
+	int i;   
 
+	gotoxy(x,y);
+	printf("┌───────────────────────────┐");
+
+	for(i=0; i<12; i++) { 
+		gotoxy(x,y+1+i);
+		printf("│                                                      │");
+	}
+
+	gotoxy(x,y+13);
+	printf("└───────────────────────────┘");
+}
+//함께하는 회원리스트 출력
+void listBorderDraw3(int x, int y){  
+	int i;   
+
+	gotoxy(x,y);
+	printf("┌───────────┐");
+
+	for(i=0; i<14; i++) { 
+		gotoxy(x,y+1+i);
+		printf("│                      │");
+	}
+
+	gotoxy(x,y+15);
+	printf("└───────────┘");
+}
 //글자색,글자배경색 변경
 void setcolor(int color, int bgcolor){
  SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), ((bgcolor&0xf)<<4) | (color&0xf));

@@ -8,8 +8,11 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 	int placeCount;  //소분류의 수
 	char **subcategory;  //소분류 저장공간
 	int i,len;
-	
-
+	int x=56,y=8;
+	system("cls");
+	screenBorderDraw();	
+	listBorderDraw2(36,15);
+	gotoxy(x,y); printf("☆ 약속 만들기 ☆");
 	fp1=fopen("place.txt","r");  //장소리스트DB 열고
 
 	if(fp1 == NULL){
@@ -18,17 +21,17 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 	}
 
 	while(1){
-		printf("약속장소\n");
-		printf("--장소리스트--\n");
+		gotoxy(x+1,y+5);printf("--장소리스트--");
 
 		//장소리스트 대분류
-		printf("1. 학습관련시설\n");
-		printf("2. 휴게시설\n");
-		printf("3. 기타시설\n");
-		printf("4. 건강,문화시설\n");
-		printf("대분류 선택>> "); scanf("%d",&placeSelect); fflush(stdin);
+		gotoxy(x-15,y+9);printf("1. 학습관련시설\n");
+		gotoxy(x-15,y+12);printf("2. 휴게시설\n");
+		gotoxy(x-15,y+15);printf("3. 기타시설\n");
+		gotoxy(x-15,y+18);printf("4. 건강,문화시설\n");
+		gotoxy(x-15,y+21);printf("대분류 선택>>"); 
+		gotoxy(x+1,y+21);scanf("%d",&placeSelect); fflush(stdin);
 		if(1 <= placeSelect && placeSelect <= 4) break;
-		printf("리스트에 있는 것중에 고르시오\n");
+		gotoxy(x-15,y+22);printf("리스트에 있는 것중에 고르시오\n");
 		getch();
 		system("cls");
 	}
@@ -69,16 +72,22 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 		fgets(subcategory[i],40,fp1);  //소분류의 내용들 저장
 	}
 
-	while(1){
+	
 		system("cls");
+		screenBorderDraw();	
+		listBorderDraw(37,12);
+		gotoxy(x,y); printf("☆ 약속 만들기 ☆");
+		gotoxy(x+1,y+3);printf("--장소리스트--");
 		for(i=0; i<placeCount; i++)  //소분류 출력
-			printf("%d. %s",i+1,subcategory[i]);
-
-		printf("소분류 선택>>"); scanf("%d",&placeSelect); fflush(stdin);
-
+		{
+			gotoxy(x-13,y+6+(i*1));printf("%d. %s",i+1,subcategory[i]);
+		}
+		gotoxy(x-13,y+25);printf("소분류 선택>>");
+	while(1){
+		 gotoxy(x+2,y+25);scanf("%d",&placeSelect); fflush(stdin);
 		if(1 <= placeSelect && placeSelect <= placeCount) break;
-		printf("리스트에 있는 것중에 고르시오\n");
-		getch();
+		gotoxy(x,y+25);printf("       ");
+		gotoxy(x-13,y+26);printf("리스트에 있는 것중에 고르시오\n");
 	}
 	strcpy(newPromise->promisePlace,subcategory[placeSelect-1]);  //기존의 다른 약속정보들이 저장되있는 newPromise 구조체에 장소 정보도 저장
 	

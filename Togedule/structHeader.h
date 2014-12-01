@@ -112,6 +112,8 @@ void gotoxy(int x, int y);  //좌표설정
 void screenBorderDraw(); //전체화면틀출력함수
 void listBorderDraw(int x, int y); //메뉴틀출력함수
 void listBorderDraw1(int x, int y);  //약속리스트틀출력
+void listBorderDraw2(int x, int y);	//이름검색리스트틀출력
+void listBorderDraw3(int x, int y);	//약속함께할회원리스트틀출력
 void checkInput();  //버퍼에 남아있는거 체크
 void setcolor(int color, int bgcolor);  //글자색,글자배경색 변경
 
