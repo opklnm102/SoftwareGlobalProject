@@ -1,16 +1,21 @@
 #include"structHeader.h"
 
 //시간표(txt파일)삭제
-void removeTimetable() {
+void removeTimetable(structMember *s) {
 
 	FILE *fp;
 	int nResult;
 	char answer;
+	char fileName[30];
 
 	listBorderDraw(3,12);
 
+	strcpy(fileName,s->ID);
+	strcat(fileName,s->name);
+	strcat(fileName,"timetable");
+	strcat(fileName,".txt");
 
-	fp=fopen("timetable.txt","r");
+	fp=fopen(fileName,"r");
 
 	//timetable.txt가 없는 경우
 	if(fp == NULL ) {
@@ -31,7 +36,7 @@ void removeTimetable() {
 	scanf("%c",&answer);
 
 	if(answer == 'y' || answer == 'Y') {
-		nResult = remove("timetable.txt");
+		nResult = remove(fileName);
 		if(nResult == 0) {
 			gotoxy(8,26);
 			printf("*시간표가 정상적으로 삭제되었습니다*");  //지우기 성공
