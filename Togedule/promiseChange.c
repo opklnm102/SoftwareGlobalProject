@@ -288,19 +288,20 @@ void promiseChange(char *DBname,char *logID){
 	int x=35,y=11;
 	char controlList[3]={0};
 	screenBorderDraw();	
-
+	gotoxy(56,6); printf("☆ 약속수정 ☆");
+	gotoxy(54,8); printf("- 나의 약속리스트 -");
+	listBorderDraw2(x,y);
 	recordCombineTimetable(CombineTimetable,DBname);
 	strcpy(openDB,DBname);
 	strcat(openDB,"PromiseList");
 	strcat(openDB,textFile);
 	fp = fopen(openDB, "r");
 	if ( fp == NULL ) {
-		printf("현재 생성된 약속리스트가 없습니다.");
+		gotoxy(x+12,y+1);printf("현재 생성된 약속리스트가 없습니다.");
 		return ;
 	}
 	while (!feof(fp)) {			//약속리스트 열어서 리스트에 적혀진 개수만큼 이름과 날짜를 읽어서 출력하는 부분
-		gotoxy(54,8); printf("☆ 나의 약속리스트 ☆");
-		listBorderDraw2(x,y);
+		
 		gotoxy(x+8,y+1); printf("약속명                      약속날짜");
 		fscanf(fp, "%s", &check);
 		if(!strcmp(check,"약속리스트")){
@@ -647,7 +648,7 @@ void deletePromise(char *friendID,char *promiseName, char *promiseDate, char *pr
 				for(j=0; j<60; j++)
 					strcpy(&friendsName[i][j],"\0");
 			}
-				
+
 			cost=(char**)malloc(sizeof(char*)*promiseCount);						//장소가 띄어쓰기 포함이기 때문에 structPromise구조체의 장소멤버 사용하기 힘드므로 
 			for(i=0; i<promiseCount; i++) {													//그냥 이중포인터 문자배열 사용
 				cost[i]=(char*)malloc(sizeof(char)*10);

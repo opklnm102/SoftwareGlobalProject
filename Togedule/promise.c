@@ -629,7 +629,7 @@ void promise(structMember *s){		//약속만들기 메인함수. (현재로그인되한 회원구조�
 	switch(menuControl) {		//system("cls") 요건 화면을 지우고 다시 출력하게 하는 명령 <windows.h>필요
 	case '1':  promiseCreatConsole(DBname,logID);  break;
 	case '2': system("cls"); promiseChange(DBname,logID); break;
-	case '3': system("cls"); break;
+	case '3': system("cls"); deleteAllPromise(DBname,logID); break;
 	}
 
 }
