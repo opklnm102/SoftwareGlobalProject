@@ -2,7 +2,7 @@
 
 
 //시간표 수정메뉴
-void modifyMenu () {
+void modifyMenu (structMember *s) {
 
 	int choiceMenu;
 
@@ -20,21 +20,25 @@ void modifyMenu () {
 	gotoxy(17,22);
 	printf(" 3. 시간표 과목 삭제 ");
 	gotoxy(17,24);
+	printf(" 4. 시간표 수정메뉴 나가기 ");
+	gotoxy(17,26);
 	printf(">> ");
 	scanf("%d", &choiceMenu);
 
 	switch (choiceMenu) {
-	case 1: modifySubjectInfo();  break; //시간표 과목정보 수정
-	case 2: addSubject(); break; //시간표 과목 추가
-	case 3: removeSubject(); break; //시간표 과목 삭제
+	case 1: modifySubjectInfo(s);  break; //시간표 과목정보 수정
+	case 2: addSubject(s); break; //시간표 과목 추가
+	case 3: removeSubject(s); break; //시간표 과목 삭제
+	case 4: return;
 	}
 
 }
 
 //시간표 과목정보 수정
-void modifySubjectInfo() {
+void modifySubjectInfo(structMember *s) {
 
 	FILE *fp;
+	char fileName[30];
 	structSubject* subjectPointer;//시간표포인터
 	structSubject tmpSubject;
 	char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"};
@@ -51,7 +55,11 @@ void modifySubjectInfo() {
 
 
 	//txt파일에 저장된 시간표 읽어오기
-	fp=fopen("timetable.txt","r");
+	strcpy(fileName,s->ID);
+	strcat(fileName,s->name);
+	strcat(fileName,"timetable");
+	strcat(fileName,".txt");
+	fp=fopen(fileName,"r");
 
 	//timetable.txt가 없는 경우
 	if(fp == NULL ) {
@@ -74,15 +82,15 @@ void modifySubjectInfo() {
 		fclose(fp);
 
 
-	gotoxy(20,12);
+	gotoxy(20,14);
 	printf("- 시간표 수정 -");
 
 	
-	gotoxy(15, 14);
+	gotoxy(15, 16);
 	printf("수정할 과목 요일 : ");
 
 	while(1) {
-	gotoxy(33, 14);
+	gotoxy(33, 16);
 	gets(charModifyDay);
 
 		//수정할 해당 요일 과목출력 
@@ -90,19 +98,19 @@ void modifySubjectInfo() {
 			if ( strstr(charModifyDay, dayOfWeek[k]) ) { //어떤 요일인지 체크
 				for(i=0;i<subjectTotalCnt;i++) {
 					if(strstr(dayOfWeek[k],subjectPointer[i].dayOfWeek)) { //입력된 시간표에서 과목정보를 찾고 해당 요일 과목출력
-						intModifyDay[j] = i; //시간표 몇번째에 과목이 있는지 저장
-						gotoxy(15, 17+j*2);
+						intModifyDay[j] = i+1; //시간표 몇번째에 과목이 있는지 저장
+						gotoxy(15, 19+j*2);
 						printf("%d) %s %s %s교시", j+1, subjectPointer[i].dayOfWeek, subjectPointer[i].subjectName, subjectPointer[i].subjectClass);
 						j++;
 					}
 				}
-				if(intModifyDay[0] == 0 ) {
-					gotoxy(13,20);
+				if(intModifyDay[0] == 0) {
+					gotoxy(13,22);
 					printf("●해당 요일에 과목이 없습니다.●");
 					Sleep(1000);
-					gotoxy(13,20);
+					gotoxy(13,22);
 					printf("                                 ");
-					gotoxy(33, 14);
+					gotoxy(33, 16);
 					printf("               ");
 					strstr(charModifyDay,"");
 					break;
@@ -115,9 +123,9 @@ void modifySubjectInfo() {
 	}
 
 
-		gotoxy(15,26);
+		gotoxy(15,30);
 		printf(">> ");
-		gotoxy(18,26);
+		gotoxy(18,30);
 		gets(charModifySubjectNum);
 		intModifySubjectNum = atoi(charModifySubjectNum)-1;
 
@@ -125,47 +133,47 @@ void modifySubjectInfo() {
 		//해당과목정보수정
 		listBorderDraw(3,12);
 
-		gotoxy(6, 12);
+		gotoxy(6, 14);
 		printf("＊＊＊＊＊＊＊＊＊＊＊현재＊＊＊＊＊＊＊＊＊＊＊");
-		gotoxy(9, 14);
-		printf("요  일 : %s",subjectPointer[intModifyDay[intModifySubjectNum]].dayOfWeek);
 		gotoxy(9, 16);
-		printf("과목명 : %s",subjectPointer[intModifyDay[intModifySubjectNum]].subjectName);
+		printf("요  일 : %s",subjectPointer[intModifyDay[intModifySubjectNum]-1].dayOfWeek);
 		gotoxy(9, 18);
-		printf("교  시 : %s",subjectPointer[intModifyDay[intModifySubjectNum]].subjectClass);
+		printf("과목명 : %s",subjectPointer[intModifyDay[intModifySubjectNum]-1].subjectName);
+		gotoxy(9, 20);
+		printf("교  시 : %s",subjectPointer[intModifyDay[intModifySubjectNum]-1].subjectClass);
 
-		gotoxy(6, 21);
+		gotoxy(6, 23);
 		printf("＊＊＊＊＊＊＊＊＊＊＊수정＊＊＊＊＊＊＊＊＊＊＊");
-		gotoxy(9, 23);
-		printf("요  일 :");
 		gotoxy(9, 25);
-		printf("과목명 :");
+		printf("요  일 :");
 		gotoxy(9, 27);
+		printf("과목명 :");
+		gotoxy(9, 29);
 		printf("교  시 :");
 
 		fflush(stdin);
 
-		gotoxy(18, 23);
-		gets(tmpSubject.dayOfWeek);
 		gotoxy(18, 25);
+		gets(tmpSubject.dayOfWeek);
+		gotoxy(18, 27);
 		gets(tmpSubject.subjectName);
 
 		while(1) {
 
-			gotoxy(18, 27);
+			gotoxy(18, 29);
 			gets(tmpSubject.subjectClass);
 
 			if (checkOverlappingClass(subjectPointer,tmpSubject,subjectTotalCnt) == 0){
 
-				if(checkOverlappingClass(&subjectPointer[intModifyDay[intModifySubjectNum]],tmpSubject,1) == 0) {
+				if(checkOverlappingClass(&subjectPointer[intModifyDay[intModifySubjectNum]-1],tmpSubject,1) == 0) {
 
 					break;
 				}
 				else
-					gotoxy(18, 27);
+					gotoxy(18, 29);
 				printf("◀교시중복!");
 				Sleep(1000);
-				gotoxy(18, 27);
+				gotoxy(18, 29);
 				printf("              ");
 			}
 
@@ -175,19 +183,20 @@ void modifySubjectInfo() {
 
 		}
 
-		strcpy(subjectPointer[intModifyDay[intModifySubjectNum]].dayOfWeek, tmpSubject.dayOfWeek);
-		strcpy(subjectPointer[intModifyDay[intModifySubjectNum]].subjectName, tmpSubject.subjectName);
-		strcpy(subjectPointer[intModifyDay[intModifySubjectNum]].subjectClass, tmpSubject.subjectClass);
+		strcpy(subjectPointer[intModifyDay[intModifySubjectNum]-1].dayOfWeek, tmpSubject.dayOfWeek);
+		strcpy(subjectPointer[intModifyDay[intModifySubjectNum]-1].subjectName, tmpSubject.subjectName);
+		strcpy(subjectPointer[intModifyDay[intModifySubjectNum]-1].subjectClass, tmpSubject.subjectClass);
 
-		sortTimetable(subjectPointer,subjectTotalCnt);
+		sortTimetable(subjectPointer,subjectTotalCnt,s);
 		free(subjectPointer);
 	}
 }
 
 //시간표 과목 추가
-void addSubject() {
+void addSubject(structMember *s) {
 
 	FILE *fp;
+	char fileName[30];
 	structSubject* subjectPointer;
 	structSubject tmpSubject;
 
@@ -199,7 +208,11 @@ void addSubject() {
 
 
 	//txt파일에 저장된 시간표 읽어오기
-	fp=fopen("timetable.txt","r");
+	strcpy(fileName,s->ID);
+	strcat(fileName,s->name);
+	strcat(fileName,"timetable");
+	strcat(fileName,".txt");
+	fp=fopen(fileName,"r");
 
 	//timetable.txt가 없는 경우
 	if(fp == NULL ) {
@@ -221,23 +234,23 @@ void addSubject() {
 
 		fclose(fp);
 
-		gotoxy(9, 17);
-		printf("요  일 :");
 		gotoxy(9, 19);
-		printf("과목명 :");
+		printf("요  일 :");
 		gotoxy(9, 21);
+		printf("과목명 :");
+		gotoxy(9, 23);
 		printf("교  시 :");
 
 		fflush(stdin);
 
-		gotoxy(18, 17);
-		gets(tmpSubject.dayOfWeek);
 		gotoxy(18, 19);
+		gets(tmpSubject.dayOfWeek);
+		gotoxy(18, 21);
 		gets(tmpSubject.subjectName);
 
 		while(1) {
 
-			gotoxy(18, 21);
+			gotoxy(18, 23);
 			gets(tmpSubject.subjectClass);
 
 			if (checkOverlappingClass(subjectPointer,tmpSubject,subjectTotalCnt) == 0){
@@ -260,7 +273,7 @@ void addSubject() {
 		strcpy(subjectPointer[subjectTotalCnt].subjectName, tmpSubject.subjectName);
 		strcpy(subjectPointer[subjectTotalCnt].subjectClass, tmpSubject.subjectClass);
 
-		sortTimetable(subjectPointer,subjectTotalCnt+1);
+		sortTimetable(subjectPointer,subjectTotalCnt+1,s);
 
 		free(subjectPointer);
 	}
@@ -268,10 +281,11 @@ void addSubject() {
 }
 
 //과목삭제
-void removeSubject() {
+void removeSubject(structMember *s) {
 
 	FILE *fp;
 	structSubject* subjectPointer;//시간표포인터
+	char fileName[30];
 	char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"};
 	int subjectTotalCnt; //과목총갯수
 	char charRemoveDay[15]; //char형삭제요일변수 
@@ -286,7 +300,11 @@ void removeSubject() {
 
 
 	//txt파일에 저장된 시간표 읽어오기
-	fp=fopen("timetable.txt","r");
+	strcpy(fileName,s->ID);
+	strcat(fileName,s->name);
+	strcat(fileName,"timetable");
+	strcat(fileName,".txt");
+	fp=fopen(fileName,"r");
 
 	//timetable.txt가 없는 경우
 	if(fp == NULL ) {
@@ -308,13 +326,13 @@ void removeSubject() {
 		fclose(fp);
 
 
-		gotoxy(20,12);
+		gotoxy(20,14);
 		printf("- 시간표 과목삭제 -");
 
 		while(1) {
-		gotoxy(15, 14);
+		gotoxy(15, 16);
 		printf("삭제할 과목 요일 : ");
-		gotoxy(33, 14);
+		gotoxy(33, 16);
 		gets(charRemoveDay);
 
 		//수정할 해당 요일 과목출력 
@@ -322,19 +340,19 @@ void removeSubject() {
 			if ( strstr(charRemoveDay, dayOfWeek[k]) ) { //어떤 요일인지 체크
 				for(i=0;i<subjectTotalCnt;i++) {
 					if(strstr(dayOfWeek[k],subjectPointer[i].dayOfWeek)) { //입력된 시간표에서 과목정보를 찾고 해당 요일 과목출력
-						intRemoveDay[j] = i; //시간표 몇번째에 과목이 있는지 저장
-						gotoxy(15, 17+j*2);
+						intRemoveDay[j] = i+1; //시간표 몇번째에 과목이 있는지 저장
+						gotoxy(15, 19+j*2);
 						printf("%d) %s %s %s교시", j+1, subjectPointer[i].dayOfWeek, subjectPointer[i].subjectName, subjectPointer[i].subjectClass);
 						j++;
 					}
 				}
 					if(intRemoveDay[0] == 0 ) {
-					gotoxy(13,20);
+					gotoxy(13,22);
 					printf("●해당 요일에 과목이 없습니다.●");
 					Sleep(1000);
-					gotoxy(13,20);
+					gotoxy(13,22);
 					printf("                                 ");
-					gotoxy(33, 14);
+					gotoxy(33, 16);
 					printf("               ");
 					strstr(charRemoveDay,"");
 					break;
@@ -347,15 +365,15 @@ void removeSubject() {
 
 		}
 
-		gotoxy(15,26);
+		gotoxy(15,28);
 		printf(">> ");
-		gotoxy(18,26);
+		gotoxy(18,28);
 		scanf("%s", &charRemoveSubjectNum);
 		intRemoveSubjectNum = atoi(charRemoveSubjectNum)-1;
 
 
 
-		for(i=intRemoveDay[intRemoveSubjectNum]+1;i<subjectTotalCnt-1;i++) {
+		for(i=intRemoveDay[intRemoveSubjectNum];i<subjectTotalCnt;i++) {//
 
 			strcpy(subjectPointer[i-1].dayOfWeek, subjectPointer[i].dayOfWeek);
 			strcpy(subjectPointer[i-1].subjectName, subjectPointer[i].subjectName);
@@ -364,21 +382,21 @@ void removeSubject() {
 		}
 
 		if(subjectTotalCnt-1 == 0 ) {
-			nResult = remove("timetable.txt");
+			nResult = remove(fileName);
 		if(nResult == 0) {
-			gotoxy(8,26);
+			gotoxy(8,28);
 			printf("*시간표가 정상적으로 삭제되었습니다*");  //지우기 성공
 			Sleep(1500);
 			return;
 		} else if (nResult == -1) {
-			gotoxy(20,26);
+			gotoxy(20,28);
 			printf("*파일을 열지 못해, 삭제를 실패했습니다*");  //지우기 실패
 		}
 
 		Sleep(10000);
 		}
 		else
-		saveTimetalbe(subjectPointer,subjectTotalCnt-1);
+		saveTimetalbe(subjectPointer,subjectTotalCnt-1,s);
 
 
 	}

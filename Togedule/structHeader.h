@@ -57,19 +57,19 @@ void mainMenu(structMember *s);  //로그인 후 메인메뉴
 void pwFind();  //비밀번호 찾기
 
 //시간표관련
-void timetableMenu(); //시간표메뉴함수
-void timetableDraw(); //시간표그리기함수
-void saveTimetalbe(structSubject* subjectPointer, int subjectTotalCnt); //시간표 txt로 저장하는 함수
+void timetableMenu(structMember *s); //시간표메뉴함수
+void timetableDraw(structMember *s); //시간표그리기함수
+void saveTimetalbe(structSubject* subjectPointer, int subjectTotalCnt, structMember *s); //시간표 txt로 저장하는 함수
 void classAtoi(char *dayOfWeek, int *savedClass); //교시를 char->int으로 바꾸어주는 함수
 int checkOverlappingClass(structSubject* subjectPointer,structSubject subject,int subjectTotalCnt); //중복교시체크함수
-void InputSubjectCnt(); // 시간표만들기 - 월~금 과목갯수 입력 함수
-void InputSubjectNameAndClass( int* SubjectCntOfday, int subjectTotalCnt) ; // 시간표만들기 - 이름/교시 입력함수
-void modifyMenu(); //시간표수정메뉴함수
-void modifySubjectInfo(); // 시간표 과목정보 수정함수
-void addSubject(); //시간표 과목 추가
-void removeSubject(); //시간표 과목 삭제
-void sortTimetable(structSubject* subjectPointer,int subjectTotalCnt); // 시간표 (요일)정렬 함수
-void removeTimetable(); //시간표삭제함수(시간표txt파일삭제)
+void InputSubjectCnt(structMember *s); // 시간표만들기 - 월~금 과목갯수 입력 함수
+void InputSubjectNameAndClass( int* SubjectCntOfday, int subjectTotalCnt, structMember *s) ; // 시간표만들기 - 이름/교시 입력함수
+void modifyMenu(structMember *s); //시간표수정메뉴함수
+void modifySubjectInfo(structMember *s); // 시간표 과목정보 수정함수
+void addSubject(structMember *s); //시간표 과목 추가
+void removeSubject(structMember *s); //시간표 과목 삭제
+void sortTimetable(structSubject* subjectPointer,int subjectTotalCnt, structMember *s); // 시간표 (요일)정렬 함수
+void removeTimetable(structMember *s); //시간표삭제함수(시간표txt파일삭제)
 
 //약속관련
 

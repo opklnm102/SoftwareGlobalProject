@@ -341,7 +341,7 @@ int weekday(int year, int month, int day) //³âµµ, ¿ù, ÀÏ À» ÀÔ·Â¹Ş¾Æ ¿äÀÏ Ã£´Â Ç
 
 int selectDate(int CombineTimetable[5][13],structPromise *newPromise){	//¸¸µé ¾à¼ÓÀÇ ³¯Â¥ ÀÔ·Â¹Ş´Â ÇÔ¼ö
 
-	char dayofweek[3];
+
 	char month[10];
 	char day[10];
 	char temp[10]={0};
@@ -503,7 +503,7 @@ void saveFriendsID(char ID[8], char *DB) {
 }
 
 void promiseCreatConsole(char *DBname, char *logID) {	//¾à¼Ó¸¸µé±â ÇÔ¼ö.¾à¼ÓÀ» ¸¸µå´Âµ¥ ÇÊ¿äÇÔ ÇÔ¼öµéÀ» È£Ãâ. 
-	char select[3];
+
 	char DB[25];
 	char friendNameCopy[8]={0};		
 	struct structPromise newPromise;	//»õ·Î¿î ¾à¼ÓÀ» À§ÇÑ ±¸Á¶Ã¼ »ı¼º newPromise

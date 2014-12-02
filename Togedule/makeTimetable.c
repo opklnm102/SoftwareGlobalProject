@@ -2,7 +2,7 @@
 
 
 //시간표 월~금 과목갯수 입력 함수
-void InputSubjectCnt() {
+void InputSubjectCnt(structMember *s) {
 
 	int i, subjectTotalCnt=0;
 	int SubjectCntOfday[5]={0};
@@ -13,9 +13,9 @@ void InputSubjectCnt() {
 	listBorderDraw(3,12);
 
 
-	gotoxy(6, 31);
+	gotoxy(6, 29);
 	printf("** 하루 최대과목 갯수는 5개이하.");
-	gotoxy(6, 32);
+	gotoxy(6, 30);
 	printf("**  총 최대과목 갯수는 13개 이하.");
 
 	while (1) {
@@ -67,11 +67,11 @@ void InputSubjectCnt() {
 			break;
 		}
 	}
-	InputSubjectNameAndClass(SubjectCntOfday,subjectTotalCnt) ;
+	InputSubjectNameAndClass(SubjectCntOfday,subjectTotalCnt, s) ;
 }
 
 // 이름/교시 입력함수
-void InputSubjectNameAndClass(int* SubjectCntOfday, int subjectTotalCnt) {
+void InputSubjectNameAndClass(int* SubjectCntOfday, int subjectTotalCnt, structMember *s) {
 
 	structSubject* subjectPointer;
 	structSubject tmpSubject;
@@ -160,7 +160,7 @@ void InputSubjectNameAndClass(int* SubjectCntOfday, int subjectTotalCnt) {
 	}
 
 
-	saveTimetalbe(subjectPointer,subjectTotalCnt);
+	saveTimetalbe(subjectPointer,subjectTotalCnt, s);
 	free(subjectPointer);
 	system("cls"); 
 

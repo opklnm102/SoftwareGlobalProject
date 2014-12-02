@@ -1,13 +1,14 @@
 #include"structHeader.h"
+
 //시간표메뉴함수
-void timetableMenu() {
+void timetableMenu(structMember *s) {
 
 	int choiceMenu;
 
 	while(1) {
 		screenBorderDraw() ;
 		listBorderDraw(3,12);
-		timetableDraw();
+		timetableDraw(s);
 
 		gotoxy(20, 18);
 		printf(" 1. 시간표 만들기 ");
@@ -16,20 +17,25 @@ void timetableMenu() {
 		gotoxy(20,22);
 		printf(" 3. 시간표 삭  제 ");
 		gotoxy(20,24);
+		printf(" 4. 시간표 나가기 ");
+
+		gotoxy(20,26);
 		printf(">> ");
 		scanf("%d", &choiceMenu);
 		switch (choiceMenu) {
-		case 1: InputSubjectCnt();  break; // 시간표만들기시작
-		case 2: modifyMenu(); break; //시간표수정
-		case 3: removeTimetable(); break; //시간표삭제
+		case 1: InputSubjectCnt(s);  break; // 시간표만들기시작
+		case 2: modifyMenu(s); break; //시간표수정
+		case 3: removeTimetable(s); break; //시간표삭제
+		case 4: return;
 		}
 
 	}
 }
 //시간표그리기함수
-void timetableDraw(){ 
+void timetableDraw(structMember *s){ 
 
 	FILE *fp;
+	char fileName[30];
 	int i,j,k;
 	int Subjectcnt;
 	structSubject* subjectPointer;
@@ -52,7 +58,15 @@ void timetableDraw(){
 	}
 	gotoxy(57,35);
 	printf("└───┴─────┴─────┴─────┴─────┴─────┘");
-	fp=fopen("timetable.txt","r");
+
+	
+	strcpy(fileName,s->ID);
+	strcat(fileName,s->name);
+	strcat(fileName,"timetable");
+	strcat(fileName,".txt");
+
+	fp=fopen(fileName,"r");
+
 
 	//timetable.txt가 없는 경우
 	if(fp == NULL ) {
@@ -98,13 +112,21 @@ void timetableDraw(){
 
 }
 //시간표 txt로 저장하는 함수
-void saveTimetalbe(structSubject* subjectPointer, int subjectTotalCnt) {
+void saveTimetalbe(structSubject* subjectPointer, int subjectTotalCnt, structMember *s) {
 	
-	FILE *fp;   
+	FILE *fp;
+	char fileName[30];
 	int i;
 
-	fp=fopen("timetable.txt","w");
+
+	strcpy(fileName,s->ID);
+	strcat(fileName,s->name);
+	strcat(fileName,"timetable");
+	strcat(fileName,".txt");
+
+	fp=fopen(fileName,"w");
 	fprintf(fp,"%d\n",subjectTotalCnt);
+
 	for(i=0;i<subjectTotalCnt; i++) {
 		fprintf(fp,"%s ",subjectPointer[i].dayOfWeek);
 		fprintf(fp,"%s ",subjectPointer[i].subjectName);
@@ -193,7 +215,7 @@ int checkOverlappingClass(structSubject* subjectPointer, structSubject subject,i
 
 
 //시간표정렬함수
-void sortTimetable(structSubject* subjectPointer,int subjectTotalCnt){
+void sortTimetable(structSubject* subjectPointer,int subjectTotalCnt, structMember *s){
 
 	structSubject * tmpsubjectPointer;
 	char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"};
@@ -212,8 +234,8 @@ void sortTimetable(structSubject* subjectPointer,int subjectTotalCnt){
 		}
 	}
 
-	saveTimetalbe(tmpsubjectPointer,subjectTotalCnt);
-	gotoxy(15, 29);
+	saveTimetalbe(tmpsubjectPointer,subjectTotalCnt, s);
+	gotoxy(15, 31);
 	printf("**시간표가 수정을 완료하였습니다**");
 	Sleep(1000);
 }
