@@ -17,7 +17,7 @@ void promiseList(char *DBname){	// 로그인한 회원의 약속리스트를 불러오는 함수 , 
 	strcat(openDB,textFile);
 	fp = fopen(openDB, "r");
 	if ( fp == NULL ) {
-		printf("현재 생성된 약속리스트가 없습니다.");
+		gotoxy(20, 32);printf("현재 생성된 약속리스트가 없습니다.");
 		return ;
 	}
 	while (!feof(fp)) {			//약속리스트 열어서 리스트에 적혀진 개수만큼 이름과 날짜를 읽어서 출력하는 부분
@@ -393,8 +393,8 @@ int selectDate(int CombineTimetable[5][13],structPromise *newPromise){	//만들 약
 	
 	
 	
-	gotoxy(x,y+14);printf("요일은 날짜입력에 따라 자동으로 선택됩니다.\n");
-	gotoxy(x,y+15);printf("날짜입력이 끝나면 약속시간(교시)을 입력하세요.\n");
+	gotoxy(x,y+14);printf("요일은 날짜입력에 따라 자동으로 선택됩니다.");
+	gotoxy(x,y+15);printf("날짜입력이 끝나면 약속시간(교시)을 입력하세요.");
 	
 	gotoxy(x,y+17);printf("약속을 잡을 날짜 입력(ex 10일) :");		//일을 입력하면
 	gotoxy(x+34,y+17);scanf("%s",&day);
@@ -454,7 +454,7 @@ void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofW
 		if(errorCheck==0)
 			break;
 		gotoxy(x+27,y);printf("        ");
-		gotoxy(x,y+1);printf("해당 시간은 비어있지 않습니다. 통합 시간표를 다시 한번 보고 선택한 날짜의 빈시간을 입력하세요: ");
+		gotoxy(x,y+1);printf("해당 시간은 비어있지 않습니다. 통합 시간표를 다시 한번 보고 선택한 날짜의 빈시간을 입력하세요");
 		
 		gotoxy(x+27,y);scanf("%s",&time);
 		strcpy(timeCopy,time);
@@ -587,7 +587,7 @@ int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise 
 	
 	printf("\n");
 	if(recordCombineTimetable(CombineTimetable,DBname)==1)	{	//현재 로그인 되어있는 회원의 시간표 정보를 통합시간표에 추가... 없으면 알려주는 문구 출력
-		gotoxy(32,35); printf("경고! 본인의 시간표정보가 없습니다.\n"); 
+		gotoxy(32,35); printf("경고! 본인의 시간표정보가 없습니다."); 
 	}
 	
 	return CountCopy;

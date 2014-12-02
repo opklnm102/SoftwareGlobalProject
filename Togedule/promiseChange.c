@@ -1,6 +1,7 @@
 #include "structHeader.h"
 
 void changePlace(char *DBname, struct structPromise *old) {
+
 	char blank[1]={0};
 	promisePlace(DBname,old);
 
@@ -9,15 +10,20 @@ void changePlace(char *DBname, struct structPromise *old) {
 void changeTime(struct structPromise *old,int newCombineTimetable[5][13],int dayofweek) {
 	int i,j;
 	char dayofWeek[5];
-	printf(" 월   화   수   목   금\n");
+	int x=-34,y=10;
+	system("cls");
+	screenBorderDraw();
+	gotoxy(53,8); printf("☆ 약속 시간수정 ☆");
+	gotoxy(x+60,y+3);printf(" 월   화   수   목   금");
 	for(j=0; j<13; j++) {		//통합시간표를 출력 (임시). 시간표 출력하는 부분과 연관해서 제대로 표를 짜서 출력해야함
 		for (i=0; i<5; i++){
-			if(newCombineTimetable[i][j]==1)
-				printf("■■ ",newCombineTimetable[i][j]);
-			if(newCombineTimetable[i][j]==0)
-				printf("□□ ",newCombineTimetable[i][j]);
+			if(newCombineTimetable[i][j]==1){
+				gotoxy(x+60+(5*i),y+4+j);printf("■■ ",newCombineTimetable[i][j]);
+			}
+			if(newCombineTimetable[i][j]==0){
+				gotoxy(x+60+(5*i),y+4+j);printf("□□ ",newCombineTimetable[i][j]);
+			}
 		}
-		printf("\n");
 	}
 	switch(dayofweek){		//weekday함수사용, 해당 연도 월 일에 해당하는 요일을 계산해서 삽입.
 	case 0: strcpy(dayofWeek,"월"); break;
@@ -26,9 +32,8 @@ void changeTime(struct structPromise *old,int newCombineTimetable[5][13],int day
 	case 3: strcpy(dayofWeek,"목"); break;
 	case 4: strcpy(dayofWeek,"금"); break;
 	}
-	printf("현재 약속요일>> %s\n",dayofWeek);
-	printf("현재 약속시간>> %s\n",old->promiseTime);
-	printf("%d",dayofweek);
+	gotoxy(x+60,y+18);printf("현재 저장된 약속요일>> %s\n",dayofWeek);
+	gotoxy(x+60,y+19);printf("현재 저장된 약속시간>> %s\n",old->promiseTime);
 	selectTime(newCombineTimetable,old,dayofweek);
 }
 
@@ -38,15 +43,16 @@ int changeDate(struct structPromise *old,int newCombineTimetable[5][13]) {
 	dayofweek=selectDate(newCombineTimetable,old);
 	time=atoi(old->promiseTime);
 	if(newCombineTimetable[dayofweek][time-1]==1) {
-		printf("현재 정해진 시간에는 약속을 잡을 수 없습니다. 시간을 수정하겠습니다.\n");
+		gotoxy(26,34);printf("현재 정해진 시간에는 약속을 잡을 수 없습니다. 시간을 수정하겠습니다.\n");
+		Sleep(2000);
 		changeTime(old,newCombineTimetable,dayofweek);
 	}
 	return dayofweek;
 }
 
 void changePromiseName(struct structPromise *old){
-	printf("수정할 약속명 입력 >> ");
-	scanf("%s",&old->promiseName);
+	gotoxy(61,26);printf("                               ");
+	gotoxy(61,26);scanf("%s",&old->promiseName);
 }
 
 int checkDateTime(int CombineTimetable[5][13], struct structPromise *old){
@@ -78,43 +84,58 @@ int checkDateTime(int CombineTimetable[5][13], struct structPromise *old){
 			strcpy(date,Date);
 		}		
 	}						
-	printf("%s %s",month,date);
+	
 	Month=atoi(month);
 	Day=atoi(date);
 	dayofweek=weekday(year,Month,Day);
 	strcpy(stime,old->promiseTime);
 	Time=atoi(stime);
+
 	if(CombineTimetable[dayofweek][Time-1]==1)
 		return -1;
 	return 0;
 }
 
 int changeName(char *DBname,int CombineTimetable[5][13],int newCombineTimetable[5][13] ,struct structPromise *old){
-	char select[3];
-	
-	int i;
 	int count;
 	int check;
+	int x=26,y=12;
+	system("cls");
+	screenBorderDraw();
+	gotoxy(53,8); printf("☆ 약속 멤버수정 ☆");
+	gotoxy(x+50,y); printf(" 인원수 : ");
+	gotoxy(x,y+4);printf(" 이름검색 : ");
+	gotoxy(x+60,y+3);printf("▷ 약속멤버");
+	listBorderDraw2(x,y+7);
+	listBorderDraw3(x+60,y+4);
 	count=selectFriends(DBname, newCombineTimetable,old);
-	for(i=0; i<count; i++)
-		printf("%s ",old->promiseFriendsName[i]);
-	scanf("%s",&select);
-
+	
 	check=checkDateTime(newCombineTimetable,old);  //기존의 시간과 현재 바뀐 통합시간표와 비교시 약속시간이 가능한지 검사.....
 	if(check!=0){
-		printf("해당 멤버들의 시간표로는 현재 약속을 잡을 수 없습니다. 날짜와 시간을 수정하겠습니다.\n");
+		gotoxy(x,y+24);printf("해당 멤버들의 시간표로는 현재 약속을 잡을 수 없습니다. 날짜와 시간을 수정하겠습니다.\n");
+		Sleep(2000);
 		changeDate(old,newCombineTimetable);
 	}
 	return count;
-	/*for(i=0; i<count; i++)		//동적할당 해제 잘 살펴봐야함 여기서 해제?아닌듯
-		free(old->promiseFriendsName[i]);
-	free(old->promiseFriendsName);*/
+}
+
+void showBG(char copyPromiseName[41],char copyPromisePlace[40],char copyPromisedate[10],char copyPromiseTime[6],char copyName[50]){
+		system("cls");
+		screenBorderDraw();
+		gotoxy(56,8); printf("☆ 약속수정 ☆");
+		gotoxy(42,13);printf("1. 약속명       : %s",copyPromiseName);
+		gotoxy(42,15);printf("2. 약속장소     : %s",copyPromisePlace);
+		gotoxy(42,17);printf("3. 약속날짜     : %s",copyPromisedate);
+		gotoxy(42,19);printf("4. 약속시간     : %s",copyPromiseTime);
+		gotoxy(42,21);printf("5. 함께할 친구  : %s",copyName);
+		
+		listBorderDraw2(39,24);
 }
 
 int selectChange(char *DBname, struct structPromise *old, int listnumber, char **name,int CombineTimetable[5][13],char checkPlace[3]){
 	FILE *fp;
 	char DB[20];
-	int i,j;
+	int i;
 	char select[3];
 	char month[3]={0};
 	char ID[8]={0};
@@ -125,7 +146,11 @@ int selectChange(char *DBname, struct structPromise *old, int listnumber, char *
 	char Date[10];
 	int check=0;
 	int friendsCount=0;
-
+	char copyPromiseName[41]={0};
+	char copyPromisePlace[40]={0};
+	char copyPromisedate[10]={0};
+	char copyPromiseTime[6]={0};
+	char copyName[50]={0};
 	char slash[1]={'/'};
 	int Month,Day;
 	int dayofweek;
@@ -152,68 +177,87 @@ int selectChange(char *DBname, struct structPromise *old, int listnumber, char *
 	Day=atoi(date);
 	dayofweek=weekday(year,Month,Day);
 
-	system("cls");
-	for(i=0;i<5;i++){
-		for(j=0; j<13; j++)
-			printf("%d",CombineTimetable[i][j]);
-		printf("\n");
-	}
-	printf("리스트넘버%d",listnumber);
-	printf("약속수정\n");
-	printf("1. 약속명   : %s\n",old->promiseName);
-	printf("2. 약속장소 : %s\n",old->promisePlace);
-	printf("3. 약속날짜 : %s\n",old->Promisedate);
-	printf("4. 약속시간 : %s\n",old->promiseTime);
-	printf("5. 함께할 친구 : ");
-	for(i=0; i<4; i++)
-		printf("%s ",name[i]);
-	printf("\n");
-	while(1){
-
-	printf("수정할 내용을 선택하세요.\n");
-	scanf("%s",&select);
-	if(!strcmp(select,"1"))
-		changePromiseName(old);
-	if(!strcmp(select,"2")){
-		changePlace(DBname,old);
-		strcpy(checkPlace,"1");
-	}
-	if(!strcmp(select,"3"))
-		dayofweek=changeDate(old,CombineTimetable);
-	if(!strcmp(select,"4"))
-		changeTime(old,CombineTimetable,dayofweek);
-	if(!strcmp(select,"5")){
-		friendsCount=changeName(DBname,CombineTimetable,newCombineTimetable,old);
-		check=1;
-		strcpy(DB,"회원목록.txt");						//학번을 이름으로 바꿔준다. 회원목록 txt를 5번동안 열고 닫고 하며 반복... 회원 숫자를 계산하기 귀찮으므로 그냥 5번 반복
-		for(i=0;i<4;i++)
-			strcpy(name[i],"\0");
-		for(i=0;i<friendsCount;i++){
-			fp = fopen(DB, "r");
-			while (!feof(fp)) {		
-				fscanf(fp, "%s %s", &ID, &listName);										//학번과 이름을 한줄 읽는다.
-				if(!strcmp(ID,old->promiseFriendsName[i])){				//검색할 학번과 같은 학번이면
-					strcpy(name[i],listName);											//transName 문자배열에 현재 읽은 이름을 복사
-					break;
-				}
-			}
-			fclose(fp);
+	strcpy(copyPromiseName,old->promiseName);
+	strcpy(copyPromisePlace,old->promisePlace);
+	strcpy(copyPromisedate,old->Promisedate);
+	strcpy(copyPromiseTime,old->promiseTime);
+	
+	strcpy(copyName,name[0]);
+	for(i=0; i<4; i++){
+		if(i!=0){
+			strcat(copyName,"  ");
+			strcat(copyName,name[i]);
 		}
 	}
-	printf("1. 약속명   : %s\n",old->promiseName);
-	printf("2. 약속장소 : %s",old->promisePlace);
-	printf("3. 약속날짜 : %s\n",old->Promisedate);
-	printf("4. 약속시간 : %s\n",old->promiseTime);
-	printf("5. 함께할 친구 : ");
-	for(i=0; i<4; i++)
-		printf("%s ",name[i]);
-	printf("\n");
-	printf("수정을 완료했으면 y를 입력하세요. 계속하려면 다른키를 입력하세요.");
-	scanf("%s",&select);
-	if(!strcmp(select,"y"))
-		break;		
-	}
-	return check;	//check 값을 리턴 check가 1이면 이름변경이 이루어진것, 0이면 이름변경이 없었던것
+
+	
+	while(1){
+		showBG(copyPromiseName,copyPromisePlace,copyPromisedate,copyPromiseTime,copyName);
+		gotoxy(42,26);printf("1. 약속명       : %s",old->promiseName);
+		gotoxy(42,28);printf("2. 약속장소     : %s",old->promisePlace);
+		gotoxy(42,30);printf("3. 약속날짜     : %s",old->Promisedate);
+		gotoxy(42,32);printf("4. 약속시간     : %s",old->promiseTime);
+		gotoxy(42,34);printf("5. 함께할 친구  : ");
+		strcpy(copyName,name[0]);
+		for(i=0; i<4; i++){
+			printf("%s  ",name[i]);
+		}
+		
+		gotoxy(42,11);printf("수정할 내용을 선택하세요 :");
+		gotoxy(69,11);scanf("%s",&select);
+		if(!strcmp(select,"1"))
+			changePromiseName(old);
+		if(!strcmp(select,"2")){
+			changePlace(DBname,old);
+			strcpy(checkPlace,"1");
+			showBG(copyPromiseName,copyPromisePlace,copyPromisedate,copyPromiseTime,copyName);
+		}
+		if(!strcmp(select,"3")){
+			dayofweek=changeDate(old,CombineTimetable);
+			showBG(copyPromiseName,copyPromisePlace,copyPromisedate,copyPromiseTime,copyName);
+		}
+		if(!strcmp(select,"4")){
+			changeTime(old,CombineTimetable,dayofweek);
+			showBG(copyPromiseName,copyPromisePlace,copyPromisedate,copyPromiseTime,copyName);
+		}
+		if(!strcmp(select,"5")){
+			friendsCount=changeName(DBname,CombineTimetable,newCombineTimetable,old);
+			check=1;
+			strcpy(DB,"회원목록.txt");						//학번을 이름으로 바꿔준다. 회원목록 txt를 5번동안 열고 닫고 하며 반복... 회원 숫자를 계산하기 귀찮으므로 그냥 5번 반복
+			for(i=0;i<4;i++)
+				strcpy(name[i],"\0");
+			for(i=0;i<friendsCount;i++){
+				fp = fopen(DB, "r");
+				while (!feof(fp)) {		
+					fscanf(fp, "%s %s", &ID, &listName);										//학번과 이름을 한줄 읽는다.
+					if(!strcmp(ID,old->promiseFriendsName[i])){				//검색할 학번과 같은 학번이면
+						strcpy(name[i],listName);											//transName 문자배열에 현재 읽은 이름을 복사
+						break;
+					}
+				}
+				fclose(fp);
+			}
+			showBG(copyPromiseName,copyPromisePlace,copyPromisedate,copyPromiseTime,copyName);
+		}
+		gotoxy(42,26);printf("1. 약속명       : %s",old->promiseName);
+		gotoxy(42,28);printf("2. 약속장소     : %s",old->promisePlace);
+		gotoxy(42,30);printf("3. 약속날짜     : %s",old->Promisedate);
+		gotoxy(42,32);printf("4. 약속시간     : %s",old->promiseTime);
+		gotoxy(42,34);printf("5. 함께할 친구  : ");
+		strcpy(copyName,name[0]);
+		for(i=0; i<4; i++){
+			printf("%s  ",name[i]);
+		}
+		
+		gotoxy(40,38);printf("수정을 완료했으면 y를 입력하세요. 계속하려면 다른키를 입력하세요 :");
+		gotoxy(107,38);scanf("%s",&select);
+		if(!strcmp(select,"y"))
+			break;	
+		gotoxy(69,11);printf("         ");
+		gotoxy(40,38);printf("                                                                           ");	
+		}
+		return check;	//check 값을 리턴 check가 1이면 이름변경이 이루어진것, 0이면 이름변경이 없었던것
+		
 }
 
 void promiseChange(char *DBname,char *logID){
@@ -241,6 +285,10 @@ void promiseChange(char *DBname,char *logID){
 	char friendNameCopy[8]={0};	
 	char checkPlace[3]={0};
 	int friendsCount;
+	int x=35,y=11;
+	char controlList[3]={0};
+	screenBorderDraw();	
+
 	recordCombineTimetable(CombineTimetable,DBname);
 	strcpy(openDB,DBname);
 	strcat(openDB,"PromiseList");
@@ -251,7 +299,9 @@ void promiseChange(char *DBname,char *logID){
 		return ;
 	}
 	while (!feof(fp)) {			//약속리스트 열어서 리스트에 적혀진 개수만큼 이름과 날짜를 읽어서 출력하는 부분
-		printf("나의 약속리스트\n");
+		gotoxy(54,8); printf("☆ 나의 약속리스트 ☆");
+		listBorderDraw2(x,y);
+		gotoxy(x+8,y+1); printf("약속명                      약속날짜");
 		fscanf(fp, "%s", &check);
 		if(!strcmp(check,"약속리스트")){
 			fscanf(fp,"%d", &listCount);
@@ -297,20 +347,99 @@ void promiseChange(char *DBname,char *logID){
 				fgets(check,40,fp);
 				fgets(check,40,fp);
 				strcpy(cost[i],check);
-				printf("%d %s ",numbering,oldPromise[i].promiseName);
-				printf("/ %s\n",oldPromise[i].Promisedate);
-				numbering++;
 			}
+			for(i=0; i<listCount; i++) {	
+				if(i==5){
+						gotoxy(35,10); printf("다음리스트를 보려면 >키를 입력하세요. 번호를 선택하려면 ~키를 입력하세요.");
+						while(1){
+							gotoxy(110,10);scanf("%s",&controlList);
+							if(!strcmp(controlList,"~")||!strcmp(controlList,">"))
+								break;
+							gotoxy(110,10);printf("     ");
+						}
+						if(!strcmp(controlList,"~")){
+							strcpy(controlList,"\0");
+							break;							
+						}
+						else if(!strcmp(controlList,">")){
+							listBorderDraw2(35,11);
+							gotoxy(x+8,y+1); printf("약속명                      약속날짜");
+							strcpy(controlList,"\0");
+						}
+						else
+							scanf("%s",&controlList);
+						gotoxy(35,10);printf("                                                                                  ");
+						
+
+					}
+					else if(i!=0&&i!=5&&i%5==0&&i+1!=listCount){
+						gotoxy(35,10);printf("이전리스트 <, 다음리스트 >, 번호를 선택하려면 ~키를 입력하세요.");
+						while(1){
+							gotoxy(100,10);scanf("%s",&controlList);
+							if(!strcmp(controlList,"~")||!strcmp(controlList,"<")||!strcmp(controlList,">"))
+								break;
+							
+							gotoxy(100,10);printf("     ");
+						}
+						if(!strcmp(controlList,"~")){
+							strcpy(controlList,"\0");
+							break;
+						}
+						else if(!strcmp(controlList,">")){
+							listBorderDraw2(35,11);
+							gotoxy(x+8,y+1); printf("약속명                      약속날짜");
+							strcpy(controlList,"\0");
+						}
+						else if(!strcmp(controlList,"<")){
+							listBorderDraw2(35,11);
+							gotoxy(x+8,y+1); printf("약속명                      약속날짜");
+							i=i-10;
+							numbering=numbering-10;
+							strcpy(controlList,"\0");
+						}
+						else
+							scanf("%s",&controlList);
+						gotoxy(35,10);printf("                                                                                  ");
+					}
+					
+					gotoxy(x+5,y+3+2*(i%5));printf("%d  %s ",numbering,oldPromise[i].promiseName);
+					gotoxy(x+38,y+3+2*(i%5));printf("%s\n",oldPromise[i].Promisedate);
+					numbering++;
+					if(i+1==listCount&&listCount>5){
+						gotoxy(35,10);printf("처음으로 돌아가려면 <키를 입력하세요.번호를 선택하려면 ~키를 입력하세요.");
+						while(1){
+							gotoxy(110,10);scanf("%s",&controlList);
+							if(!strcmp(controlList,"~")||!strcmp(controlList,"<"))
+								break;
+							gotoxy(110,10);printf("     ");
+						}
+						if(!strcmp(controlList,"~")){
+							strcpy(controlList,"\0");
+							break;
+						}
+						else if(!strcmp(controlList,"<")){
+							listBorderDraw2(35,11);	
+							gotoxy(x+8,y+1); printf("약속명                      약속날짜");
+							i=-1;
+							numbering=1;
+							strcpy(controlList,"\0");
+						}
+						
+						gotoxy(35,10);printf("                                                                                  ");
+					}
+				}
 		}
 	}
 	fclose(fp);
-	printf("→ 수정하실 약속 : ");
+	gotoxy(35,10);printf("                                                                                     ");
+	gotoxy(35,25);printf("→ 수정하실 약속 : ");
 	while(1) {						//리스트 번호 범위 내의 수만 입력받기
-		scanf("%s",select);
+		gotoxy(54,25);scanf("%s",select);
 		listnumber=atoi(select);	
 		if(listnumber>0&&listnumber<=numbering)
 			break;
-		printf("리스트 내의 번호를 입력하세요 : ");
+		gotoxy(35,26);printf("리스트 내의 번호를 입력하세요");
+		gotoxy(54,25);printf("       ");
 	}
 	listnumber--;
 
@@ -345,11 +474,7 @@ void promiseChange(char *DBname,char *logID){
 		}
 		fclose(fp);
 	}
-	for(i=0;i<5;i++){
-		for(j=0; j<13; j++)
-			printf("%d",CombineTimetable[i][j]);
-		printf("\n");
-	}
+	
 	j=0;
 	for(i=0;i<4;i++){
 		if(!strcmp(transName[i],"\0"))
@@ -362,14 +487,19 @@ void promiseChange(char *DBname,char *logID){
 	}
 	itoa(j,oldPromise[listnumber].promiseFreindsCount,10);
 	oldPromise[listnumber].promisePlace[strlen(oldPromise[listnumber].promisePlace)-1]=blank[0];           //장소DB에서 읽어올때 \n 하나 들어있는거 없애서 자동줄바꿈 방지
-	printf("\n");
-	printf("약속명      장소        날짜      시간      함께할친구\n");
-	printf("%s    %s     %s     %s\n",oldPromise[listnumber].promiseName,oldPromise[listnumber].promisePlace,oldPromise[listnumber].promiseTime,oldPromise[listnumber].Promisedate);
+
+	listBorderDraw2(35,26);
+
+	gotoxy(38,28);printf("약속명 >>     %s",oldPromise[listnumber].promiseName);
+	gotoxy(38,30);printf("장소   >>     %s",oldPromise[listnumber].promisePlace);
+	gotoxy(38,32);printf("날짜   >>     %s",oldPromise[listnumber].Promisedate);
+	gotoxy(38,34);printf("시간   >>     %s",oldPromise[listnumber].promiseTime);
+	gotoxy(38,36);printf("함께할친구 >>   ");
+
 	for(i=0; i<4; i++)
 		printf("%s ",transName[i]);
-	printf("\n");
-	printf("수정하시겠습니까? <Y,N>");
-	scanf("%s",&select);
+	gotoxy(38,40);printf("수정하시겠습니까? <Y,N>");
+	gotoxy(63,40);scanf("%s",&select);
 	changePromise.promiseFriendsName=(char**)malloc(sizeof(char*)*j+1);
 	for(i=0; i<j; i++) {
 		changePromise.promiseFriendsName[i]=(char*)malloc(sizeof(char)*8);
@@ -384,13 +514,6 @@ void promiseChange(char *DBname,char *logID){
 	strcpy(changePromise.Promisedate,oldPromise[listnumber].Promisedate);
 	for(i=0; i<j; i++) {
 		strcpy(changePromise.promiseFriendsName[i],oldPromise[listnumber].promiseFriendsName[i]);
-	}
-	printf("%s ",changePromise.promiseName);
-	printf("%s ",changePromise.promisePlace);
-	printf("%s ",changePromise.promiseTime);
-	printf("%s ",changePromise.Promisedate);
-	for(i=0; i<j; i++) {
-		printf("%s ",changePromise.promiseFriendsName[i]);
 	}
 	
 	if(!strcmp(select,"y"))									//y나 Y일때 수정 단계로 넘어감

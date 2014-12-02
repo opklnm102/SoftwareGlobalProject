@@ -83,6 +83,7 @@ int changeName(char *DBname,int CombineTimetable[5][13],int newCombineTimetable[
 int checkDateTime(int CombineTimetable[5][13], struct structPromise *old);   //약속수정-> 현재 약속이 가능한지 체크. 이름을 수정했을때 불러서 바뀐 통합시간표를 근거로 체크
 void saveMyPromiseList(struct structPromise *promiseList, char *DBname, int listCount,char **friendsName,char **cost,int listnumber);   //약속리스트 수정부분을 맞는 위치에 저장하는 함수
 void deletePromise(char *friendID,char *promiseName, char *promiseDate, char *promiseTime);    //약속리스트를 읽고 매개변수로 주어진 약속이름, 약속날짜, 약속시간과 같은 약속항목을 찾아 삭제하는 함수 약속이 그거 하나만 있었을 때는 파일을 날린다.
+void showBG(char copyPromiseName[41],char copyPromisePlace[40],char copyPromisedate[10],char copyPromiseTime[6],char copyName[50]);    //약속수정 UI만드는 도중 화면을 리셋하고 수정전 내용을 출력하는 부분이 필요해서 만든 함수
 //약속장소고르기,저장부분
 void promisePlace(char *DBname,struct structPromise *newPromise);   //약속 장소 고르기 함수
 void saveNewpromise(char *DBname,struct structPromise *newPromise);   //기존 약속리스트에 새 약속을 추가하는 함수
