@@ -145,7 +145,7 @@ void setMajor(char ID[8],char Major[20])	{		//학번 3,4자리를 바탕으로 학과 알아�
 	strcpy(Major,noMajor);		//없을경우 "학과정보없음" 을 Major에 저장		
 }
 
-int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13],char *MyDB){		//이름검색함수.. (검색할이름, 함께하는회원중 리스트에 안올라간 회원수,새약속구조체,통합시간표) 를 변수로 받는다.
+int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13],char *MyDB,char IDList[4][13]){		//이름검색함수.. (검색할이름, 함께하는회원중 리스트에 안올라간 회원수,새약속구조체,통합시간표) 를 변수로 받는다.
 	int exist=0;
 	char openDB[40];
 	char check[30];
@@ -177,7 +177,7 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 			if(!strcmp(listName,name)){				//검색할 이름과 같은 이름이면
 				strcpy(openDB,ID);
 				strcat(openDB,name);
-				if(strcmp(openDB,MyDB)){
+				if(strcmp(openDB,MyDB)&&strcmp(ID,IDList[0])&&strcmp(ID,IDList[1])&&strcmp(ID,IDList[2])&&strcmp(ID,IDList[3])){
 					strcat(openDB,textFile);
 					fp1 = fopen(openDB, "r");			//학번과 이름을 이용 해당회원정보파일을 읽는다.
 
@@ -200,9 +200,18 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 					y=y+2;
 					overlap++;						//리스트 번호를 증가시키고 반복...반복해서 같은 이름을 계속 찾아나간다.
 				}
+				
 			}
+			
+				
 		}
 		fclose(fp);
+
+		if(overlap==1){
+				gotoxy(x,y);printf("%s회원의 정보가 없습니다.",name );	
+				exist=1;
+				break;
+		}
 		if(!strcmp(openDB,"회원목록.txt")){		//회원목록에 없는 이름을 검색했을 경우 처리
 			gotoxy(x,y);printf("%s회원의 정보가 없습니다.",name);
 			exist=1;							//exist를 1로 리턴. exist는 이 이름검색함수의 리턴값으로 쓰임. 함수를 부르는 단계에서 이 리턴값을 가지고 회원이름이 있는지 없는지를 체크해서 /
@@ -224,7 +233,7 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 
 		while (!feof(fp)) {					//열어서 위에 입력받은 리스트 번호가 될때까지 읽어주며 값을 찾는다. 리스트 순서는 회원목록 순서와 같으므로 이렇게 처리한다.
 			fscanf(fp, "%s %s", &ID, &listName);
-			if(!strcmp(listName,name)){
+			if(!strcmp(listName,name)&&strcmp(ID,IDList[0])&&strcmp(ID,IDList[1])&&strcmp(ID,IDList[2])&&strcmp(ID,IDList[3])){
 				strcpy(openDB,ID);
 				strcat(openDB,listName);
 				if(strcmp(openDB,MyDB)){
@@ -243,9 +252,12 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 		for(i=0; i<5; i++) {										//리스트에서 선택된 회원의 학번을 strcpy를 이용 구조체 newPromise 의 promiseFriendsName 에 복사붙여넣기 
 			if(!strcmp(newPromise.promiseFriendsName[i],"\0")){
 				strcpy(newPromise.promiseFriendsName[i],ID);
+
 				break;
 			}
 		}
+
+		strcpy(IDList[count-1],ID);
 		break;
 	}	
 	return exist;			//exist를 리턴값으로 가진다. 이름검색이 됬으면 0이 리턴, 없는 이름이면 위에서 1을 리턴하게 되있다.
@@ -555,8 +567,9 @@ int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise 
 	char Name[13];
 	char control[3]={0};
 	char nameList[4][13]={0};
+	char selectedNameList[4][13]={0};
 	int x=26, y=12;
-
+	
 	gotoxy(x+60,y);scanf("%s",&newPromise->promiseFreindsCount); //@@@인원수 입력
 	Count=atoi(newPromise->promiseFreindsCount);				//인원수를 int형으로 바꿔주고 newPromise의 promiseFriendsCount 에 동적할당
 	CountCopy=Count;
@@ -571,7 +584,7 @@ int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise 
 		gotoxy(x+12,y+4);printf("                              ");
 		gotoxy(x+12,y+4);scanf("%s",&Name);  //@@@검색할 이름 입력
 		
-		if(!searchName(Name,Count,*newPromise,CombineTimetable,DBname))	{	//이름 검색함수에서 리턴값을 받아온다. 받아온 리턴값이 1이면 이름이 없었던 경우이므로 Count값을 감소하지 않는다.
+		if(!searchName(Name,Count,*newPromise,CombineTimetable,DBname,selectedNameList))	{	//이름 검색함수에서 리턴값을 받아온다. 받아온 리턴값이 1이면 이름이 없었던 경우이므로 Count값을 감소하지 않는다.
 			Count--;
 			
 			strcpy(nameList[i],Name);		
