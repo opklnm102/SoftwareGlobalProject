@@ -46,8 +46,7 @@ typedef struct structCost{
 	char cost;
 }structCost;
 
-/*-------------------------------구조체정의 끝--------------------------------*/
- // 전역변수.
+/*-------------------------------구조체정의 끝--------------------------------*
 
 /*-------------------------------함수원형선언--------------------------------*/
 //로그인관련
@@ -55,6 +54,10 @@ void login(structMember *s);  //로그인
 void membership();  //회원가입
 void mainMenu(structMember *s);  //로그인 후 메인메뉴
 void pwFind();  //비밀번호 찾기
+
+//내상태보기
+void mystatus(structMember *s);  //상태보기시작
+void mystatus_promiseList(char *DBname);  //내 상태보기 약속리스트 출력
 
 //시간표관련
 void timetableMenu(structMember *s); //시간표메뉴함수
@@ -113,7 +116,8 @@ void moneyShare2();  //돈나누는 모드 고르는 기능
 void gotoxy(int x, int y);  //좌표설정
 void screenBorderDraw(); //전체화면틀출력함수
 void listBorderDraw(int x, int y); //메뉴틀출력함수
-void listBorderDraw1(int x, int y);  //약속리스트틀출력
+void promiselistBorderDraw(int x, int y);  ////약속리스트틀출력(좁은것)
+void listBorderDraw1(int x, int y);  //약속리스트틀출력(넓은것)
 void listBorderDraw2(int x, int y);	//이름검색리스트틀출력
 void listBorderDraw3(int x, int y);	//약속함께할회원리스트틀출력
 void checkInput();  //버퍼에 남아있는거 체크
