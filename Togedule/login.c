@@ -24,6 +24,7 @@ void login(structMember *s){
 	for(i=0; i<14; i++){  //비밀번호 입력시 ***로 출력부분
 		ch=getch();		
 		if(ch == 13){  //enter키(비밀번호입력끝부분) 확인
+
 			password[i] = '\0';
 			printf("\n"); break;
 		}
@@ -62,7 +63,7 @@ void login(structMember *s){
 		}
 	}
 	if(fp2 == NULL){  //개인별 회원정보파일을 못열었을 경우(회원가입안되어있을경우)
-		gotoxy(60, 27); printf("회원가입하세요....");
+		gotoxy(60, 27); printf("회원가입하세요....        ");
 		getch();
 		return;
 	}
@@ -76,7 +77,7 @@ void login(structMember *s){
 	loginCount=0;
 	while(loginCount<4){  //로그인 횟수 5가 넘을 경우 고유코드로 초기화
 		if(strcmp(password,s->password)==0){ //로그인	
-			gotoxy(60, 27); printf("환영합니다!!!",loginCount); 
+			gotoxy(60, 27); printf("환영합니다!!!          ",loginCount); 
 			getch();
 			mainMenu(s);
 		}

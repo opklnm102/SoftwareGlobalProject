@@ -318,7 +318,6 @@ void promiseChange(char *DBname,char *logID){
 					}
 			}
 
-
 			friendsName=(char**)malloc(sizeof(char*)*listCount);									//일단 학번이 한줄단위로 줄줄이 써있으니 그것을 읽어오는 문자열을 하나 동적할당한다.
 			for(i=0; i<listCount; i++) {
 				friendsName[i]=(char*)malloc(sizeof(char)*60);
@@ -576,7 +575,7 @@ void promiseChange(char *DBname,char *logID){
 	free(cost);
 	free(oldPromise);	
 }
-
+//친구들한테 약속 저장
 void saveMyPromiseList(struct structPromise *promiseList, char *DBname, int listCount,char **friendsName,char **cost,int listnumber) {
 	FILE *fp;
 	char DB[40]={0};

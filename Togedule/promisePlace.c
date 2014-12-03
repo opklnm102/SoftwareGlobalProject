@@ -70,8 +70,9 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 	for(i=0; i<placeCount; i++){
 		subcategory[i] = (char *)malloc(sizeof(char)*40);
 		fgets(subcategory[i],40,fp1);  //소분류의 내용들 저장
+		len=strlen(subcategory[i]);
+		subcategory[i][len-1]='\0';		
 	}
-
 	
 		system("cls");
 		screenBorderDraw();	
@@ -99,7 +100,7 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 	fclose(fp1);	
 
 }
-
+//내약속저장
 void saveNewpromise(char *DBname,struct structPromise *newPromise) {		//기존약속리스트에 새 약속을 추가하는 함수
 	char openDB[40];
 	FILE *fp;

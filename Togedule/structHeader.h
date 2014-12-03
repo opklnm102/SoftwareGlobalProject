@@ -8,7 +8,6 @@
 #pragma warning (disable:4996)
 
 //B(뒤로가기), X(종료)를 입력해야하기 때문에 전부 char 형으로 입력을 받아야한다.
-
 /*-------------------------------구조체정의--------------------------------*/
 //회원 구조체
 typedef struct structMember{  
@@ -75,7 +74,6 @@ void sortTimetable(structSubject* subjectPointer,int subjectTotalCnt, structMemb
 void removeTimetable(structMember *s); //시간표삭제함수(시간표txt파일삭제)
 
 //약속관련
-
 void promiseChange(char *DBname,char *logID);   //약속수정 시작-> 리스트 출력-> 리스트 선택-> 약속수정항목 선택함수 호출-> 약속저장함수들 호출 하는 함수
 int selectChange(char *DBname, struct structPromise *old, int listnumber, char **name,int CombineTimetable[5][13],char checkPlace[3]);    //약속수정항목 선택
 void changePromiseName(struct structPromise *old);   //약속수정-> 약속명 수정
@@ -87,18 +85,21 @@ int checkDateTime(int CombineTimetable[5][13], struct structPromise *old);   //�
 void saveMyPromiseList(struct structPromise *promiseList, char *DBname, int listCount,char **friendsName,char **cost,int listnumber);   //약속리스트 수정부분을 맞는 위치에 저장하는 함수
 void deletePromise(char *friendID,char *promiseName, char *promiseDate, char *promiseTime);    //약속리스트를 읽고 매개변수로 주어진 약속이름, 약속날짜, 약속시간과 같은 약속항목을 찾아 삭제하는 함수 약속이 그거 하나만 있었을 때는 파일을 날린다.
 void showBG(char copyPromiseName[41],char copyPromisePlace[40],char copyPromisedate[10],char copyPromiseTime[6],char copyName[50]);    //약속수정 UI만드는 도중 화면을 리셋하고 수정전 내용을 출력하는 부분이 필요해서 만든 함수
-void deleteAllPromise(char *DBname,char *logID);
+//약속 상세보기 부분
+int ViewAllPromise(char *DBname,char *logID);
+//약속 삭제부분
+int deleteAllPromise(char *DBname,char *logID) ;
 //약속장소고르기,저장부분
 void promisePlace(char *DBname,struct structPromise *newPromise);   //약속 장소 고르기 함수
 void saveNewpromise(char *DBname,struct structPromise *newPromise);   //기존 약속리스트에 새 약속을 추가하는 함수
 //약속만들기부분
-void promise(structMember *s);   //약속만들기 메인함수. 메뉴선택을 입력받는다.
+int promise(structMember *s);   //약속만들기 메인함수. 메뉴선택을 입력받는다.
 void showMenu();    //약속만들기 메인메뉴출력함수
 void promiseList(char *DBname);   //회원의 약속리스트를 출력하는 함수
 void promiseCreatConsole(char *DBname, char *logID);    //약속만들기 함수. 입력받는 모든 함수들 호출, 저장하는 함수들 호출
 void selectName(char *DBname,struct structPromise *newPromise);   //약속명을 입력받는 함수
 int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise *newPromise);    //회원수를 입력받고 회원수만큼 이름을 입력받아 이름검색함수를 호출하는 함수
-int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13],char *MyDB);   //이름검색함수 (검색할이름, 함께하는회원중 리스트에 안올라간 회원수,새약속구조체,통합시간표) 를 매개변수로 받는다
+int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13],char *MyDB,char IDList[4][13]);   //이름검색함수 (검색할이름, 함께하는회원중 리스트에 안올라간 회원수,새약속구조체,통합시간표) 를 매개변수로 받는다
 void setMajor(char ID[8],char Major[20]);   //학번 3번째,4번째 자리를 바탕으로 학과정보를 알아내는 함수
 int recordCombineTimetable(int CombineTimetable[5][13], char *DBname);   //통합시간표에 정보를 추가하는 함수, 통합시간표와 '학번+이름' 문자열을 매개변수로 받아서 처리
 int selectDate(int CombineTimetable[5][13],structPromise *newPromise);    //만들 약속의 날짜 입력받는 함수

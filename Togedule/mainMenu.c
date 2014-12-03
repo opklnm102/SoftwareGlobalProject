@@ -3,9 +3,11 @@
 void mainMenu(structMember *s){
 	int x=10, y=7;  //좌표
 	char menuSelect;
+	int check;
 
 	//----------------------------UI그리기-----------------------------------------------
 	while(1){
+		check=1;
 		screenBorderDraw();  //전체틀출력
 		listBorderDraw(40,13);  //메뉴틀출력
 
@@ -33,7 +35,7 @@ void mainMenu(structMember *s){
 			timetableMenu(s);
 			break;
 		case '3' :  //약속 잡아주세요
-			promise(s);
+			while(check){check=promise(s);}
 			break;
 		case '4' :  //돈 나눠주세요
 			moneyShare1(s); break;

@@ -1,6 +1,6 @@
 #include "structHeader.h"
 
-void deleteAllPromise(char *DBname,char *logID) {
+int deleteAllPromise(char *DBname,char *logID) {
 	FILE *fp;
 	char openDB[30];
 	char textFile[]=".txt";

@@ -37,7 +37,7 @@ void promiseList(char *DBname){	// ·Î±×ÀÎÇÑ È¸¿øÀÇ ¾à¼Ó¸®½ºÆ®¸¦ ºÒ·¯¿À´Â ÇÔ¼ö , 
 				fgets(check,41,fp);
 				gotoxy(x,y);printf("¡Û %s / %s",promiseName,promiseDate);
 				y=y+3;
-				if(x==20&&y==32){
+				if(x==20&&y==32){  //¿·ÁÙ·Î ÀÌµ¿ÇØ¼­ 5°³ ÂïÀ½(ÃÖ´ë 10°³)
 					x=44;
 					y=17;
 				}
@@ -297,13 +297,13 @@ int callendar(int Month) {		//´Ş·ÂÃâ·ÂÇÔ¼ö. ¿ùÀ» ÀÎ¼ö·Î ³Ñ°Ü¹Ş´Â´Ù. selectDate Ç
 			m=m+12;
 		}
 	}
-	gotoxy(26,17);printf(" ÀÏ ¿ù È­ ¼ö ¸ñ ±İ Åä");		//ÀÔ·Â¹ŞÀº ³âµµ¿Í ¿ùÀÇ ´Ş·ÂÀ» Ãâ·Â¸¸ ÇÏ´Â ÇÔ¼öÀÌ´Ù.
-	gotoxy(26,18);printf(" --------------------");
+	gotoxy(26,18);printf(" ÀÏ ¿ù È­ ¼ö ¸ñ ±İ Åä");		//ÀÔ·Â¹ŞÀº ³âµµ¿Í ¿ùÀÇ ´Ş·ÂÀ» Ãâ·Â¸¸ ÇÏ´Â ÇÔ¼öÀÌ´Ù.
+	gotoxy(26,19);printf(" --------------------");
 	date=1;
 	for(x=0;x<=6;x++)
 	{	
 		
-		gotoxy(26,19+i);
+		gotoxy(26,20+i);
 		th=y/100;
 		year=y%100;
 		day=((21*th/4)+(5*year/4)+(26*(m+1)/10)+date-1)%7;
@@ -370,23 +370,41 @@ int selectDate(int CombineTimetable[5][13],structPromise *newPromise){	//¸¸µé ¾à
 	screenBorderDraw();		
 	gotoxy(56,8); printf("¡Ù ¾à¼Ó ¸¸µé±â ¡Ù");
 	gotoxy(x,y); printf("¾à¼ÓÀ» »ı¼ºÇÒ ´ŞÀ» ÀÔ·ÂÇÏ¼¼¿ä.");
-	gotoxy(x,y+1); printf("´Ş·ÂÀÌ ³ªÅ¸³ª¸é ÅëÇÕ½Ã°£Ç¥¸¦ Âü°íÇØ¼­ ¾à¼ÓÀ» Á¤ÇÒ ³¯Â¥¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
+	gotoxy(x,y+1); printf("´Ş·ÂÀÌ ³ªÅ¸³ª¸é ÅëÇÕ½Ã°£Ç¥¸¦ Âü°íÇØ¼­ ¾à¼ÓÀ» Á¤ÇÒ");
+	gotoxy(x,y+2); printf("³¯Â¥¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
 
+	//ÅëÇÕ½Ã°£Ç¥¸¦ Ãâ·Â
+	gotoxy(x+60,y-5);
+	printf("¦£¦¡¦¨¦¡¦¡¦¨¦¡¦¡¦¨¦¡¦¡¦¨¦¡¦¡¦¨¦¡¦¡¦¤");
+	gotoxy(x+60,y-4); 
+	printf("¦¢  ¦¢ ¿ù ¦¢ È­ ¦¢ ¼ö ¦¢ ¸ñ ¦¢ ±İ ¦¢"); 
+	gotoxy(x+60,y-3);
+	printf("¦§¦¡¦«¦¡¦¡¦«¦¡¦¡¦«¦¡¦¡¦«¦¡¦¡¦«¦¡¦¡¦©");
+	for(i=0; i<26; i+=2) { 
+		gotoxy(x+60,y-2+i);
+		printf("¦¢%2d¦¢    ¦¢    ¦¢    ¦¢    ¦¢    ¦¢",i/2+1);
+		gotoxy(x+60,y-1+i);
+		if(i!= 24)
+			printf("¦§¦¡¦«¦¡¦¡¦«¦¡¦¡¦«¦¡¦¡¦«¦¡¦¡¦«¦¡¦¡¦©");
+	}
+	gotoxy(x+60,y+23);
+	printf("¦¦¦¡¦ª¦¡¦¡¦ª¦¡¦¡¦ª¦¡¦¡¦ª¦¡¦¡¦ª¦¡¦¡¦¥");
 
-	gotoxy(x,y+3); printf("¾à¼ÓÀ» ÀâÀ» ´Ş ÀÔ·Â(ex 3¿ù) :");	
-	gotoxy(x+30,y+3); scanf("%s",&month);								//¿ùÀ» ÀÔ·ÂÇÏ¸é
-	length=strlen(month);
-	gotoxy(x+60,y+3);printf(" ¿ù   È­   ¼ö   ¸ñ   ±İ");
-	for(j=0; j<13; j++) {		//ÅëÇÕ½Ã°£Ç¥¸¦ Ãâ·Â (ÀÓ½Ã). ½Ã°£Ç¥ Ãâ·ÂÇÏ´Â ºÎºĞ°ú ¿¬°üÇØ¼­ Á¦´ë·Î Ç¥¸¦ Â¥¼­ Ãâ·ÂÇØ¾ßÇÔ
-		for (i=0; i<5; i++){
-			if(CombineTimetable[i][j]==1){
-				gotoxy(x+60+(5*i),y+4+j);printf("¡á¡á ",CombineTimetable[i][j]);
-			}
-			if(CombineTimetable[i][j]==0){
-				gotoxy(x+60+(5*i),y+4+j);printf("¡à¡à ",CombineTimetable[i][j]);
-			}
+	for (i=0; i<5; i++) {  //ÅëÇÕ½Ã°£Ç¥¸¦ Ãâ·Â(°ãÄ¡´Â ºÎºĞ ºÓÀº»ö)	
+		for(j=0; j<13; j++){
+			if(CombineTimetable[i][j]==1){				
+				gotoxy(92+6*i,10+j*2);
+				setcolor(4,4);
+				printf("    ",CombineTimetable[i][j]);
+				//setcolor(7,0);
+			}			
 		}
 	}
+	setcolor(7,0);  //±ÛÀÚ»ö º¹±Í ±ÛÀÚ(¹é),¹è°æ(Èæ)
+
+	gotoxy(x,y+4); printf("¾à¼ÓÀ» ÀâÀ» ´Ş ÀÔ·Â(ex 3¿ù) :");	
+	gotoxy(x+30,y+4); scanf("%s",&month);								//¿ùÀ» ÀÔ·ÂÇÏ¸é
+	length=strlen(month);	
 
 	for(i=0;i<length;i++) {
 		if(strncmp(month,"¿ù",1)!=0){
@@ -405,11 +423,11 @@ int selectDate(int CombineTimetable[5][13],structPromise *newPromise){	//¸¸µé ¾à
 	
 	
 	
-	gotoxy(x,y+14);printf("¿äÀÏÀº ³¯Â¥ÀÔ·Â¿¡ µû¶ó ÀÚµ¿À¸·Î ¼±ÅÃµË´Ï´Ù.");
-	gotoxy(x,y+15);printf("³¯Â¥ÀÔ·ÂÀÌ ³¡³ª¸é ¾à¼Ó½Ã°£(±³½Ã)À» ÀÔ·ÂÇÏ¼¼¿ä.");
+	gotoxy(x,y+15);printf("¿äÀÏÀº ³¯Â¥ÀÔ·Â¿¡ µû¶ó ÀÚµ¿À¸·Î ¼±ÅÃµË´Ï´Ù.");
+	gotoxy(x,y+16);printf("³¯Â¥ÀÔ·ÂÀÌ ³¡³ª¸é ¾à¼Ó½Ã°£(±³½Ã)À» ÀÔ·ÂÇÏ¼¼¿ä.");
 	
-	gotoxy(x,y+17);printf("¾à¼ÓÀ» ÀâÀ» ³¯Â¥ ÀÔ·Â(ex 10ÀÏ) :");		//ÀÏÀ» ÀÔ·ÂÇÏ¸é
-	gotoxy(x+34,y+17);scanf("%s",&day);
+	gotoxy(x,y+18);printf("¾à¼ÓÀ» ÀâÀ» ³¯Â¥ ÀÔ·Â(ex 10ÀÏ) :");		//ÀÏÀ» ÀÔ·ÂÇÏ¸é
+	gotoxy(x+34,y+18);scanf("%s",&day);
 	length=strlen(temp);
 	for(i=0; i<length; i++)
 		temp[i]='\0';
@@ -438,7 +456,7 @@ void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofW
 	int i;
 	int Time;
 	int length;
-	int x=26, y=30;
+	int x=26, y=31;
 
 	gotoxy(x,y);printf("¾à¼Ó½Ã°£À» ÀÔ·Â(ex 3½Ã) :");
 	gotoxy(x+27,y);scanf("%s",&time);
@@ -622,7 +640,7 @@ void showMenu() {			//¾à¼Ó¸¸µé±â ¸ŞÀÎ ¸Ş´ºÃâ·ÂÇÔ¼ö.
 	gotoxy(x,y);printf("¢¹ ¸Ş´º ¼±ÅÃ : ");
 }
 
-void promise(structMember *s){		//¾à¼Ó¸¸µé±â ¸ŞÀÎÇÔ¼ö. (ÇöÀç·Î±×ÀÎµÇÇÑ È¸¿ø±¸Á¶Ã¼)¸¦ º¯¼ö·Î ¹Ş´Â´Ù.
+int promise(structMember *s){		//¾à¼Ó¸¸µé±â ¸ŞÀÎÇÔ¼ö. (ÇöÀç·Î±×ÀÎµÇÇÑ È¸¿ø±¸Á¶Ã¼)¸¦ º¯¼ö·Î ¹Ş´Â´Ù.
 
 	char logID[8];
 	char logName[13];

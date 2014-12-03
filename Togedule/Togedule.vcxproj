@@ -79,12 +79,17 @@
     <ClCompile Include="login.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="mainMenu.c" />
+    <ClCompile Include="makeTimetable.c" />
     <ClCompile Include="membership.c" />
+    <ClCompile Include="modifyTimetable.c" />
     <ClCompile Include="moneyShare.c" />
+    <ClCompile Include="mystatus.c" />
     <ClCompile Include="promise.c" />
     <ClCompile Include="promiseChange.c" />
+    <ClCompile Include="promiseDelete.c" />
     <ClCompile Include="promisePlace.c" />
     <ClCompile Include="pwFind.c" />
+    <ClCompile Include="removeTimetable.c" />
     <ClCompile Include="timeTable.c" />
   </ItemGroup>
   <ItemGroup>
