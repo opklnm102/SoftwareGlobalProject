@@ -33,7 +33,8 @@ int deleteAllPromise(char *DBname,char *logID) {
 	fp = fopen(openDB, "r");
 	if ( fp == NULL ) {
 		gotoxy(x+12,y+1); printf("현재 생성된 약속리스트가 없습니다.");
-		return ;
+		Sleep(1000);
+		return 0;
 	}
 	while (!feof(fp)) {			//약속리스트 열어서 리스트에 적혀진 개수만큼 이름과 날짜를 읽어서 출력하는 부분
 		
@@ -86,14 +87,14 @@ int deleteAllPromise(char *DBname,char *logID) {
 			}
 			for(i=0; i<listCount; i++) {	
 				if(i==5){
-						gotoxy(35,10); printf("다음리스트를 보려면 >키를 입력하세요. 번호를 선택하려면 ~키를 입력하세요.");
+						gotoxy(35,10); printf("다음리스트를 보려면 >키를 입력하세요. 번호를 선택하려면 @키를 입력하세요.");
 						while(1){
 							gotoxy(110,10);scanf("%s",&controlList);
-							if(!strcmp(controlList,"~")||!strcmp(controlList,">"))
+							if(!strcmp(controlList,"@")||!strcmp(controlList,">"))
 								break;
 							gotoxy(110,10);printf("     ");
 						}
-						if(!strcmp(controlList,"~")){
+						if(!strcmp(controlList,"@")){
 							strcpy(controlList,"\0");
 							break;							
 						}
@@ -109,15 +110,15 @@ int deleteAllPromise(char *DBname,char *logID) {
 
 					}
 					else if(i!=0&&i!=5&&i%5==0&&i+1!=listCount){
-						gotoxy(35,10);printf("이전리스트 <, 다음리스트 >, 번호를 선택하려면 ~키를 입력하세요.");
+						gotoxy(35,10);printf("이전리스트 <, 다음리스트 >, 번호를 선택하려면 @키를 입력하세요.");
 						while(1){
 							gotoxy(100,10);scanf("%s",&controlList);
-							if(!strcmp(controlList,"~")||!strcmp(controlList,"<")||!strcmp(controlList,">"))
+							if(!strcmp(controlList,"@")||!strcmp(controlList,"<")||!strcmp(controlList,">"))
 								break;
 							
 							gotoxy(100,10);printf("     ");
 						}
-						if(!strcmp(controlList,"~")){
+						if(!strcmp(controlList,"@")){
 							strcpy(controlList,"\0");
 							break;
 						}
@@ -142,14 +143,14 @@ int deleteAllPromise(char *DBname,char *logID) {
 					gotoxy(x+38,y+3+2*(i%5));printf("%s\n",oldPromise[i].Promisedate);
 					numbering++;
 					if(i+1==listCount&&listCount>5){
-						gotoxy(35,10);printf("처음으로 돌아가려면 <키를 입력하세요.번호를 선택하려면 ~키를 입력하세요.");
+						gotoxy(35,10);printf("처음으로 돌아가려면 <키를 입력하세요.번호를 선택하려면 @키를 입력하세요.");
 						while(1){
 							gotoxy(110,10);scanf("%s",&controlList);
-							if(!strcmp(controlList,"~")||!strcmp(controlList,"<"))
+							if(!strcmp(controlList,"@")||!strcmp(controlList,"<"))
 								break;
 							gotoxy(110,10);printf("     ");
 						}
-						if(!strcmp(controlList,"~")){
+						if(!strcmp(controlList,"@")){
 							strcpy(controlList,"\0");
 							break;
 						}
@@ -241,5 +242,5 @@ int deleteAllPromise(char *DBname,char *logID) {
 		deletePromise(oldPromise[listnumber].promiseFriendsName[i],oldPromise[listnumber].promiseName,oldPromise[listnumber].Promisedate,oldPromise[listnumber].promiseTime);
 	}
 	deletePromise(logID,oldPromise[listnumber].promiseName,oldPromise[listnumber].Promisedate,oldPromise[listnumber].promiseTime);
-	
+	return 1;
 }

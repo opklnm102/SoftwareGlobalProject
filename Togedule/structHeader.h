@@ -8,6 +8,7 @@
 #pragma warning (disable:4996)
 
 //B(뒤로가기), X(종료)를 입력해야하기 때문에 전부 char 형으로 입력을 받아야한다.
+
 /*-------------------------------구조체정의--------------------------------*/
 //회원 구조체
 typedef struct structMember{  
@@ -74,6 +75,7 @@ void sortTimetable(structSubject* subjectPointer,int subjectTotalCnt, structMemb
 void removeTimetable(structMember *s); //시간표삭제함수(시간표txt파일삭제)
 
 //약속관련
+
 void promiseChange(char *DBname,char *logID);   //약속수정 시작-> 리스트 출력-> 리스트 선택-> 약속수정항목 선택함수 호출-> 약속저장함수들 호출 하는 함수
 int selectChange(char *DBname, struct structPromise *old, int listnumber, char **name,int CombineTimetable[5][13],char checkPlace[3]);    //약속수정항목 선택
 void changePromiseName(struct structPromise *old);   //약속수정-> 약속명 수정
@@ -85,6 +87,7 @@ int checkDateTime(int CombineTimetable[5][13], struct structPromise *old);   //�
 void saveMyPromiseList(struct structPromise *promiseList, char *DBname, int listCount,char **friendsName,char **cost,int listnumber);   //약속리스트 수정부분을 맞는 위치에 저장하는 함수
 void deletePromise(char *friendID,char *promiseName, char *promiseDate, char *promiseTime);    //약속리스트를 읽고 매개변수로 주어진 약속이름, 약속날짜, 약속시간과 같은 약속항목을 찾아 삭제하는 함수 약속이 그거 하나만 있었을 때는 파일을 날린다.
 void showBG(char copyPromiseName[41],char copyPromisePlace[40],char copyPromisedate[10],char copyPromiseTime[6],char copyName[50]);    //약속수정 UI만드는 도중 화면을 리셋하고 수정전 내용을 출력하는 부분이 필요해서 만든 함수
+void saveFriendPromiseList(struct structPromise *promiseList, char *DBname,char **friendsName,char **cost,int listnumber,struct structPromise *newPromise);
 //약속 상세보기 부분
 int ViewAllPromise(char *DBname,char *logID);
 //약속 삭제부분

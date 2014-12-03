@@ -202,7 +202,8 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 				}
 				
 			}
-			
+			strcpy(ID,"\0");
+			strcpy(listName,"\0");
 				
 		}
 		fclose(fp);
@@ -225,6 +226,7 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 			overlap=atoi(select);	
 			if(overlap>0&&overlap<=limit)
 				break;
+			gotoxy(x+20,33);printf("     ");
 		}
 		limit=1;
 		strcpy(openDB,"회원목록");		//회원목록을 다시 연다.
@@ -400,7 +402,7 @@ int selectDate(int CombineTimetable[5][13],structPromise *newPromise){	//만들 약
 			}			
 		}
 	}
-	setcolor(7,0);  //글자색 복귀 글자(백),배경(흑)
+	setcolor(0,15);  //글자색 복귀 글자(흑),배경(백)
 
 	gotoxy(x,y+4); printf("약속을 잡을 달 입력(ex 3월) :");	
 	gotoxy(x+30,y+4); scanf("%s",&month);								//월을 입력하면
@@ -484,7 +486,8 @@ void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofW
 		if(errorCheck==0)
 			break;
 		gotoxy(x+27,y);printf("        ");
-		gotoxy(x,y+1);printf("해당 시간은 비어있지 않습니다. 통합 시간표를 다시 한번 보고 선택한 날짜의 빈시간을 입력하세요");
+		gotoxy(x,y+1);printf("해당 시간은 비어있지 않습니다."); 
+		gotoxy(x,y+2);printf("통합 시간표를 참고해서 선택한 날짜의 빈시간을 입력하세요");
 		
 		gotoxy(x+27,y);scanf("%s",&time);
 		strcpy(timeCopy,time);
@@ -637,6 +640,7 @@ void showMenu() {			//약속만들기 메인 메뉴출력함수.
 	gotoxy(x,y-14); printf("2. 약속 수정");
 	gotoxy(x,y-11); printf("3. 약속 삭제");	
 	gotoxy(x,y-8); printf("4. 약속 보기");	
+	gotoxy(x,y-5); printf("5. 나가기");	
 	gotoxy(x,y);printf("▷ 메뉴 선택 : ");
 }
 
@@ -646,7 +650,7 @@ int promise(structMember *s){		//약속만들기 메인함수. (현재로그인되한 회원구조체
 	char logName[13];
 	char menuControl;
 	char DBname[20];
-	
+	int check=1;
 	
 	strcpy(logID,s->ID);
 	strcpy(logName,s->name);			
@@ -659,8 +663,11 @@ int promise(structMember *s){		//약속만들기 메인함수. (현재로그인되한 회원구조체
 	gotoxy(96,32);scanf("%c",&menuControl);
 	switch(menuControl) {		//system("cls") 요건 화면을 지우고 다시 출력하게 하는 명령 <windows.h>필요
 	case '1':  promiseCreatConsole(DBname,logID);  break;
-	case '2': system("cls"); promiseChange(DBname,logID); break;
-	case '3': system("cls"); deleteAllPromise(DBname,logID); break;
+	case '2': while(1){system("cls"); promiseChange(DBname,logID); }break;
+	case '3': while(check){system("cls"); check=deleteAllPromise(DBname,logID);} break;
+	case '4': while(check){system("cls"); check=ViewAllPromise(DBname,logID);} break;
 	}
-
+	if(menuControl=='5')
+		return 0;
+	return 1;
 }

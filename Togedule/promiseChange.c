@@ -10,21 +10,37 @@ void changePlace(char *DBname, struct structPromise *old) {
 void changeTime(struct structPromise *old,int newCombineTimetable[5][13],int dayofweek) {
 	int i,j;
 	char dayofWeek[5];
-	int x=-34,y=10;
+	int x=26,y=12;
 	system("cls");
 	screenBorderDraw();
 	gotoxy(53,8); printf("☆ 약속 시간수정 ☆");
-	gotoxy(x+60,y+3);printf(" 월   화   수   목   금");
-	for(j=0; j<13; j++) {		//통합시간표를 출력 (임시). 시간표 출력하는 부분과 연관해서 제대로 표를 짜서 출력해야함
-		for (i=0; i<5; i++){
-			if(newCombineTimetable[i][j]==1){
-				gotoxy(x+60+(5*i),y+4+j);printf("■■ ",newCombineTimetable[i][j]);
-			}
-			if(newCombineTimetable[i][j]==0){
-				gotoxy(x+60+(5*i),y+4+j);printf("□□ ",newCombineTimetable[i][j]);
-			}
+	gotoxy(x+60,y-5);
+	printf("┌─┬──┬──┬──┬──┬──┐");
+	gotoxy(x+60,y-4); 
+	printf("│  │ 월 │ 화 │ 수 │ 목 │ 금 │"); 
+	gotoxy(x+60,y-3);
+	printf("├─┼──┼──┼──┼──┼──┤");
+	for(i=0; i<26; i+=2) { 
+		gotoxy(x+60,y-2+i);
+		printf("│%2d│    │    │    │    │    │",i/2+1);
+		gotoxy(x+60,y-1+i);
+		if(i!= 24)
+			printf("├─┼──┼──┼──┼──┼──┤");
+	}
+	gotoxy(x+60,y+23);
+	printf("└─┴──┴──┴──┴──┴──┘");
+
+	for (i=0; i<5; i++) {  //통합시간표를 출력(겹치는 부분 붉은색)	
+		for(j=0; j<13; j++){
+			if(newCombineTimetable[i][j]==1){				
+				gotoxy(92+6*i,10+j*2);
+				setcolor(4,4);
+				printf("    ",newCombineTimetable[i][j]);
+				//setcolor(7,0);
+			}			
 		}
 	}
+	setcolor(0,15);  //글자색 복귀 글자(백),배경(흑)
 	switch(dayofweek){		//weekday함수사용, 해당 연도 월 일에 해당하는 요일을 계산해서 삽입.
 	case 0: strcpy(dayofWeek,"월"); break;
 	case 1: strcpy(dayofWeek,"화"); break;
@@ -32,8 +48,8 @@ void changeTime(struct structPromise *old,int newCombineTimetable[5][13],int day
 	case 3: strcpy(dayofWeek,"목"); break;
 	case 4: strcpy(dayofWeek,"금"); break;
 	}
-	gotoxy(x+60,y+18);printf("현재 저장된 약속요일>> %s\n",dayofWeek);
-	gotoxy(x+60,y+19);printf("현재 저장된 약속시간>> %s\n",old->promiseTime);
+	gotoxy(x,y+16);printf("현재 저장된 약속요일>> %s\n",dayofWeek);
+	gotoxy(x,y+17);printf("현재 저장된 약속시간>> %s\n",old->promiseTime);
 	selectTime(newCombineTimetable,old,dayofweek);
 }
 
@@ -51,7 +67,7 @@ int changeDate(struct structPromise *old,int newCombineTimetable[5][13]) {
 }
 
 void changePromiseName(struct structPromise *old){
-	gotoxy(61,26);printf("                               ");
+	gotoxy(60,26);printf("                               ");
 	gotoxy(61,26);scanf("%s",&old->promiseName);
 }
 
@@ -304,9 +320,9 @@ void promiseChange(char *DBname,char *logID){
 		
 		gotoxy(x+8,y+1); printf("약속명                      약속날짜");
 		fscanf(fp, "%s", &check);
+		
 		if(!strcmp(check,"약속리스트")){
 			fscanf(fp,"%d", &listCount);
-
 			oldPromise=(struct structPromise*)malloc(sizeof(struct structPromise)*listCount);		//읽어온 약속을 저장하기위한 약속구조체
 			for(i=0; i<listCount; i++) {															//약속저장을 할때와는 달리 이번에는 학번도 하나씩 다 읽어서 현재 이 약속을 공유하는 회원파일을 각각 처리해야함으로 
 				oldPromise[i].promiseFriendsName=(char**)malloc(sizeof(char*)*4+1);					//동적할당을 promiseFriendsName에도 해준다. 
@@ -317,6 +333,7 @@ void promiseChange(char *DBname,char *logID){
 							strcpy(&oldPromise[i].promiseFriendsName[j][k],"\0");
 					}
 			}
+
 
 			friendsName=(char**)malloc(sizeof(char*)*listCount);									//일단 학번이 한줄단위로 줄줄이 써있으니 그것을 읽어오는 문자열을 하나 동적할당한다.
 			for(i=0; i<listCount; i++) {
@@ -347,17 +364,19 @@ void promiseChange(char *DBname,char *logID){
 				fgets(check,40,fp);
 				fgets(check,40,fp);
 				strcpy(cost[i],check);
+				length=strlen(oldPromise[i].promisePlace);
+				oldPromise[i].promisePlace[length-1]='\0';	
 			}
 			for(i=0; i<listCount; i++) {	
 				if(i==5){
-						gotoxy(35,10); printf("다음리스트를 보려면 >키를 입력하세요. 번호를 선택하려면 ~키를 입력하세요.");
+						gotoxy(35,10); printf("다음리스트를 보려면 >키를 입력하세요. 번호를 선택하려면 @키를 입력하세요.");
 						while(1){
 							gotoxy(110,10);scanf("%s",&controlList);
-							if(!strcmp(controlList,"~")||!strcmp(controlList,">"))
+							if(!strcmp(controlList,"@")||!strcmp(controlList,">"))
 								break;
 							gotoxy(110,10);printf("     ");
 						}
-						if(!strcmp(controlList,"~")){
+						if(!strcmp(controlList,"@")){
 							strcpy(controlList,"\0");
 							break;							
 						}
@@ -373,15 +392,15 @@ void promiseChange(char *DBname,char *logID){
 
 					}
 					else if(i!=0&&i!=5&&i%5==0&&i+1!=listCount){
-						gotoxy(35,10);printf("이전리스트 <, 다음리스트 >, 번호를 선택하려면 ~키를 입력하세요.");
+						gotoxy(35,10);printf("이전리스트 <, 다음리스트 >, 번호를 선택하려면 @키를 입력하세요.");
 						while(1){
 							gotoxy(100,10);scanf("%s",&controlList);
-							if(!strcmp(controlList,"~")||!strcmp(controlList,"<")||!strcmp(controlList,">"))
+							if(!strcmp(controlList,"@")||!strcmp(controlList,"<")||!strcmp(controlList,">"))
 								break;
 							
 							gotoxy(100,10);printf("     ");
 						}
-						if(!strcmp(controlList,"~")){
+						if(!strcmp(controlList,"@")){
 							strcpy(controlList,"\0");
 							break;
 						}
@@ -406,14 +425,14 @@ void promiseChange(char *DBname,char *logID){
 					gotoxy(x+38,y+3+2*(i%5));printf("%s\n",oldPromise[i].Promisedate);
 					numbering++;
 					if(i+1==listCount&&listCount>5){
-						gotoxy(35,10);printf("처음으로 돌아가려면 <키를 입력하세요.번호를 선택하려면 ~키를 입력하세요.");
+						gotoxy(35,10);printf("처음으로 돌아가려면 <키를 입력하세요.번호를 선택하려면 @키를 입력하세요.");
 						while(1){
 							gotoxy(110,10);scanf("%s",&controlList);
-							if(!strcmp(controlList,"~")||!strcmp(controlList,"<"))
+							if(!strcmp(controlList,"@")||!strcmp(controlList,"<"))
 								break;
 							gotoxy(110,10);printf("     ");
 						}
-						if(!strcmp(controlList,"~")){
+						if(!strcmp(controlList,"@")){
 							strcpy(controlList,"\0");
 							break;
 						}
@@ -486,8 +505,6 @@ void promiseChange(char *DBname,char *logID){
 
 	}
 	itoa(j,oldPromise[listnumber].promiseFreindsCount,10);
-	oldPromise[listnumber].promisePlace[strlen(oldPromise[listnumber].promisePlace)-1]=blank[0];           //장소DB에서 읽어올때 \n 하나 들어있는거 없애서 자동줄바꿈 방지
-
 	listBorderDraw2(35,26);
 
 	gotoxy(38,28);printf("약속명 >>     %s",oldPromise[listnumber].promiseName);
@@ -520,14 +537,12 @@ void promiseChange(char *DBname,char *logID){
 		Check=selectChange(DBname,&changePromise,listnumber,transName,CombineTimetable,checkPlace);		//selectChange 함수사용, (현재읽어온 약속리스트정보구조체, 사용자가 선택한 약속리스트번호, 함께하는 회원 이름)을 인수로 넘겨준다.
 	else if(!strcmp(select,"Y"))
 		Check=selectChange(DBname,&changePromise,listnumber,transName,CombineTimetable,checkPlace);
-	
+	else	return;
 	friendsCount=atoi(oldPromise[listnumber].promiseFreindsCount);
 	if(Check==1) {	
 		strcpy(cost[listnumber],"\n");
 		friendsCount=atoi(changePromise.promiseFreindsCount);//함께할 친구이름들이 수정되었을 경우 그 수를 int형으로 바꿔 저장한다.
 		strcpy(oldPromise[listnumber].promiseFreindsCount,changePromise.promiseFreindsCount);//함께할 친구 이름이 수정되었을 경우
-		if(strcmp(checkPlace,"1"))
-			strcat(changePromise.promisePlace,"\n");
 		for(i=0;i<j; i++){
 			deletePromise(oldPromise[listnumber].promiseFriendsName[i],oldPromise[listnumber].promiseName,oldPromise[listnumber].Promisedate,oldPromise[listnumber].promiseTime);
 			strcpy(oldPromise[listnumber].promiseFriendsName[i],"\0");			
@@ -544,21 +559,25 @@ void promiseChange(char *DBname,char *logID){
 		}//여기서 이름이 바뀐경우 실행되는 함수가 있어야한다. 예전회원의 약속리스트에서 해당 약속을 삭제하는 함수가 필요하다. 요약하면 무조건 지우고 루프를 벗어나면 새로운 약속회원들한테 약속을 추가한다.
 	}			// 기존리스트와 새로정한 친구리스트간에 중복되는 이름이 있어도 그걸 처리하는게 더 힘드므로 그냥 무조건 기존애들을 지우고 새로운 애들한테 추가한다.
 	//여기서는 로그인되어있는 본인과 같이 약속을 잡기로 지정되있는 회원들의 약속리스트에 수정된 약속을 쓴다. 즉 기존 약속리스트를 다 날리고 복사되있는 정보에 수정을 가한 정보를 추가해서 기록한다.
-	strcpy(oldPromise[listnumber].promiseName,changePromise.promiseName);	//수정이 완료되었으므로 changePromise구조체의 정보를 원래 약속리스트 해당부분에 덮어씌운다.
-		strcpy(oldPromise[listnumber].promisePlace,changePromise.promisePlace);
-		strcpy(oldPromise[listnumber].promiseTime,changePromise.promiseTime);
-		strcpy(oldPromise[listnumber].Promisedate,changePromise.Promisedate);
-		saveMyPromiseList(oldPromise, DBname,listCount,friendsName,cost,listnumber);
+	
 	if(Check==0){
 		
 		for(i=0; i<friendsCount; i++) {		//약속을 함께할 회원들의 개개인의 약속 리스트에 현재 약속정보를 저장하는 부분 
 			saveFriendsID(oldPromise[listnumber].promiseFriendsName[i],DB);			//ex) a,b,c,d가 약속을 잡았다. a가 지금 로그인해서 약속을 만든 회원. a회원의 리스트에는 b,c,d가 저장되어있음
 			strcpy(friendNameCopy,oldPromise[listnumber].promiseFriendsName[i]);	//지금 로그인 되어있는 회원의 아이디와 for문으로 선택된 함께 약속을 할 회원들중 하나의 아이디를 바꿔치기 해서 저장한다. 
-			strcpy(oldPromise[listnumber].promiseFriendsName[i],logID);					//ex) b회원의 약속리스트에는 a,c,d || c회원의 약속리스트에는 b,a,d || d회원의 약속리스트에는 b,c,a 라는 정보가 저장된다.
-			saveMyPromiseList(oldPromise, DB,listCount,friendsName,cost,listnumber);
+			strcpy(oldPromise[listnumber].promiseFriendsName[i],logID);	//ex) b회원의 약속리스트에는 a,c,d || c회원의 약속리스트에는 b,a,d || d회원의 약속리스트에는 b,c,a 라는 정보가 저장된다.
+
+			saveFriendPromiseList(oldPromise, DB,friendsName,cost,listnumber,&changePromise);
 			strcpy(oldPromise[listnumber].promiseFriendsName[i],friendNameCopy);		
 		}
 	}
+	strcpy(oldPromise[listnumber].promiseName,changePromise.promiseName);	//수정이 완료되었으므로 changePromise구조체의 정보를 원래 약속리스트 해당부분에 덮어씌운다.
+	strcpy(oldPromise[listnumber].promisePlace,changePromise.promisePlace);
+	strcpy(oldPromise[listnumber].promiseTime,changePromise.promiseTime);
+	strcpy(oldPromise[listnumber].Promisedate,changePromise.Promisedate);
+
+	saveMyPromiseList(oldPromise, DBname,listCount,friendsName,cost,listnumber);
+
 	for(i=0;i<listCount; i++)			//동적할당 해제
 		free(friendsName[i]);				
 	free(friendsName);
@@ -574,6 +593,7 @@ void promiseChange(char *DBname,char *logID){
 		free(cost[i]);				
 	free(cost);
 	free(oldPromise);	
+	return;
 }
 //친구들한테 약속 저장
 void saveMyPromiseList(struct structPromise *promiseList, char *DBname, int listCount,char **friendsName,char **cost,int listnumber) {
@@ -581,6 +601,7 @@ void saveMyPromiseList(struct structPromise *promiseList, char *DBname, int list
 	char DB[40]={0};
 	int i,j;
 	int friendsCount=0;
+
 	friendsCount=atoi(promiseList[listnumber].promiseFreindsCount);
 	strcpy(DB,DBname);
 	strcat(DB,"PromiseList.txt");
@@ -590,7 +611,7 @@ void saveMyPromiseList(struct structPromise *promiseList, char *DBname, int list
 	for(i=0; i<listCount; i++) {
 		if(i!=listnumber){
 			fprintf(fp,"%s\n",promiseList[i].promiseName);
-			fprintf(fp,"%s",promiseList[i].promisePlace);			
+			fprintf(fp,"%s\n",promiseList[i].promisePlace);			
 			fprintf(fp,"%s\n",promiseList[i].promiseTime);
 			fprintf(fp,"%s\n",promiseList[i].Promisedate);			
 			fprintf(fp,"%s\n",friendsName[i]);
@@ -601,7 +622,7 @@ void saveMyPromiseList(struct structPromise *promiseList, char *DBname, int list
 		}
 		if(i==listnumber){
 			fprintf(fp,"%s\n",promiseList[i].promiseName);
-			fprintf(fp,"%s",promiseList[i].promisePlace);			
+			fprintf(fp,"%s\n",promiseList[i].promisePlace);			
 			fprintf(fp,"%s\n",promiseList[i].promiseTime);
 			fprintf(fp,"%s\n",promiseList[i].Promisedate);			
 			for(j=0;j<friendsCount;j++){
@@ -619,7 +640,111 @@ void saveMyPromiseList(struct structPromise *promiseList, char *DBname, int list
 
 	fclose(fp);	
 }
+void saveFriendPromiseList(struct structPromise *promiseList, char *DBname,char **friendsName,char **cost,int listnumber,struct structPromise *newPromise) {
+	FILE *fp;
+	char DB[40]={0};
+	int i,j,k;
+	int length;
+	int friendsCount=0;
+	int listCount=0;
+	int findListNumber=-1;
+	char check[41];
+	struct structPromise *oldPromise;
+	friendsCount=atoi(promiseList[listnumber].promiseFreindsCount);
+	strcpy(DB,DBname);
+	strcat(DB,"PromiseList.txt");
+	fp = fopen(DB,"r");
+	while (!feof(fp)) {			//약속리스트 열어서 리스트에 적혀진 개수만큼 이름과 날짜를 읽어서 출력하는 부분
+		fscanf(fp, "%s", &check);
+		
+		if(!strcmp(check,"약속리스트")){
+			fscanf(fp,"%d", &listCount);
+			oldPromise=(struct structPromise*)malloc(sizeof(struct structPromise)*listCount);		//읽어온 약속을 저장하기위한 약속구조체
+			for(i=0; i<listCount; i++) {															//약속저장을 할때와는 달리 이번에는 학번도 하나씩 다 읽어서 현재 이 약속을 공유하는 회원파일을 각각 처리해야함으로 
+				oldPromise[i].promiseFriendsName=(char**)malloc(sizeof(char*)*4+1);					//동적할당을 promiseFriendsName에도 해준다. 
+					for(j=0; j<4; j++) {													
+						oldPromise[i].promiseFriendsName[j]=(char*)malloc(sizeof(char)*8);
+						strcpy(oldPromise[i].promiseFriendsName[j],"\0");
+						for(k=0; k<8; k++)
+							strcpy(&oldPromise[i].promiseFriendsName[j][k],"\0");
+					}
+			}
 
+
+			friendsName=(char**)malloc(sizeof(char*)*listCount);									//일단 학번이 한줄단위로 줄줄이 써있으니 그것을 읽어오는 문자열을 하나 동적할당한다.
+			for(i=0; i<listCount; i++) {
+				friendsName[i]=(char*)malloc(sizeof(char)*60);
+				strcpy(friendsName[i],"\0");
+					for(j=0; j<60; j++)
+						strcpy(&friendsName[i][j],"\0");
+			}
+
+			cost=(char**)malloc(sizeof(char*)*listCount);						//비용은 약속수정에서 안쓰이는 정보이므로 그냥 읽어주기만 한다.. 필요없음
+			for(i=0; i<listCount; i++) {													
+				cost[i]=(char*)malloc(sizeof(char)*10);
+				strcpy(cost[i],"\0");
+					for(j=0; j<10; j++)
+						strcpy(&cost[i][j],"\0");
+			}
+
+			for(i=0; i<listCount; i++) {								//일단 약속리스트개수만큼 약속을 읽어와서 oldPromise구조체에 순서대로 저장
+				fscanf(fp,"%s",&oldPromise[i].promiseName);
+				fflush(stdin);
+				fgets(check,40,fp);						
+				fgets(check,40,fp);					
+				strcpy(oldPromise[i].promisePlace,check);	
+				length=strlen(oldPromise[i].promisePlace);
+				oldPromise[i].promisePlace[length-1]='\0';						
+				fscanf(fp,"%s",&oldPromise[i].promiseTime);
+				fscanf(fp,"%s",&oldPromise[i].Promisedate);
+				fscanf(fp,"%s",&check);
+				strcpy(friendsName[i],check);
+				fgets(check,40,fp);
+				fgets(check,40,fp);
+				strcpy(cost[i],check);
+				
+			}
+		}
+	}
+	for(i=0; i<listCount; i++) {
+		if(!strcmp(oldPromise[i].promiseName,promiseList[listnumber].promiseName)&&!strcmp(oldPromise[i].promisePlace,promiseList[listnumber].promisePlace)&&!strcmp(oldPromise[i].Promisedate,promiseList[listnumber].Promisedate)&&!strcmp(oldPromise[i].promiseTime,promiseList[listnumber].promiseTime))
+			findListNumber=i;
+	}
+	fp = fopen(DB,"w");
+	fprintf(fp,"약속리스트\n");
+	fprintf(fp,"%d\n",listCount);
+	for(i=0; i<listCount; i++) {
+		if(i!=listnumber){
+			fprintf(fp,"%s\n",oldPromise[i].promiseName);
+			fprintf(fp,"%s\n",oldPromise[i].promisePlace);			
+			fprintf(fp,"%s\n",oldPromise[i].promiseTime);
+			fprintf(fp,"%s\n",oldPromise[i].Promisedate);			
+			fprintf(fp,"%s\n",friendsName[i]);
+			if((i==listCount-1)&&(!strcmp(cost[i],"\n"))){
+				break;
+			}
+			fprintf(fp,"%s",cost[i]);
+		}
+		if(i==findListNumber){
+			fprintf(fp,"%s\n",newPromise->promiseName);
+			fprintf(fp,"%s\n",newPromise->promisePlace);			
+			fprintf(fp,"%s\n",newPromise->promiseTime);
+			fprintf(fp,"%s\n",newPromise->Promisedate);			
+			for(j=0;j<friendsCount;j++){
+				fprintf(fp,"%s",promiseList[i].promiseFriendsName[j]);
+				if(j!=friendsCount-1)
+					fprintf(fp,",");
+			}
+			fprintf(fp,"\n");
+			if((i==listCount-1)&&(!strcmp(cost[i],"\n"))){
+				break;
+			}
+			fprintf(fp,"%s",cost[i]);
+		}
+	}
+
+	fclose(fp);	
+}
 void deletePromise(char *friendID,char *promiseName, char *promiseDate, char *promiseTime){
 	FILE *fp;
 	char DB[40]={0};

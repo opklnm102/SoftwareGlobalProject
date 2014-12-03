@@ -24,14 +24,14 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 		gotoxy(x+1,y+5);printf("--장소리스트--");
 
 		//장소리스트 대분류
-		gotoxy(x-15,y+9);printf("1. 학습관련시설\n");
-		gotoxy(x-15,y+12);printf("2. 휴게시설\n");
-		gotoxy(x-15,y+15);printf("3. 기타시설\n");
-		gotoxy(x-15,y+18);printf("4. 건강,문화시설\n");
+		gotoxy(x-15,y+9);printf("1. 학습관련시설");
+		gotoxy(x-15,y+12);printf("2. 휴게시설");
+		gotoxy(x-15,y+15);printf("3. 기타시설");
+		gotoxy(x-15,y+18);printf("4. 건강,문화시설");
 		gotoxy(x-15,y+21);printf("대분류 선택>>"); 
 		gotoxy(x+1,y+21);scanf("%d",&placeSelect); fflush(stdin);
 		if(1 <= placeSelect && placeSelect <= 4) break;
-		gotoxy(x-15,y+22);printf("리스트에 있는 것중에 고르시오\n");
+		gotoxy(x-15,y+22);printf("리스트에 있는 것중에 고르시오");
 		getch();
 		system("cls");
 	}
@@ -122,7 +122,8 @@ void saveNewpromise(char *DBname,struct structPromise *newPromise) {		//기존약속
 		fprintf(fp,"1\n");
 		fprintf(fp,newPromise->promiseName);
 		fprintf(fp,"\n");
-		fprintf(fp,newPromise->promisePlace);						
+		fprintf(fp,newPromise->promisePlace);	
+		fprintf(fp,"\n");
 		fprintf(fp,newPromise->promiseTime);
 		fprintf(fp,"\n");
 		fprintf(fp,newPromise->Promisedate);
@@ -199,7 +200,7 @@ void saveNewpromise(char *DBname,struct structPromise *newPromise) {		//기존약속
 		if(strlen(cost[i-1])!=1&&i-1!=0)
 			fprintf(fp,"\n");
 		fprintf(fp,"%s\n",newPromise->promiseName);
-		fprintf(fp,"%s",newPromise->promisePlace);				//마찬가지로 null안찍어도됨.
+		fprintf(fp,"%s\n",newPromise->promisePlace);				//마찬가지로 null안찍어도됨.
 		fprintf(fp,"%s\n",newPromise->promiseTime);
 		fprintf(fp,"%s\n",newPromise->Promisedate);
 		friendCount=atoi(newPromise->promiseFreindsCount);
