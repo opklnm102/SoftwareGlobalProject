@@ -1,6 +1,11 @@
 #include "structHeader.h"
 
-void moneyShare2(){
+void moneyShare2(structMember *s){
+	FILE *fin;
+	int i;
+	char fileName[30];
+	char fileContents[100][100]={0};
+
 	/*
 	54000원이 나왔다. 5명이다.
 	(54000 / (5 * 1000))*1000 = 50000 / 5 = 10000원씩 나누어 갖게된다.
@@ -14,16 +19,62 @@ void moneyShare2(){
 	int finalMoney; // 최종 돈
 	int peopleCnt; // 사람 숫자
 	int divisionNumber; // 나누는 수
-	int i;
 	int arrMoney[5]={0, };
 	int baseMoney ;
 	int restPeople;
 	int restMoney;
+	int promiseNumber;
 	int menuseletion; //메뉴 선택하는 변수
 	int randomPersonNumber; //랜덤으로 받은 시드값을 저장하는 변수 1,2,3,4,5 중 하나
+	int promiseCnt=0, contentsCnt=0, j=0;
 	/*--------------------------------변수 끝났다---------------------------------*/
-
+	i=0;
+	system("cls");
+	strcpy(fileName,s->ID);
+	strcat(fileName,s->name);
+	strcat(fileName,"PromiseList.txt");
+	fin= fopen(fileName,"r"); // 파일생성
+	while(1) // 파일의 끝까지 내용을 fileContents 변수에 저장
+	{
+		fgets(fileContents[contentsCnt],100, fin);
+		contentsCnt++;
+		if (feof(fin)) break;
+	}
+	printf("약속리스트\n");
+	promiseCnt=(contentsCnt-2)/6;
+	for (i=0; i<promiseCnt; i++)
+	{
+		printf("%d. %s", i+1, fileContents[(i*6)+2]);
+		/*
+			for (j=0; j<6; j++)
+			{
+				printf("%s", fileContents[(i*6)+2+j]);
+			}
+		*/
+	} // 약속 리스트들이 총 6줄이므로 6*i번째의 제목만 출력
 	//메뉴를 선택해라
+	printf("약속을 선택하시오.");
+	scanf("%d", &promiseNumber);
+	printf("%s 약속을 선택하셨습니다.\n", fileContents[(promiseNumber-1)*6+2]);
+	//사람 인원수 구하기
+	
+	peopleCnt=1;
+	if (fileContents[(promiseNumber-1)*6+4][0]==NULL) {
+		printf("입력오류!!!!");
+	}
+	else {
+		for (i=0; ; i++)
+		{
+			if (fileContents[(promiseNumber-1)*6+4][i]==',') {
+				peopleCnt++;
+			}
+			if (fileContents[(promiseNumber-1)*6+4][i]==NULL) {
+				peopleCnt++;
+				break;
+			}
+		}
+	}
+	fflush(stdin);
 	while(1) {
 		printf("1 : 공평하게 나누기, 2 : 한 명에게 몰아주기\n");
 		printf("메뉴를 선택해주세요 : ▶");
@@ -37,11 +88,10 @@ void moneyShare2(){
 	switch(menuseletion){
 	case 1:
 
-		printf("나누기 전 돈, 사람 숫자, 절사할 최소 돈\n");
-		printf("예시) 16500 5 1000\n");
-		printf("최대 5명까지 지정할 수 있습니다.\n");
+		printf("나누기 전 돈, 절사할 최소 돈\n");
+		printf("예시) 16500 1000\n");
 
-		scanf("%d %d %d", &beforeDivideMoney , &peopleCnt, &divisionNumber); fflush(stdin);
+		scanf("%d %d", &beforeDivideMoney , &divisionNumber); fflush(stdin);
 
 		baseMoney = (beforeDivideMoney / (peopleCnt * divisionNumber)) * divisionNumber;
 		/*int beforeDivideMoney, peopleCnt=0, divisionNumber, baseMoney = 0, finalMoney, restMoney, i, restPeople;
@@ -53,7 +103,7 @@ void moneyShare2(){
 		if (restMoney == 0) {
 			finalMoney = baseMoney+ (restMoney / (peopleCnt * divisionNumber) * divisionNumber);
 
-			for(i=0; i<5; i++)
+			for(i=0; i<peopleCnt; i++)
 				arrMoney[i] = finalMoney;
 		} 
 		else {
@@ -81,7 +131,7 @@ void moneyShare2(){
 
 		/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ알고리즘 끝ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ ㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
 
-		for(i=0; i<5; i++){ //for (i=0; i<peopleCnt; i++)
+		for(i=0; i<peopleCnt; i++){ //for (i=0; i<peopleCnt; i++)
 			printf("%d\n", arrMoney[i]);
 		}
 
@@ -89,7 +139,7 @@ void moneyShare2(){
 
 	case 2: //한 명한테 몰아주기
 		srand((unsigned)time(NULL));
-		printf("사람 수를 입력해주세요 :▶"); scanf("%d",&peopleCnt); fflush(stdin); 
+		fflush(stdin); 
 		randomPersonNumber = ( rand()%peopleCnt );
 
 		printf("나눌 돈을 적어주세요 : ▶"); 

@@ -75,6 +75,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="structHeader.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="function.c" />
     <ClCompile Include="login.c" />
     <ClCompile Include="main.c" />
@@ -88,12 +91,10 @@
     <ClCompile Include="promiseChange.c" />
     <ClCompile Include="promiseDelete.c" />
     <ClCompile Include="promisePlace.c" />
+    <ClCompile Include="promiseView.c" />
     <ClCompile Include="pwFind.c" />
     <ClCompile Include="removeTimetable.c" />
     <ClCompile Include="timeTable.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="structHeader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
