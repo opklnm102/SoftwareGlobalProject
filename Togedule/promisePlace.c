@@ -5,6 +5,7 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 	FILE *fp1;
 	char place[20],DBplace[40];
 	int placeSelect;  //장소선택
+	char placeSelectChar[4]={0};
 	int placeCount;  //소분류의 수
 	char **subcategory;  //소분류 저장공간
 	int i,len;
@@ -19,7 +20,7 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 		printf("can not file open\n");
 		return;
 	}
-
+	strcpy(newPromise->promisePlace,"\0");   //B,b 입력 체크를 위해 초기화
 	while(1){
 		gotoxy(x+1,y+5);printf("--장소리스트--");
 
@@ -29,13 +30,19 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 		gotoxy(x-15,y+15);printf("3. 기타시설");
 		gotoxy(x-15,y+18);printf("4. 건강,문화시설");
 		gotoxy(x-15,y+21);printf("대분류 선택>>"); 
-		gotoxy(x+1,y+21);scanf("%d",&placeSelect); fflush(stdin);
+		gotoxy(x+1,y+21);scanf("%s",&placeSelectChar); fflush(stdin);
+		if(!strcmp(placeSelectChar,"b")||!strcmp(placeSelectChar,"B"))
+			break;
+		placeSelect=atoi(placeSelectChar);
 		if(1 <= placeSelect && placeSelect <= 4) break;
 		gotoxy(x-15,y+22);printf("리스트에 있는 것중에 고르시오");
 		getch();
 		system("cls");
 	}
-
+	if(!strcmp(placeSelectChar,"b")||!strcmp(placeSelectChar,"B")){
+		fclose(fp1);
+		return;
+	}
 	switch(placeSelect){  //장소리스트 대분류 선택
 	case 1 :
 		strcpy(place,"학습관련시설");		
@@ -85,10 +92,20 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 		}
 		gotoxy(x-13,y+25);printf("소분류 선택>>");
 	while(1){
-		 gotoxy(x+2,y+25);scanf("%d",&placeSelect); fflush(stdin);
+		 gotoxy(x+2,y+25);scanf("%s",&placeSelectChar); fflush(stdin);
+		 if(!strcmp(placeSelectChar,"b")||!strcmp(placeSelectChar,"B"))
+			break;
+		placeSelect=atoi(placeSelectChar);
 		if(1 <= placeSelect && placeSelect <= placeCount) break;
 		gotoxy(x,y+25);printf("       ");
 		gotoxy(x-13,y+26);printf("리스트에 있는 것중에 고르시오\n");
+	}
+	if(!strcmp(placeSelectChar,"b")||!strcmp(placeSelectChar,"B")){
+		for(i=0; i<placeCount; i++)
+			free(subcategory[i]);
+		free(subcategory);
+		fclose(fp1);
+		return;;
 	}
 	strcpy(newPromise->promisePlace,subcategory[placeSelect-1]);  //기존의 다른 약속정보들이 저장되있는 newPromise 구조체에 장소 정보도 저장
 	

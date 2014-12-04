@@ -90,6 +90,21 @@ int deleteAllPromise(char *DBname,char *logID) {
 						gotoxy(35,10); printf("다음리스트를 보려면 >키를 입력하세요. 번호를 선택하려면 @키를 입력하세요.");
 						while(1){
 							gotoxy(110,10);scanf("%s",&controlList);
+							if(!strcmp(controlList,"b")||!strcmp(controlList,"B")){
+								for(i=0; i<listCount; i++) {											
+									for(j=0; j<4; j++)
+										free(oldPromise[i].promiseFriendsName[j]);
+									free(oldPromise[i].promiseFriendsName);
+								}
+								free(oldPromise);
+								for(i=0; i<listCount; i++)
+									free(friendsName[i]);
+								free(friendsName);
+								for(i=0; i<listCount; i++)
+									free(cost[i]);
+								free(cost);
+								return 0;
+							}
 							if(!strcmp(controlList,"@")||!strcmp(controlList,">"))
 								break;
 							gotoxy(110,10);printf("     ");
@@ -113,6 +128,21 @@ int deleteAllPromise(char *DBname,char *logID) {
 						gotoxy(35,10);printf("이전리스트 <, 다음리스트 >, 번호를 선택하려면 @키를 입력하세요.");
 						while(1){
 							gotoxy(100,10);scanf("%s",&controlList);
+							if(!strcmp(controlList,"b")||!strcmp(controlList,"B")){
+								for(i=0; i<listCount; i++) {											
+									for(j=0; j<4; j++)
+										free(oldPromise[i].promiseFriendsName[j]);
+									free(oldPromise[i].promiseFriendsName);
+								}
+								free(oldPromise);
+								for(i=0; i<listCount; i++)
+									free(friendsName[i]);
+								free(friendsName);
+								for(i=0; i<listCount; i++)
+									free(cost[i]);
+								free(cost);
+								return 0;
+							}
 							if(!strcmp(controlList,"@")||!strcmp(controlList,"<")||!strcmp(controlList,">"))
 								break;
 							
@@ -146,6 +176,21 @@ int deleteAllPromise(char *DBname,char *logID) {
 						gotoxy(35,10);printf("처음으로 돌아가려면 <키를 입력하세요.번호를 선택하려면 @키를 입력하세요.");
 						while(1){
 							gotoxy(110,10);scanf("%s",&controlList);
+							if(!strcmp(controlList,"b")||!strcmp(controlList,"B")){
+								for(i=0; i<listCount; i++) {											
+									for(j=0; j<4; j++)
+										free(oldPromise[i].promiseFriendsName[j]);
+									free(oldPromise[i].promiseFriendsName);
+								}
+								free(oldPromise);
+								for(i=0; i<listCount; i++)
+									free(friendsName[i]);
+								free(friendsName);
+								for(i=0; i<listCount; i++)
+									free(cost[i]);
+								free(cost);
+								return 0;
+							}
 							if(!strcmp(controlList,"@")||!strcmp(controlList,"<"))
 								break;
 							gotoxy(110,10);printf("     ");
@@ -172,6 +217,21 @@ int deleteAllPromise(char *DBname,char *logID) {
 	gotoxy(35,25);printf("→ 삭제하실 약속 : ");
 	while(1) {						//리스트 번호 범위 내의 수만 입력받기
 		gotoxy(54,25);scanf("%s",select);
+		if(!strcmp(select,"b")||!strcmp(select,"B")){
+			for(i=0; i<listCount; i++) {											
+				for(j=0; j<4; j++)
+					free(oldPromise[i].promiseFriendsName[j]);
+				free(oldPromise[i].promiseFriendsName);
+			}
+			free(oldPromise);
+			for(i=0; i<listCount; i++)
+				free(friendsName[i]);
+			free(friendsName);
+			for(i=0; i<listCount; i++)
+				free(cost[i]);
+			free(cost);
+			return 0;
+		}
 		listnumber=atoi(select);	
 		if(listnumber>0&&listnumber<=numbering)
 			break;
@@ -236,11 +296,54 @@ int deleteAllPromise(char *DBname,char *logID) {
 	for(i=0; i<4; i++)
 		printf("%s ",transName[i]);
 	gotoxy(38,40);printf("정말 삭제하시겠습니까? <Y,N>");
-	gotoxy(67,40);scanf("%s",&select);
-	
+	while(1) {
+		gotoxy(67,40);scanf("%s",&select);
+		if(!strcmp(select,"b")||!strcmp(select,"B")||!strcmp(select,"N")||!strcmp(select,"n")){
+			for(i=0; i<4; i++)
+				printf("%s ",transName[i]);
+			for(i=0; i<listCount; i++) {											
+				for(j=0; j<4; j++)
+					free(oldPromise[i].promiseFriendsName[j]);
+				free(oldPromise[i].promiseFriendsName);
+			}
+			free(oldPromise);
+			for(i=0; i<listCount; i++)
+				free(friendsName[i]);
+			free(friendsName);
+			for(i=0; i<listCount; i++)
+				free(cost[i]);
+			free(cost);
+			for(i=0; i<4; i++)
+				free(transName[i]);
+			free(transName);
+			return 0;
+		}
+		if(!strcmp(select,"Y")||!strcmp(select,"y"))
+			break;
+		gotoxy(67,40);printf("        ");
+	}
 	for(i=0; i<j; i++) {
 		deletePromise(oldPromise[listnumber].promiseFriendsName[i],oldPromise[listnumber].promiseName,oldPromise[listnumber].Promisedate,oldPromise[listnumber].promiseTime);
 	}
 	deletePromise(logID,oldPromise[listnumber].promiseName,oldPromise[listnumber].Promisedate,oldPromise[listnumber].promiseTime);
+
+	for(i=0; i<4; i++)
+		printf("%s ",transName[i]);
+	for(i=0; i<listCount; i++) {											
+		for(j=0; j<4; j++)
+			free(oldPromise[i].promiseFriendsName[j]);
+		free(oldPromise[i].promiseFriendsName);
+	}
+	free(oldPromise);
+	for(i=0; i<listCount; i++)
+		free(friendsName[i]);
+	free(friendsName);
+	for(i=0; i<listCount; i++)
+		free(cost[i]);
+	free(cost);
+	for(i=0; i<4; i++)
+		free(transName[i]);
+	free(transName);
+
 	return 1;
 }

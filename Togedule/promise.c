@@ -223,6 +223,8 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 		limit=overlap-1;
 		while(1) {						//리스트 번호 범위 내의 수만 입력받기
 			gotoxy(x+20,33);scanf("%s",select);
+			if(!strcmp(select,"b")||!strcmp(select,"B"))
+				return -1;
 			overlap=atoi(select);	
 			if(overlap>0&&overlap<=limit)
 				break;
@@ -262,7 +264,7 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 		strcpy(IDList[count-1],ID);
 		break;
 	}	
-	return exist;			//exist를 리턴값으로 가진다. 이름검색이 됬으면 0이 리턴, 없는 이름이면 위에서 1을 리턴하게 되있다.
+	return exist;			//exist를 리턴값으로 가진다. 이름검색이 됬으면 0이 리턴, 없는 이름이면 위에서 1을 리턴하게 되있다. 리스트번호 입력시 B,b키 입력시 -1리턴 
 }
 
 int callendar(int Month) {		//달력출력함수. 월을 인수로 넘겨받는다. selectDate 함수에서 입력받은 달을 넘겨받음.
@@ -406,6 +408,8 @@ int selectDate(int CombineTimetable[5][13],structPromise *newPromise){	//만들 약
 
 	gotoxy(x,y+4); printf("약속을 잡을 달 입력(ex 3월) :");	
 	gotoxy(x+30,y+4); scanf("%s",&month);								//월을 입력하면
+	if(!strcmp(month,"b")||!strcmp(month,"B"))
+		return -1;
 	length=strlen(month);	
 
 	for(i=0;i<length;i++) {
@@ -427,26 +431,32 @@ int selectDate(int CombineTimetable[5][13],structPromise *newPromise){	//만들 약
 	
 	gotoxy(x,y+15);printf("요일은 날짜입력에 따라 자동으로 선택됩니다.");
 	gotoxy(x,y+16);printf("날짜입력이 끝나면 약속시간(교시)을 입력하세요.");
-	
-	gotoxy(x,y+18);printf("약속을 잡을 날짜 입력(ex 10일) :");		//일을 입력하면
-	gotoxy(x+34,y+18);scanf("%s",&day);
-	length=strlen(temp);
-	for(i=0; i<length; i++)
-		temp[i]='\0';
-	length=strlen(day);
-	for(i=0;i<length;i++) {
-		if(strncmp(day,"일",1)!=0){
-			strncat(temp,day,1);
-			changeLocation(day);
+	while(1){
+		gotoxy(x,y+18);printf("약속을 잡을 날짜 입력(ex 10일) :");		//일을 입력하면
+		gotoxy(x+34,y+18);scanf("%s",&day);
+		if(!strcmp(day,"b")||!strcmp(day,"B"))
+			return -1;
+		length=strlen(temp);
+		for(i=0; i<length; i++)
+			temp[i]='\0';
+		length=strlen(day);
+		for(i=0;i<length;i++) {
+			if(strncmp(day,"일",1)!=0){
+				strncat(temp,day,1);
+				changeLocation(day);
+			}
+			if(strncmp(day,"일",1)==0) {				//'일'이라는 단어를 제외하고 숫자부분만 떼내어서 정수형 변수 Day에 저장  
+				Day=atoi(temp);
+				break;
+			}		
 		}
-		if(strncmp(day,"일",1)==0) {				//'일'이라는 단어를 제외하고 숫자부분만 떼내어서 정수형 변수 Day에 저장  
-			Day=atoi(temp);
+		strcat(newPromise->Promisedate,temp);
+		dayofWeek=weekday(year,Month,Day);
+		if(dayofWeek==0||dayofWeek==1||dayofWeek==2||dayofWeek==3||dayofWeek==4)
 			break;
-		}		
-	} 
-	strcat(newPromise->Promisedate,temp);
-	dayofWeek=weekday(year,Month,Day);
-	
+		gotoxy(x,y+19);printf("약속은 주중에만 잡을 수 있습니다.");
+		gotoxy(x+34,y+18);printf("      ");
+	}
 	return dayofWeek;
 }
 
@@ -459,9 +469,11 @@ void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofW
 	int Time;
 	int length;
 	int x=26, y=31;
-
+	strcpy(newPromise->promiseTime,"\0");	//B,b 입력 체크를 위해 초기화
 	gotoxy(x,y);printf("약속시간을 입력(ex 3시) :");
 	gotoxy(x+27,y);scanf("%s",&time);
+	if(!strcmp(time,"b")||!strcmp(time,"B"))
+		return;
 	strcpy(timeCopy,time);
 	length=strlen(temp);
 	for(i=0; i<length; i++)
@@ -490,6 +502,8 @@ void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofW
 		gotoxy(x,y+2);printf("통합 시간표를 참고해서 선택한 날짜의 빈시간을 입력하세요");
 		
 		gotoxy(x+27,y);scanf("%s",&time);
+		if(!strcmp(time,"b")||!strcmp(time,"B"))
+			break;
 		strcpy(timeCopy,time);
 		length=strlen(temp);
 		for(i=0; i<length; i++)
@@ -506,8 +520,9 @@ void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofW
 			}		
 		}
 	}
-	strcpy(newPromise->promiseTime,timeCopy);			//자료 저장을 위한부분 임시로 여기에 삽입. 뒤에 장소DB가 만들어지고 장소함수도 만들어지면 그쪽으로 옮길 예정
-	
+	if(!strcmp(time,"b")||!strcmp(time,"B"))
+			return;
+	strcpy(newPromise->promiseTime,timeCopy);			//자료 저장을 위한부분 임시로 여기에 삽입. 뒤에 장소DB가 만들어지고 장소함수도 만들어지면 그쪽으로 옮길 예정	
 }
 
 void saveFriendsID(char ID[8], char *DB) {
@@ -555,12 +570,34 @@ void promiseCreatConsole(char *DBname, char *logID) {	//약속만들기 함수.약속을 �
 	listBorderDraw2(x,y+7);
 	listBorderDraw3(x+60,y+4);
 	selectName(DBname,&newPromise);
+	if(!strcmp(newPromise.promiseName,"B")||!strcmp(newPromise.promiseName,"b"))
+		return;
 	count=selectFriends(DBname,CombineTimetable,&newPromise);
-	Sleep(1000);	//자동으로 넘어가게
+	if(!strcmp(newPromise.promiseFreindsCount,"b")||!strcmp(newPromise.promiseFreindsCount,"B")||count==0)
+		return;
+	gotoxy(128,44);Sleep(1000);	//자동으로 넘어가게
 	dayofWeek=selectDate(CombineTimetable,&newPromise);		//selectDate함수를 호출한다. 날짜,요일,시간을 정하는 함수
+	if(dayofWeek==-1){
+		for(i=0;i<count;i++)
+			free(newPromise.promiseFriendsName[i]);
+		free(newPromise.promiseFriendsName);		
+		return;
+	}
 	selectTime(CombineTimetable,&newPromise,dayofWeek);
+	if(!strcmp(newPromise.promiseTime,"\0")) {
+		for(i=0;i<count;i++)
+			free(newPromise.promiseFriendsName[i]);
+		free(newPromise.promiseFriendsName);		
+		return;
+	}
 	Sleep(1000);
 	promisePlace(DBname,&newPromise);				//약속장소 선택함수 사용, (학번+이름, newPromise 구조체)를 인수로 넘긴다.
+	if(!strcmp(newPromise.promisePlace,"\0")){
+		for(i=0;i<count;i++)
+			free(newPromise.promiseFriendsName[i]);
+		free(newPromise.promiseFriendsName);	
+		return;
+	}
 	saveNewpromise(DBname,&newPromise);
 	for(i=0; i<count; i++) {		//약속을 함께할 회원들의 개개인의 약속 리스트에 현재 약속정보를 저장하는 부분 
 		saveFriendsID(newPromise.promiseFriendsName[i],DB);			//ex) a,b,c,d가 약속을 잡았다. a가 지금 로그인해서 약속을 만든 회원. a회원의 리스트에는 b,c,d가 저장되어있음
@@ -579,12 +616,14 @@ void promiseCreatConsole(char *DBname, char *logID) {	//약속만들기 함수.약속을 �
 void selectName(char *DBname,struct structPromise *newPromise) {	//약속명 함수. (학번+이름)을 인수로 받는다.
 	int x=26,y=12;
 	gotoxy(x+10,y);scanf("%s",&newPromise->promiseName);  //@@@약속명 입력
+	
 }
 
 int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise *newPromise) {	//약속만들기 함수. 약속명, 인원수, 이름검색(함수호출)을 여기서 한다. (학번+이름)을 인수로 받는다.
 	int i,j;
 	int Count=0;
 	int CountCopy;
+	int check=0;
 	char Name[13];
 	char control[3]={0};
 	char nameList[4][13]={0};
@@ -592,9 +631,11 @@ int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise 
 	int x=26, y=12;
 	
 	gotoxy(x+60,y);scanf("%s",&newPromise->promiseFreindsCount); //@@@인원수 입력
+	if(!strcmp(newPromise->promiseFreindsCount,"b")||!strcmp(newPromise->promiseFreindsCount,"B"))
+		return;
 	Count=atoi(newPromise->promiseFreindsCount);				//인원수를 int형으로 바꿔주고 newPromise의 promiseFriendsCount 에 동적할당
 	CountCopy=Count;
-	newPromise->promiseFriendsName=(char **)malloc(sizeof(char*)*Count+2);	//요건 +1로 하면 오류.. 왜그런지 이유 못알아냄.
+	newPromise->promiseFriendsName=(char **)malloc(sizeof(char*)*Count+2);	
 	for(i=0; i<Count; i++){
 		newPromise->promiseFriendsName[i]=(char *)malloc(sizeof(char)*20);
 		for(j=0; j<13; j++)
@@ -604,22 +645,34 @@ int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise 
 	while(Count>0) {		//인원수만큼 검색함수를 돌린다.
 		gotoxy(x+12,y+4);printf("                              ");
 		gotoxy(x+12,y+4);scanf("%s",&Name);  //@@@검색할 이름 입력
-		
-		if(!searchName(Name,Count,*newPromise,CombineTimetable,DBname,selectedNameList))	{	//이름 검색함수에서 리턴값을 받아온다. 받아온 리턴값이 1이면 이름이 없었던 경우이므로 Count값을 감소하지 않는다.
+		if(!strcmp(Name,"b")||!strcmp(Name,"B"))			
+			break;
+		check=searchName(Name,Count,*newPromise,CombineTimetable,DBname,selectedNameList);
+		if(check==0)	{			//이름 검색함수에서 리턴값을 받아온다. 0이면 검색결과가 있었던 경우 ,받아온 리턴값이 1또는 -1이면 이름이 없었던 경우이거나 B,b키를 입력한것이므로 Count값을 감소하지 않는다.
 			Count--;
 			
 			strcpy(nameList[i],Name);		
-				//리스트을 위해 nameList 문자열에 이름검색에 성공한 회원의 이름을 저장한다.					
+				
 			gotoxy(x+64,y+6);printf("%s",nameList[0]);	//@@@이름리스트 출력
 			gotoxy(x+64,y+8);printf("%s",nameList[1]);	//@@@이름리스트 출력
 			gotoxy(x+64,y+10);printf("%s",nameList[2]);	//@@@이름리스트 출력
 			gotoxy(x+64,y+12);printf("%s",nameList[3]);	//@@@이름리스트 출력
 			i++;
 		}
+		else if(check==-1){
+			for(i=0; i<Count; i++)
+				free(newPromise->promiseFriendsName[i]);
+			free(newPromise->promiseFriendsName);
+			return 0;
+		}
 		
 	}
-	
-	printf("\n");
+	if(!strcmp(Name,"b")||!strcmp(Name,"B")){
+		for(i=0; i<Count; i++)
+			free(newPromise->promiseFriendsName[i]);
+		free(newPromise->promiseFriendsName);	
+		return 0;
+	}
 	if(recordCombineTimetable(CombineTimetable,DBname)==1)	{	//현재 로그인 되어있는 회원의 시간표 정보를 통합시간표에 추가... 없으면 알려주는 문구 출력
 		gotoxy(32,35); printf("경고! 본인의 시간표정보가 없습니다."); 
 	}
@@ -639,7 +692,7 @@ void showMenu() {			//약속만들기 메인 메뉴출력함수.
 	gotoxy(x,y-17); printf("1. 약속만들기");
 	gotoxy(x,y-14); printf("2. 약속 수정");
 	gotoxy(x,y-11); printf("3. 약속 삭제");	
-	gotoxy(x,y-8); printf("4. 약속 보기");	
+	gotoxy(x,y-8); printf("4. 약속 상세보기");	
 	gotoxy(x,y-5); printf("5. 나가기");	
 	gotoxy(x,y);printf("▷ 메뉴 선택 : ");
 }
@@ -667,7 +720,7 @@ int promise(structMember *s){		//약속만들기 메인함수. (현재로그인되한 회원구조체
 	case '3': while(check){system("cls"); check=deleteAllPromise(DBname,logID);} break;
 	case '4': while(check){system("cls"); check=ViewAllPromise(DBname,logID);} break;
 	}
-	if(menuControl=='5')
+	if(menuControl=='5'||menuControl =='B'||menuControl =='b')
 		return 0;
 	return 1;
 }

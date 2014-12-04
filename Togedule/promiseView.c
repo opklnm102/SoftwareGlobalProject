@@ -44,7 +44,7 @@ int ViewAllPromise(char *DBname,char *logID) {
 			fscanf(fp,"%d", &listCount);
 
 			oldPromise=(struct structPromise*)malloc(sizeof(struct structPromise)*listCount);		//읽어온 약속을 저장하기위한 약속구조체
-			for(i=0; i<listCount; i++) {															//약속저장을 할때와는 달리 이번에는 학번도 하나씩 다 읽어서 현재 이 약속을 공유하는 회원파일을 각각 처리해야함으로 
+			for(i=0; i<listCount; i++) {															
 				oldPromise[i].promiseFriendsName=(char**)malloc(sizeof(char*)*4+1);					//동적할당을 promiseFriendsName에도 해준다. 
 					for(j=0; j<4; j++) {													
 						oldPromise[i].promiseFriendsName[j]=(char*)malloc(sizeof(char)*8);
@@ -90,6 +90,21 @@ int ViewAllPromise(char *DBname,char *logID) {
 						gotoxy(35,10); printf("다음리스트를 보려면 >키를 입력하세요. 번호를 선택하려면 @키를 입력하세요.");
 						while(1){
 							gotoxy(110,10);scanf("%s",&controlList);
+							if(!strcmp(controlList,"b")||!strcmp(controlList,"B")){
+								for(i=0; i<listCount; i++) {											
+									for(j=0; j<4; j++)
+										free(oldPromise[i].promiseFriendsName[j]);
+									free(oldPromise[i].promiseFriendsName);
+								}
+								free(oldPromise);
+								for(i=0; i<listCount; i++)
+									free(friendsName[i]);
+								free(friendsName);
+								for(i=0; i<listCount; i++)
+									free(cost[i]);
+								free(cost);
+								return 0;
+							}
 							if(!strcmp(controlList,"@")||!strcmp(controlList,">"))
 								break;
 							gotoxy(110,10);printf("     ");
@@ -113,6 +128,21 @@ int ViewAllPromise(char *DBname,char *logID) {
 						gotoxy(35,10);printf("이전리스트 <, 다음리스트 >, 번호를 선택하려면 @키를 입력하세요.");
 						while(1){
 							gotoxy(100,10);scanf("%s",&controlList);
+							if(!strcmp(controlList,"b")||!strcmp(controlList,"B")){
+								for(i=0; i<listCount; i++) {											
+									for(j=0; j<4; j++)
+										free(oldPromise[i].promiseFriendsName[j]);
+									free(oldPromise[i].promiseFriendsName);
+								}
+								free(oldPromise);
+								for(i=0; i<listCount; i++)
+									free(friendsName[i]);
+								free(friendsName);
+								for(i=0; i<listCount; i++)
+									free(cost[i]);
+								free(cost);
+								return 0;
+							}
 							if(!strcmp(controlList,"@")||!strcmp(controlList,"<")||!strcmp(controlList,">"))
 								break;
 							
@@ -146,6 +176,21 @@ int ViewAllPromise(char *DBname,char *logID) {
 						gotoxy(35,10);printf("처음으로 돌아가려면 <키를 입력하세요.번호를 선택하려면 @키를 입력하세요.");
 						while(1){
 							gotoxy(110,10);scanf("%s",&controlList);
+							if(!strcmp(controlList,"b")||!strcmp(controlList,"B")){
+								for(i=0; i<listCount; i++) {											
+									for(j=0; j<4; j++)
+										free(oldPromise[i].promiseFriendsName[j]);
+									free(oldPromise[i].promiseFriendsName);
+								}
+								free(oldPromise);
+								for(i=0; i<listCount; i++)
+									free(friendsName[i]);
+								free(friendsName);
+								for(i=0; i<listCount; i++)
+									free(cost[i]);
+								free(cost);
+								return 0;
+							}
 							if(!strcmp(controlList,"@")||!strcmp(controlList,"<"))
 								break;
 							gotoxy(110,10);printf("     ");
@@ -172,6 +217,21 @@ int ViewAllPromise(char *DBname,char *logID) {
 	gotoxy(35,25);printf("→ 상세보기할 약속 : ");
 	while(1) {						//리스트 번호 범위 내의 수만 입력받기
 		gotoxy(56,25);scanf("%s",select);
+		if(!strcmp(select,"b")||!strcmp(select,"B")){
+			for(i=0; i<listCount; i++) {											
+				for(j=0; j<4; j++)
+					free(oldPromise[i].promiseFriendsName[j]);
+				free(oldPromise[i].promiseFriendsName);
+			}
+			free(oldPromise);
+			for(i=0; i<listCount; i++)
+				free(friendsName[i]);
+			free(friendsName);
+			for(i=0; i<listCount; i++)
+				free(cost[i]);
+			free(cost);
+			return 0;
+		}
 		listnumber=atoi(select);	
 		if(listnumber>0&&listnumber<=numbering)
 			break;
@@ -235,6 +295,21 @@ int ViewAllPromise(char *DBname,char *logID) {
 
 	for(i=0; i<4; i++)
 		printf("%s ",transName[i]);
+	for(i=0; i<listCount; i++) {											
+		for(j=0; j<4; j++)
+			free(oldPromise[i].promiseFriendsName[j]);
+		free(oldPromise[i].promiseFriendsName);
+	}
+	free(oldPromise);
+	for(i=0; i<listCount; i++)
+		free(friendsName[i]);
+	free(friendsName);
+	for(i=0; i<listCount; i++)
+		free(cost[i]);
+	free(cost);
+	for(i=0; i<4; i++)
+		free(transName[i]);
+	free(transName);
 	gotoxy(20,10);printf("메인 메뉴로 돌아가려면 B를 다른 약속을 상세보기하려면 B를 제외한 키를 입력하세요 : ");
 	gotoxy(103,10);scanf("%s",&select);
 	if(!strcmp(select,"b")||!strcmp(select,"B"))
