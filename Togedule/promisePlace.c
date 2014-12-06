@@ -105,7 +105,7 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 			free(subcategory[i]);
 		free(subcategory);
 		fclose(fp1);
-		return;;
+		return;
 	}
 	strcpy(newPromise->promisePlace,subcategory[placeSelect-1]);  //기존의 다른 약속정보들이 저장되있는 newPromise 구조체에 장소 정보도 저장
 	

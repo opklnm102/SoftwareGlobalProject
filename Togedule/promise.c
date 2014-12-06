@@ -573,7 +573,7 @@ void promiseCreatConsole(char *DBname, char *logID) {	//약속만들기 함수.약속을 �
 	if(!strcmp(newPromise.promiseName,"B")||!strcmp(newPromise.promiseName,"b"))
 		return;
 	count=selectFriends(DBname,CombineTimetable,&newPromise);
-	if(!strcmp(newPromise.promiseFreindsCount,"b")||!strcmp(newPromise.promiseFreindsCount,"B")||count==0)
+	if(count==0)
 		return;
 	gotoxy(128,44);Sleep(1000);	//자동으로 넘어가게
 	dayofWeek=selectDate(CombineTimetable,&newPromise);		//selectDate함수를 호출한다. 날짜,요일,시간을 정하는 함수
@@ -632,7 +632,7 @@ int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise 
 	
 	gotoxy(x+60,y);scanf("%s",&newPromise->promiseFreindsCount); //@@@인원수 입력
 	if(!strcmp(newPromise->promiseFreindsCount,"b")||!strcmp(newPromise->promiseFreindsCount,"B"))
-		return;
+		return 0;
 	Count=atoi(newPromise->promiseFreindsCount);				//인원수를 int형으로 바꿔주고 newPromise의 promiseFriendsCount 에 동적할당
 	CountCopy=Count;
 	newPromise->promiseFriendsName=(char **)malloc(sizeof(char*)*Count+2);	
@@ -716,7 +716,7 @@ int promise(structMember *s){		//약속만들기 메인함수. (현재로그인되한 회원구조체
 	gotoxy(96,32);scanf("%c",&menuControl);
 	switch(menuControl) {		//system("cls") 요건 화면을 지우고 다시 출력하게 하는 명령 <windows.h>필요
 	case '1':  promiseCreatConsole(DBname,logID);  break;
-	case '2': while(1){system("cls"); promiseChange(DBname,logID); }break;
+	case '2': while(check){system("cls"); check=promiseChange(DBname,logID); }break;
 	case '3': while(check){system("cls"); check=deleteAllPromise(DBname,logID);} break;
 	case '4': while(check){system("cls"); check=ViewAllPromise(DBname,logID);} break;
 	}
