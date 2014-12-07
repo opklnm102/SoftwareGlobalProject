@@ -881,7 +881,7 @@ void saveFriendPromiseList(struct structPromise *promiseList, char *DBname,char 
 	fprintf(fp,"약속리스트\n");
 	fprintf(fp,"%d\n",listCount);
 	for(i=0; i<listCount; i++) {
-		if(i!=listnumber){
+		if(i!=findListNumber){
 			fprintf(fp,"%s\n",oldPromise[i].promiseName);
 			fprintf(fp,"%s\n",oldPromise[i].promisePlace);			
 			fprintf(fp,"%s\n",oldPromise[i].promiseTime);
@@ -898,7 +898,7 @@ void saveFriendPromiseList(struct structPromise *promiseList, char *DBname,char 
 			fprintf(fp,"%s\n",newPromise->promiseTime);
 			fprintf(fp,"%s\n",newPromise->Promisedate);			
 			for(j=0;j<friendsCount;j++){
-				fprintf(fp,"%s",promiseList[i].promiseFriendsName[j]);
+				fprintf(fp,"%s",promiseList[listnumber].promiseFriendsName[j]);
 				if(j!=friendsCount-1)
 					fprintf(fp,",");
 			}

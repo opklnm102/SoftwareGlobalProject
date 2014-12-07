@@ -1,47 +1,46 @@
 #include"structHeader.h"
 //개인파일로 만들시 꼭 위의 헤더랑 function.c 포함해서 작업해야함
-char dayOfWeek[5][4];
 
-void promiseList(char *DBname){	// 로그인한 회원의 약속리스트를 불러오는 함수 , 출력만 한다. 없을경우 없다고 출력해준다.
-	FILE *fp;
-	char openDB[30];
-	char textFile[]=".txt";
-	char check[41];
-	char promiseName[41];
-	char promiseDate[10];
-	int listCount=0;
-	int i;
-	int x=20, y=17;
-	strcpy(openDB,DBname);
-	strcat(openDB,"PromiseList");
-	strcat(openDB,textFile);
+void promiseList(char *DBname){			// 회원의 '학번+이름'을 매개변수로 받아와서 해당 회원의 약속리스트를 불러오는 함수,10개까지 간략하게 출력한다.
+	FILE *fp;				//파일 포인터
+	char openDB[35];		//오픈시킬 파일명
+	char buffer[41];		//파일에서 읽어들인 값이 들어가는 임시 저장공간
+	char promiseName[41];	//약속 이름을 저장		--> 약속이름과 날짜만 보여주는 함수이므로 이외의 정보들은 필요하지 않음
+	char promiseDate[10];	//약속 날짜를 저장
+	int listCount=0;		//리스트 개수
+	int i;					//루프를 위한 변수
+	int x=20, y=17;			//좌표 설정을 용이하게 만든 변수
+
+	strcpy(openDB,DBname);					//매개변수로 받은 '학번+이름'에 PromiseList.txt를 붙인 이름을 가진 약속리스트를 읽기모드로 오픈
+	strcat(openDB,"PromiseList.txt");
 	fp = fopen(openDB, "r");
-	if ( fp == NULL ) {
+
+	if ( fp == NULL ) {						//파일이 없을 경우
 		gotoxy(20, 32);printf("현재 생성된 약속리스트가 없습니다.");
 		return ;
 	}
-	while (!feof(fp)) {			//약속리스트 열어서 리스트에 적혀진 개수만큼 이름과 날짜를 읽어서 출력하는 부분
+	while (!feof(fp)) {			//약속리스트 열어서 약속의 이름과 날짜를 읽어서 출력, 최대 10개까지 출력
 		gotoxy(16,13); printf("▷ 나의 약속리스트\n");
-		fscanf(fp, "%s", &check);
-		if(!strcmp(check,"약속리스트")){
+		fscanf(fp, "%s", &buffer);
+		if(!strcmp(buffer,"약속리스트")){
 			fscanf(fp,"%d", &listCount);
 			gotoxy(20, 32); printf("현재 잡혀있는 약속 개수 %d",listCount);
 			for(i=0; i<listCount; i++){
 				fscanf(fp,"%s", promiseName);
-				fgets(check,41,fp);
-				fgets(check,41,fp);
-				fgets(check,41,fp);
+				fgets(buffer,41,fp);
+				fgets(buffer,41,fp);
+				fgets(buffer,41,fp);
 				fscanf(fp,"%s", promiseDate);
-				fscanf(fp,"%s", check);
-				fgets(check,41,fp);			//비용들어갈 자리 추가.
-				fgets(check,41,fp);
+				fscanf(fp,"%s", buffer);
+				fgets(buffer,41,fp);	
+				fgets(buffer,41,fp);
 				gotoxy(x,y);printf("○ %s / %s",promiseName,promiseDate);
 				y=y+3;
-				if(x==20&&y==32){  //옆줄로 이동해서 5개 찍음(최대 10개)
+				if(x==20&&y==32){		//한쪽에 5개를 찍은뒤 옆줄로 이동해서 다시 5개 찍음(최대 10개)
 					x=44;
 					y=17;
 				}
-				if(x==44&&y==32){
+				if(x==44&&y==32){		//10개를 꽉채워 찍은 경우 알림문구 표시
 					gotoxy(17, 35);printf("나의 약속리스트는 10개까지만 표시됩니다.");
 					gotoxy(17, 36);printf("상세한 약속을 보려면 약속보기를 선택하세요.");
 					break;
@@ -52,7 +51,7 @@ void promiseList(char *DBname){	// 로그인한 회원의 약속리스트를 불러오는 함수 , 
 	fclose(fp);
 }
 
-void changeLocation( char* str ) {	//문자열 처리함수 한줄씩 떙기고 맨 뒤에 공백삽입하는 함수. 
+void changeLocation( char* str ) {		//문자열 처리함수. 한칸씩 떙기고 맨 뒤에 "\0"을 삽입하는 함수. 
 	int len = strlen( str ); 
 	int i;
 	char temp = str[0]; 
@@ -61,25 +60,28 @@ void changeLocation( char* str ) {	//문자열 처리함수 한줄씩 떙기고 맨 뒤에 공백�
 	str[ len - 1 ] = '\0'; 
 } 
 
-int recordCombineTimetable(int CombineTimetable[5][13], char *DBname){		//통합시간표에 정보를 추가하는 함수. 통합시간표와 '학번+이름' 문자열을 인수로 받아서 처리.
-	char openDB[40];
-	char check[30];
-	char dayWeek[30];
-	char Time[5]={0};
-	int dayweek,time,i,j;
-	char comma[1]={','};
-	int length;
-	FILE *fp;
-	strcpy(openDB,DBname);
+int recordCombineTimetable(int CombineTimetable[5][13], char *DBname){		//통합시간표와 '학번+이름'문자열을 매개변수로 받아 통합시간표에 정보를 추가하는 함수. 0과1을 반환한다.
+	FILE *fp;				//파일 포인터
+	char openDB[40];		//오픈시킬 파일명
+	char buffer[30];		//임시 저장공간
+	char dayWeek[10];		//요일을 읽어올 문자열
+	char Time[5]={0};		//시간이 들어갈 문자열
+	char comma[1]={','};	//읽어올 timetable.txt에는 시간구분을 3,4,5 이런식으로 ','를 이용해 처리했으므로 문자열 처리를 위해 필요한 변수
+	int dayweek,time,i,j;	//통합시간표 int형 이차원배열에 요일과 시간에 대한 정보를 넣기위해 필요한 변수들 dayweek에는 요일에 대한 정보가 time에는 시간에 대한 정보가 들어간다.	
+	int length;				//문자열길이에 대한 값을 넣을 변수
+	
+	strcpy(openDB,DBname);			//매개변수로 받은 '학번+이름'에 timetable.txt를 붙인 이름을 가진 시간표정보를 읽기모드로 오픈
 	strcat(openDB,"timetable.txt");		
-	fp = fopen(openDB, "r");		//해당 회원의 시간표정보를 읽어온다.
-	if(!fp){					//만약 해당 회원의 시간표 정보가 없을경우 1 리턴. 
+	fp = fopen(openDB, "r");		
+
+	if(!fp){						//만약 해당 회원의 시간표 정보가 없을 경우 1을 리턴. 
 		return 1;
 	}
+
 	while (!feof(fp)) {
-		fscanf(fp, "%s", &check);			//첫줄은 시간표 개수? 를 의미한다고 해서 읽기만 하는 값. 여기서 안쓰이는 변수
+		fscanf(fp, "%s", &buffer);				//첫줄은 시간표 개수를 의미. 읽기만 하는 값. 필요없는 정보
 		while(!feof(fp)){					
-			fscanf(fp,"%s", &dayWeek);		//요일을 읽는다 읽어서 월화수목금에 해당하는 정수형 자료로 /처리. 
+			fscanf(fp,"%s", &dayWeek);			//요일을 읽어온뒤 월,화,수,목,금 을 0,1,2,3,4 로 대응시켜 dayweek변수에 저장 
 			if(!strcmp(dayWeek,"월"))
 				dayweek=0;
 			else if(!strcmp(dayWeek,"화"))
@@ -90,24 +92,25 @@ int recordCombineTimetable(int CombineTimetable[5][13], char *DBname){		//통합시
 				dayweek=3;
 			else if(!strcmp(dayWeek,"금"))
 				dayweek=4;
-			fscanf(fp,"%s", &check);		//과목을 읽는다. 과목도 통합시간표에서 안쓰이는 변수이므로 읽기만 한다.
-			fscanf(fp,"%s",&check);			//시간을 읽는다.
+			fscanf(fp,"%s", &buffer);			//과목을 읽는다. 과목도 통합시간표를 만들때 불필요한 정보
+			fscanf(fp,"%s",&buffer);			//시간을 읽는다.
 
-			for(i=0;i<strlen(check);i++) {			//시간 문자열의 길이를 알아내서 for문으로 한단어씩 개별처리를 한다.
-				if(strncmp(check,comma,1)!=0){		//시간문자열의 첫단어가 "," 가 아니면 
-					strncat(Time,check,1);			//Time이라는 문자열에 시간문자열의 첫단어를 삽입. 덮어씌우는게 아니라 뒤에 덧붙이는 삽입이다. 
-					changeLocation(check);			//changeLocatioin 함수를 사용. 시간문자열은 첫단어를 지우고 한칸씩 땡긴다.
+			for(i=0;i<strlen(buffer);i++) {			//읽어들인 시간 문자열의 길이만큼 for문으로 한단어씩 개별처리를 한다.
+				if(strncmp(buffer,comma,1)!=0){		//현재 시간문자열의 첫단어가 "," 가 아니면 
+					strncat(Time,buffer,1);			//Time문자열에 시간문자열의 첫문자를 덧붙여서 삽입 
+					changeLocation(buffer);			//changeLocatioin 함수를 사용. 시간문자열의 첫단어를 지우고 한칸씩 앞으로 땡겨준다.
 				}
-				if(strncmp(check,comma,1)==0) {		//시간문자열의 첫단어가 "," 이면
-					changeLocation(check);			//함수이용. ","삭제후 한칸씩 땡긴다.
-					time=atoi(Time);				//지금까지 삽입한 Time 문자열을 정수형 time 변수에 삽입
-					CombineTimetable[dayweek][time-1]=1;		//위에서 변환해준 정수형 요일과 시간을 이용. 통합시간표에 체크
-					length=strlen(Time);
-					for(j=0; j<length; j++)
+				if(strncmp(buffer,comma,1)==0) {		//현재 시간문자열의 첫단어가 "," 이면
+					changeLocation(buffer);				//changeLocatioin 함수를 사용 ","삭제후 한칸씩 땡긴다.
+					time=atoi(Time);					//Time 문자열을 변환시켜 정수형 time 변수에 삽입
+					CombineTimetable[dayweek][time-1]=1;		//dayweek,time 변수를 이용. 통합시간표에서 해당하는 위치를 1로 변경
+					length=strlen(Time);				
+					for(j=0; j<length; j++)				//Time문자열 초기화
 						Time[j]='\0';	
-					}		
-				}						
-			time=atoi(check);					//마지막시간뒤에는 ","가 안붙으므로 여기서 다시한번 처리
+				}		
+			}
+			//길이만큼 for문을 돌리고 나오면 마지막 ','뒤의 자료처리가 남아있다. 
+			time=atoi(buffer);					
 			CombineTimetable[dayweek][time-1]=1;
 			length=strlen(Time);
 			for(j=0; j<length; j++)
@@ -115,40 +118,48 @@ int recordCombineTimetable(int CombineTimetable[5][13], char *DBname){		//통합시
 		}
 	}			
 	fclose(fp);
-	return 0;		//정상적으로 읽었으면 0리턴 
+
+	return 0;				//정상적으로 파일을 읽어 처리했으면 0을 리턴 
 }
 
-void setMajor(char ID[8],char Major[20])	{		//학번 3,4자리를 바탕으로 학과 알아내는 함수
-	char IDCopy[8];					
-	char keyWord[3]={0};
-	char major[20];
-	char number[3];
-	char noMajor[13];
-	FILE *fp;
-
+void setMajor(char ID[8],char Major[20])	{		//학번7자리와 학과정보가 들어갈 문자열을 매개변수로 받고 학번 3,4번째자리의 숫자를 바탕으로 학과를 알아내는 함수
+	FILE *fp;					//파일 포인터
+	char IDCopy[8];				//문자열 처리를 간단하게 하기위해 학번복사본을 저장할 문자열
+	char keyWord[3]={0};		//학과를 알아내는데 필요한 핵심정보인 학번의 3,4번째 숫자가 들어갈 문자열
+	char number[3];				//텍스트 파일에서 읽어올 학과번호 정보를 저장할 문자열
+	char major[20];				//텍스트 파일에서 읽어올 학과이름 정보를 저장할 문자열
+	char noMajor[13];			//일치하는 학과 정보가 없을경우 처리를 위한 문자열
+	
 	strcpy(noMajor,"학과정보없음");		//학과정보와 일치하는게 없을때 출력해줄 문장
-	strcpy(IDCopy,ID);
-	changeLocation(IDCopy);
-	changeLocation(IDCopy);
-	strncpy(keyWord,IDCopy,2);
+
+	strcpy(IDCopy,ID);			//학번을 복사본에 저장 이후 학번은 복사본문자열을 통해서 처리
+	changeLocation(IDCopy);		//changeLocation함수를 이용해서 학번문자열의 첫번째 자리를 삭제하고 한칸씩 땡겨준다.
+	changeLocation(IDCopy);		//두번반복을 통해 원래 학번 문자열의 3번째 자리가 맨앞에 오도록 변경되었다.
+	strncpy(keyWord,IDCopy,2);	//현재 학번문자열의 1,2번째에 해당하는 문자 ,즉 원래 학번의 3,4번째에 해당하는 두 문자를 keyWord에 저장
+
 	fp=fopen("major.txt","r");			//major.txt 여기에 학번, 학과 정보가 저장되어있음 
 	
+	if(fp == NULL){
+		printf("학과정보 파일 오픈 불가");
+		return;
+	}
 	while(!feof(fp)){					
-		fscanf(fp,"%s %s",&number,&major);
-		if(!strcmp(number,keyWord))	{			//일치하는 학번일 경우 학과 정보를 Major에 저장
-			fclose(fp);
-			strcpy(Major,major);
-			return;
+		fscanf(fp,"%s %s",&number,&major);		//학과번호 정보와 학과정보를 읽는다.
+		if(!strcmp(number,keyWord))	{			//학과번호와 keyWord가 일치하면 학과정보를 Major에 저장
+			fclose(fp);							//파일을 닫고
+			strcpy(Major,major);				//매개변수로 받은 Major문자열에 정보를 저장한뒤
+			return;								//리턴
 		}
 	}
 	fclose(fp);
-	strcpy(Major,noMajor);		//없을경우 "학과정보없음" 을 Major에 저장		
+	strcpy(Major,noMajor);		//일치하는 학과정보가 없었을경우 "학과정보없음"을 Major에 저장		
 }
 
-int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13],char *MyDB,char IDList[4][13]){		//이름검색함수.. (검색할이름, 함께하는회원중 리스트에 안올라간 회원수,새약속구조체,통합시간표) 를 변수로 받는다.
-	int exist=0;
-	char openDB[40];
-	char check[30];
+int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13],char *MyDB,char IDList[4][13]){		//이름검색함수.. (검색할이름, 함께하는회원중 리스트에 안올라간 회원수,새약속구조체,통합시간표,'학번+이름'문자열,현재 저장된 회원리스트) 를 변수로 받는다.
+	FILE *fp;				//파일포인터
+	FILE *fp1;
+	char openDB[40];		//오픈시킬 파일명
+	char buffer[30];
 	char Time[5]={0};
 	char select[2];
 	char ID[8];
@@ -157,10 +168,10 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 	int overlap=1;
 	int limit=0;
 	int i;
+	int exist=0;
 	char comma[1]={','};
 	struct structMember friendID;		//이 구조체는 이 함수내부에서만 쓰임.. 별 효용은 없고 그냥 char두개 또 만들기 귀찮아서 써본 구조체...
-	FILE *fp;
-	FILE *fp1;
+
 	int x=32, y=22;
 	listBorderDraw2(26,19);
 	gotoxy(x+20,33);printf("           ");
@@ -188,8 +199,8 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 					}
 
 					while (!feof(fp1)) {				//회원정보에서 학번과 이름을 읽어와 구조체 friendID에 저장한다.
-						fscanf(fp1, "%s", &check);
-						if(!strcmp(check,"회원정보")){
+						fscanf(fp1, "%s", &buffer);
+						if(!strcmp(buffer,"회원정보")){
 							fscanf(fp1,"%s", friendID.ID);
 							fscanf(fp1,"%s", friendID.name);
 						}
@@ -722,5 +733,9 @@ int promise(structMember *s){		//약속만들기 메인함수. (현재로그인되한 회원구조체
 	}
 	if(menuControl=='5'||menuControl =='B'||menuControl =='b')
 		return 0;
+	if(menuControl=='x'||menuControl =='X'){
+		gotoxy(90,45);
+		exit(0);
+	}
 	return 1;
 }
