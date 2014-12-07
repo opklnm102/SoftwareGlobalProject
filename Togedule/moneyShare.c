@@ -1,20 +1,11 @@
 #include "structHeader.h"
 
 void moneyShare2(structMember *s){
+	/*-------------------------------변수 시작했다--------------------------------*/
 	FILE *fin;
 	int i;
 	char fileName[30];
 	char fileContents[100][100]={0};
-
-	/*
-	54000원이 나왔다. 5명이다.
-	(54000 / (5 * 1000))*1000 = 50000 / 5 = 10000원씩 나누어 갖게된다.
-	이 때 restMoney = 4000원
-	*/
-
-	//나누기 전 돈, 사람 수, 나누는 수, 최종 돈, 남는 돈, i, 몰아주는 사람 제외하고 나머지
-
-	/*-------------------------------변수 시작했다--------------------------------*/
 	int beforeDivideMoney; // 나누기 전 돈
 	int finalMoney; // 최종 돈
 	int peopleCnt; // 사람 숫자
@@ -27,31 +18,83 @@ void moneyShare2(structMember *s){
 	int menuseletion; //메뉴 선택하는 변수
 	int randomPersonNumber; //랜덤으로 받은 시드값을 저장하는 변수 1,2,3,4,5 중 하나
 	int promiseCnt=0, contentsCnt=0, j=0;
+	//promiseList 함수에서 따온 것↓
+	char buffer[41]; //파일에서 읽어들인 값이 들어가는 임시 저장공간
+	char promiseName[41];	//약속 이름을 저장
+	int listCount=0;		//리스트 개수
+	char promiseDate[10];	//약속 날짜를 저장
+	int x=20, y=17;	
 	/*--------------------------------변수 끝났다---------------------------------*/
+	
+	/*
+	54000원이 나왔다. 5명이다.
+	(54000 / (5 * 1000))*1000 = 50000 / 5 = 10000원씩 나누어 갖게된다.
+	이 때 restMoney = 4000원
+	*/
+
+	//나누기 전 돈, 사람 수, 나누는 수, 최종 돈, 남는 돈, i, 몰아주는 사람 제외하고 나머지
+
 	i=0;
 	system("cls");
 	strcpy(fileName,s->ID);
 	strcat(fileName,s->name);
-	strcat(fileName,"PromiseList.txt");
-	fin= fopen(fileName,"r"); // 파일생성
+	strcat(fileName,"PromiseList.txt"); //1235039이정훈PromiseList.txt
+	fin = fopen(fileName,"r"); // 파일생성
+
+	if ( fin == NULL ) {
+		printf("현재 생성된 약속리스트가 없습니다.");
+		return;
+	}
+	
+	while (!feof(fin)) {			//약속리스트 열어서 약속의 이름과 날짜를 읽어서 출력, 최대 10개까지 출력
+		gotoxy(16,13); printf("▷ 나의 약속리스트\n");
+		fscanf(fin, "%s", &buffer);
+		if(!strcmp(buffer,"약속리스트")){
+			fscanf(fin,"%d", &listCount);
+			gotoxy(20, 32); printf("현재 잡혀있는 약속 개수 %d",listCount);
+			for(i=0; i<listCount; i++){
+				fscanf(fin,"%s", promiseName);
+				fgets(buffer,41,fin);
+				fgets(buffer,41,fin);
+				fgets(buffer,41,fin);
+				fscanf(fin,"%s", promiseDate);
+				fscanf(fin,"%s", buffer);
+				fgets(buffer,41,fin);	
+				fgets(buffer,41,fin);
+				gotoxy(x,y);printf("○ %s / %s",promiseName,promiseDate);
+				y=y+3;
+				if(x==20&&y==32){		//한쪽에 5개를 찍은뒤 옆줄로 이동해서 다시 5개 찍음(최대 10개)
+					x=44;
+					y=17;
+				}
+				if(x==44&&y==32){		//10개를 꽉채워 찍은 경우 알림문구 표시
+					gotoxy(17, 35);printf("나의 약속리스트는 10개까지만 표시됩니다.");
+					gotoxy(17, 36);printf("상세한 약속을 보려면 약속보기를 선택하세요.");
+					break;
+				}
+			}
+		}
+	}
+	
 	while(1) // 파일의 끝까지 내용을 fileContents 변수에 저장
 	{
-		fgets(fileContents[contentsCnt],100, fin);
+		fgets(fileContents[contentsCnt], 100, fin);
 		contentsCnt++;
 		if (feof(fin)) break;
 	}
-	printf("약속리스트\n");
-	promiseCnt=(contentsCnt-2)/6;
-	for (i=0; i<promiseCnt; i++)
-	{
-		printf("%d. %s", i+1, fileContents[(i*6)+2]);
-		/*
-			for (j=0; j<6; j++)
-			{
-				printf("%s", fileContents[(i*6)+2+j]);
-			}
-		*/
-	} // 약속 리스트들이 총 6줄이므로 6*i번째의 제목만 출력
+	//printf("약속리스트\n");
+	//promiseCnt = (contentsCnt-2) / 6;
+	//for (i=0; i<promiseCnt; i++)
+	//{
+	//	printf("%d. %s", i+1, fileContents[(i*6)+2]);
+	//	/*
+	//		for (j=0; j<6; j++)
+	//		{
+	//			printf("%s", fileContents[(i*6)+2+j]);
+	//		}
+	//	*/
+	//} // 약속 리스트들이 총 6줄이므로 6*i번째의 제목만 출력
+
 	//메뉴를 선택해라
 	printf("약속을 선택하시오.");
 	scanf("%d", &promiseNumber);
@@ -80,7 +123,7 @@ void moneyShare2(structMember *s){
 		printf("메뉴를 선택해주세요 : ▶");
 		scanf("%d", &menuseletion); fflush(stdin);
 
-		if( menuseletion==1 || menuseletion==2 || menuseletion==3 )
+		if( menuseletion==1 || menuseletion==2)
 			break;
 		else printf("메뉴 선택을 다시 해주세요.");
 	}
