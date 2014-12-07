@@ -95,7 +95,7 @@ int recordCombineTimetable(int CombineTimetable[5][13], char *DBname){		//ÅëÇÕ½Ã
 			fscanf(fp,"%s", &buffer);			//°ú¸ñÀ» ÀÐ´Â´Ù. °ú¸ñµµ ÅëÇÕ½Ã°£Ç¥¸¦ ¸¸µé¶§ ºÒÇÊ¿äÇÑ Á¤º¸
 			fscanf(fp,"%s",&buffer);			//½Ã°£À» ÀÐ´Â´Ù.
 
-			for(i=0;i<strlen(buffer);i++) {			//ÀÐ¾îµéÀÎ ½Ã°£ ¹®ÀÚ¿­ÀÇ ±æÀÌ¸¸Å­ for¹®À¸·Î ÇÑ´Ü¾î¾¿ °³º°Ã³¸®¸¦ ÇÑ´Ù.
+			for(i=0;i<(int)strlen(buffer);i++) {			//ÀÐ¾îµéÀÎ ½Ã°£ ¹®ÀÚ¿­ÀÇ ±æÀÌ¸¸Å­ for¹®À¸·Î ÇÑ´Ü¾î¾¿ °³º°Ã³¸®¸¦ ÇÑ´Ù.
 				if(strncmp(buffer,comma,1)!=0){		//ÇöÀç ½Ã°£¹®ÀÚ¿­ÀÇ Ã¹´Ü¾î°¡ "," °¡ ¾Æ´Ï¸é 
 					strncat(Time,buffer,1);			//Time¹®ÀÚ¿­¿¡ ½Ã°£¹®ÀÚ¿­ÀÇ Ã¹¹®ÀÚ¸¦ µ¡ºÙ¿©¼­ »ðÀÔ 
 					changeLocation(buffer);			//changeLocatioin ÇÔ¼ö¸¦ »ç¿ë. ½Ã°£¹®ÀÚ¿­ÀÇ Ã¹´Ü¾î¸¦ Áö¿ì°í ÇÑÄ­¾¿ ¾ÕÀ¸·Î ¶¯°ÜÁØ´Ù.
@@ -355,7 +355,7 @@ int callendar(int Month) {		//´Þ·ÂÃâ·ÂÇÔ¼ö. ¿ùÀ» ÀÎ¼ö·Î ³Ñ°Ü¹Þ´Â´Ù. selectDate Ç
 		
 
 	}
-
+	return y;
 }
 
 int weekday(int year, int month, int day) //³âµµ, ¿ù, ÀÏ À» ÀÔ·Â¹Þ¾Æ ¿äÀÏ Ã£´Â ÇÔ¼ö. ¸®ÅÏ°ªÀº Á¤¼ö.
@@ -650,7 +650,7 @@ int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise 
 	for(i=0; i<Count; i++){
 		newPromise->promiseFriendsName[i]=(char *)malloc(sizeof(char)*20);
 		for(j=0; j<13; j++)
-			newPromise->promiseFriendsName[i][j]=NULL;
+			strcpy(&newPromise->promiseFriendsName[i][j],"\0");
 	}
 	i=0;
 	while(Count>0) {		//ÀÎ¿ø¼ö¸¸Å­ °Ë»öÇÔ¼ö¸¦ µ¹¸°´Ù.
@@ -663,7 +663,7 @@ int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise 
 			Count--;
 			
 			strcpy(nameList[i],Name);		
-				
+
 			gotoxy(x+64,y+6);printf("%s",nameList[0]);	//@@@ÀÌ¸§¸®½ºÆ® Ãâ·Â
 			gotoxy(x+64,y+8);printf("%s",nameList[1]);	//@@@ÀÌ¸§¸®½ºÆ® Ãâ·Â
 			gotoxy(x+64,y+10);printf("%s",nameList[2]);	//@@@ÀÌ¸§¸®½ºÆ® Ãâ·Â

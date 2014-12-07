@@ -233,7 +233,7 @@ int deleteAllPromise(char *DBname,char *logID) {
 			return 0;
 		}
 		listnumber=atoi(select);	
-		if(listnumber>0&&listnumber<=numbering)
+		if(listnumber>0&&listnumber<numbering)
 			break;
 		gotoxy(35,26);printf("리스트 내의 번호를 입력하세요");
 		gotoxy(54,25);printf("       ");
