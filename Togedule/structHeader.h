@@ -76,8 +76,8 @@ void removeTimetable(structMember *s); //시간표삭제함수(시간표txt파일삭제)
 
 //약속관련
 
-void promiseChange(char *DBname,char *logID);   //약속수정 시작-> 리스트 출력-> 리스트 선택-> 약속수정항목 선택함수 호출-> 약속저장함수들 호출 하는 함수
-int selectChange(char *DBname, struct structPromise *old, int listnumber, char **name,int CombineTimetable[5][13],char checkPlace[3]);    //약속수정항목 선택
+int promiseChange(char *DBname,char *logID);   //약속수정 시작-> 리스트 출력-> 리스트 선택-> 약속수정항목 선택함수 호출-> 약속저장함수들 호출 하는 함수
+int selectChange(char *DBname, struct structPromise *old, int listnumber, char **name,int CombineTimetable[5][13]);    //약속수정항목 선택
 void changePromiseName(struct structPromise *old);   //약속수정-> 약속명 수정
 void changePlace(char *DBname, struct structPromise *old);  //약속수정-> 약속장소 수정
 int changeDate(struct structPromise *old,int newCombineTimetable[5][13]);    //약속수정-> 약속날짜 수정
