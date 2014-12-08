@@ -92,7 +92,7 @@ int checkDateTime(int CombineTimetable[5][13], struct structPromise *old){
 	year=year+1900;
 
 	strcpy(Date,old->Promisedate);
-	for(i=0;i<strlen(Date);i++) {			
+	for(i=0;i<(int)strlen(Date);i++) {			
 		if(strncmp(Date,slash,1)!=0){		
 			strncat(month,Date,1);			
 			changeLocation(Date);			
@@ -184,7 +184,7 @@ int selectChange(char *DBname, struct structPromise *old, int listnumber, char *
 	year=year+1900;
 
 	strcpy(Date,old->Promisedate);
-	for(i=0;i<strlen(Date);i++) {			
+	for(i=0;i<(int)strlen(Date);i++) {			
 		if(strncmp(Date,slash,1)!=0){		
 			strncat(month,Date,1);			
 			changeLocation(Date);			
@@ -533,7 +533,7 @@ int promiseChange(char *DBname,char *logID){
 			return 0;
 		}
 		listnumber=atoi(select);	
-		if(listnumber>0&&listnumber<=numbering)
+		if(listnumber>0&&listnumber<numbering)
 			break;
 		gotoxy(35,26);printf("리스트 내의 번호를 입력하세요");
 		gotoxy(54,25);printf("       ");
@@ -881,7 +881,7 @@ void saveFriendPromiseList(struct structPromise *promiseList, char *DBname,char 
 	fprintf(fp,"약속리스트\n");
 	fprintf(fp,"%d\n",listCount);
 	for(i=0; i<listCount; i++) {
-		if(i!=listnumber){
+		if(i!=findListNumber){
 			fprintf(fp,"%s\n",oldPromise[i].promiseName);
 			fprintf(fp,"%s\n",oldPromise[i].promisePlace);			
 			fprintf(fp,"%s\n",oldPromise[i].promiseTime);
@@ -898,7 +898,7 @@ void saveFriendPromiseList(struct structPromise *promiseList, char *DBname,char 
 			fprintf(fp,"%s\n",newPromise->promiseTime);
 			fprintf(fp,"%s\n",newPromise->Promisedate);			
 			for(j=0;j<friendsCount;j++){
-				fprintf(fp,"%s",promiseList[i].promiseFriendsName[j]);
+				fprintf(fp,"%s",promiseList[listnumber].promiseFriendsName[j]);
 				if(j!=friendsCount-1)
 					fprintf(fp,",");
 			}

@@ -1,47 +1,46 @@
 #include"structHeader.h"
 //°³ÀÎÆÄÀÏ·Î ¸¸µé½Ã ²À À§ÀÇ Çì´õ¶û function.c Æ÷ÇÔÇØ¼­ ÀÛ¾÷ÇØ¾ßÇÔ
-char dayOfWeek[5][4];
 
-void promiseList(char *DBname){	// ·Î±×ÀÎÇÑ È¸¿øÀÇ ¾à¼Ó¸®½ºÆ®¸¦ ºÒ·¯¿À´Â ÇÔ¼ö , Ãâ·Â¸¸ ÇÑ´Ù. ¾øÀ»°æ¿ì ¾ø´Ù°í Ãâ·ÂÇØÁØ´Ù.
-	FILE *fp;
-	char openDB[30];
-	char textFile[]=".txt";
-	char check[41];
-	char promiseName[41];
-	char promiseDate[10];
-	int listCount=0;
-	int i;
-	int x=20, y=17;
-	strcpy(openDB,DBname);
-	strcat(openDB,"PromiseList");
-	strcat(openDB,textFile);
+void promiseList(char *DBname){			// È¸¿øÀÇ 'ÇĞ¹ø+ÀÌ¸§'À» ¸Å°³º¯¼ö·Î ¹Ş¾Æ¿Í¼­ ÇØ´ç È¸¿øÀÇ ¾à¼Ó¸®½ºÆ®¸¦ ºÒ·¯¿À´Â ÇÔ¼ö,10°³±îÁö °£·«ÇÏ°Ô Ãâ·ÂÇÑ´Ù.
+	FILE *fp;				//ÆÄÀÏ Æ÷ÀÎÅÍ
+	char openDB[35];		//¿ÀÇÂ½ÃÅ³ ÆÄÀÏ¸í
+	char buffer[41];		//ÆÄÀÏ¿¡¼­ ÀĞ¾îµéÀÎ °ªÀÌ µé¾î°¡´Â ÀÓ½Ã ÀúÀå°ø°£
+	char promiseName[41];	//¾à¼Ó ÀÌ¸§À» ÀúÀå		--> ¾à¼ÓÀÌ¸§°ú ³¯Â¥¸¸ º¸¿©ÁÖ´Â ÇÔ¼öÀÌ¹Ç·Î ÀÌ¿ÜÀÇ Á¤º¸µéÀº ÇÊ¿äÇÏÁö ¾ÊÀ½
+	char promiseDate[10];	//¾à¼Ó ³¯Â¥¸¦ ÀúÀå
+	int listCount=0;		//¸®½ºÆ® °³¼ö
+	int i;					//·çÇÁ¸¦ À§ÇÑ º¯¼ö
+	int x=20, y=17;			//ÁÂÇ¥ ¼³Á¤À» ¿ëÀÌÇÏ°Ô ¸¸µç º¯¼ö
+
+	strcpy(openDB,DBname);					//¸Å°³º¯¼ö·Î ¹ŞÀº 'ÇĞ¹ø+ÀÌ¸§'¿¡ PromiseList.txt¸¦ ºÙÀÎ ÀÌ¸§À» °¡Áø ¾à¼Ó¸®½ºÆ®¸¦ ÀĞ±â¸ğµå·Î ¿ÀÇÂ
+	strcat(openDB,"PromiseList.txt");
 	fp = fopen(openDB, "r");
-	if ( fp == NULL ) {
+
+	if ( fp == NULL ) {						//ÆÄÀÏÀÌ ¾øÀ» °æ¿ì
 		gotoxy(20, 32);printf("ÇöÀç »ı¼ºµÈ ¾à¼Ó¸®½ºÆ®°¡ ¾ø½À´Ï´Ù.");
 		return ;
 	}
-	while (!feof(fp)) {			//¾à¼Ó¸®½ºÆ® ¿­¾î¼­ ¸®½ºÆ®¿¡ ÀûÇôÁø °³¼ö¸¸Å­ ÀÌ¸§°ú ³¯Â¥¸¦ ÀĞ¾î¼­ Ãâ·ÂÇÏ´Â ºÎºĞ
+	while (!feof(fp)) {			//¾à¼Ó¸®½ºÆ® ¿­¾î¼­ ¾à¼ÓÀÇ ÀÌ¸§°ú ³¯Â¥¸¦ ÀĞ¾î¼­ Ãâ·Â, ÃÖ´ë 10°³±îÁö Ãâ·Â
 		gotoxy(16,13); printf("¢¹ ³ªÀÇ ¾à¼Ó¸®½ºÆ®\n");
-		fscanf(fp, "%s", &check);
-		if(!strcmp(check,"¾à¼Ó¸®½ºÆ®")){
+		fscanf(fp, "%s", &buffer);
+		if(!strcmp(buffer,"¾à¼Ó¸®½ºÆ®")){
 			fscanf(fp,"%d", &listCount);
 			gotoxy(20, 32); printf("ÇöÀç ÀâÇôÀÖ´Â ¾à¼Ó °³¼ö %d",listCount);
 			for(i=0; i<listCount; i++){
 				fscanf(fp,"%s", promiseName);
-				fgets(check,41,fp);
-				fgets(check,41,fp);
-				fgets(check,41,fp);
+				fgets(buffer,41,fp);
+				fgets(buffer,41,fp);
+				fgets(buffer,41,fp);
 				fscanf(fp,"%s", promiseDate);
-				fscanf(fp,"%s", check);
-				fgets(check,41,fp);			//ºñ¿ëµé¾î°¥ ÀÚ¸® Ãß°¡.
-				fgets(check,41,fp);
+				fscanf(fp,"%s", buffer);
+				fgets(buffer,41,fp);	
+				fgets(buffer,41,fp);
 				gotoxy(x,y);printf("¡Û %s / %s",promiseName,promiseDate);
 				y=y+3;
-				if(x==20&&y==32){  //¿·ÁÙ·Î ÀÌµ¿ÇØ¼­ 5°³ ÂïÀ½(ÃÖ´ë 10°³)
+				if(x==20&&y==32){		//ÇÑÂÊ¿¡ 5°³¸¦ ÂïÀºµÚ ¿·ÁÙ·Î ÀÌµ¿ÇØ¼­ ´Ù½Ã 5°³ ÂïÀ½(ÃÖ´ë 10°³)
 					x=44;
 					y=17;
 				}
-				if(x==44&&y==32){
+				if(x==44&&y==32){		//10°³¸¦ ²ËÃ¤¿ö ÂïÀº °æ¿ì ¾Ë¸²¹®±¸ Ç¥½Ã
 					gotoxy(17, 35);printf("³ªÀÇ ¾à¼Ó¸®½ºÆ®´Â 10°³±îÁö¸¸ Ç¥½ÃµË´Ï´Ù.");
 					gotoxy(17, 36);printf("»ó¼¼ÇÑ ¾à¼ÓÀ» º¸·Á¸é ¾à¼Óº¸±â¸¦ ¼±ÅÃÇÏ¼¼¿ä.");
 					break;
@@ -52,7 +51,7 @@ void promiseList(char *DBname){	// ·Î±×ÀÎÇÑ È¸¿øÀÇ ¾à¼Ó¸®½ºÆ®¸¦ ºÒ·¯¿À´Â ÇÔ¼ö , 
 	fclose(fp);
 }
 
-void changeLocation( char* str ) {	//¹®ÀÚ¿­ Ã³¸®ÇÔ¼ö ÇÑÁÙ¾¿ ‹¯±â°í ¸Ç µÚ¿¡ °ø¹é»ğÀÔÇÏ´Â ÇÔ¼ö. 
+void changeLocation( char* str ) {		//¹®ÀÚ¿­ Ã³¸®ÇÔ¼ö. ÇÑÄ­¾¿ ‹¯±â°í ¸Ç µÚ¿¡ "\0"À» »ğÀÔÇÏ´Â ÇÔ¼ö. 
 	int len = strlen( str ); 
 	int i;
 	char temp = str[0]; 
@@ -61,25 +60,28 @@ void changeLocation( char* str ) {	//¹®ÀÚ¿­ Ã³¸®ÇÔ¼ö ÇÑÁÙ¾¿ ‹¯±â°í ¸Ç µÚ¿¡ °ø¹é»
 	str[ len - 1 ] = '\0'; 
 } 
 
-int recordCombineTimetable(int CombineTimetable[5][13], char *DBname){		//ÅëÇÕ½Ã°£Ç¥¿¡ Á¤º¸¸¦ Ãß°¡ÇÏ´Â ÇÔ¼ö. ÅëÇÕ½Ã°£Ç¥¿Í 'ÇĞ¹ø+ÀÌ¸§' ¹®ÀÚ¿­À» ÀÎ¼ö·Î ¹Ş¾Æ¼­ Ã³¸®.
-	char openDB[40];
-	char check[30];
-	char dayWeek[30];
-	char Time[5]={0};
-	int dayweek,time,i,j;
-	char comma[1]={','};
-	int length;
-	FILE *fp;
-	strcpy(openDB,DBname);
+int recordCombineTimetable(int CombineTimetable[5][13], char *DBname){		//ÅëÇÕ½Ã°£Ç¥¿Í 'ÇĞ¹ø+ÀÌ¸§'¹®ÀÚ¿­À» ¸Å°³º¯¼ö·Î ¹Ş¾Æ ÅëÇÕ½Ã°£Ç¥¿¡ Á¤º¸¸¦ Ãß°¡ÇÏ´Â ÇÔ¼ö. 0°ú1À» ¹İÈ¯ÇÑ´Ù.
+	FILE *fp;				//ÆÄÀÏ Æ÷ÀÎÅÍ
+	char openDB[40];		//¿ÀÇÂ½ÃÅ³ ÆÄÀÏ¸í
+	char buffer[30];		//ÀÓ½Ã ÀúÀå°ø°£
+	char dayWeek[10];		//¿äÀÏÀ» ÀĞ¾î¿Ã ¹®ÀÚ¿­
+	char Time[5]={0};		//½Ã°£ÀÌ µé¾î°¥ ¹®ÀÚ¿­
+	char comma[1]={','};	//ÀĞ¾î¿Ã timetable.txt¿¡´Â ½Ã°£±¸ºĞÀ» 3,4,5 ÀÌ·±½ÄÀ¸·Î ','¸¦ ÀÌ¿ëÇØ Ã³¸®ÇßÀ¸¹Ç·Î ¹®ÀÚ¿­ Ã³¸®¸¦ À§ÇØ ÇÊ¿äÇÑ º¯¼ö
+	int dayweek,time,i,j;	//ÅëÇÕ½Ã°£Ç¥ intÇü ÀÌÂ÷¿ø¹è¿­¿¡ ¿äÀÏ°ú ½Ã°£¿¡ ´ëÇÑ Á¤º¸¸¦ ³Ö±âÀ§ÇØ ÇÊ¿äÇÑ º¯¼öµé dayweek¿¡´Â ¿äÀÏ¿¡ ´ëÇÑ Á¤º¸°¡ time¿¡´Â ½Ã°£¿¡ ´ëÇÑ Á¤º¸°¡ µé¾î°£´Ù.	
+	int length;				//¹®ÀÚ¿­±æÀÌ¿¡ ´ëÇÑ °ªÀ» ³ÖÀ» º¯¼ö
+	
+	strcpy(openDB,DBname);			//¸Å°³º¯¼ö·Î ¹ŞÀº 'ÇĞ¹ø+ÀÌ¸§'¿¡ timetable.txt¸¦ ºÙÀÎ ÀÌ¸§À» °¡Áø ½Ã°£Ç¥Á¤º¸¸¦ ÀĞ±â¸ğµå·Î ¿ÀÇÂ
 	strcat(openDB,"timetable.txt");		
-	fp = fopen(openDB, "r");		//ÇØ´ç È¸¿øÀÇ ½Ã°£Ç¥Á¤º¸¸¦ ÀĞ¾î¿Â´Ù.
-	if(!fp){					//¸¸¾à ÇØ´ç È¸¿øÀÇ ½Ã°£Ç¥ Á¤º¸°¡ ¾øÀ»°æ¿ì 1 ¸®ÅÏ. 
+	fp = fopen(openDB, "r");		
+
+	if(!fp){						//¸¸¾à ÇØ´ç È¸¿øÀÇ ½Ã°£Ç¥ Á¤º¸°¡ ¾øÀ» °æ¿ì 1À» ¸®ÅÏ. 
 		return 1;
 	}
+
 	while (!feof(fp)) {
-		fscanf(fp, "%s", &check);			//Ã¹ÁÙÀº ½Ã°£Ç¥ °³¼ö? ¸¦ ÀÇ¹ÌÇÑ´Ù°í ÇØ¼­ ÀĞ±â¸¸ ÇÏ´Â °ª. ¿©±â¼­ ¾È¾²ÀÌ´Â º¯¼ö
+		fscanf(fp, "%s", &buffer);				//Ã¹ÁÙÀº ½Ã°£Ç¥ °³¼ö¸¦ ÀÇ¹Ì. ÀĞ±â¸¸ ÇÏ´Â °ª. ÇÊ¿ä¾ø´Â Á¤º¸
 		while(!feof(fp)){					
-			fscanf(fp,"%s", &dayWeek);		//¿äÀÏÀ» ÀĞ´Â´Ù ÀĞ¾î¼­ ¿ùÈ­¼ö¸ñ±İ¿¡ ÇØ´çÇÏ´Â Á¤¼öÇü ÀÚ·á·Î /Ã³¸®. 
+			fscanf(fp,"%s", &dayWeek);			//¿äÀÏÀ» ÀĞ¾î¿ÂµÚ ¿ù,È­,¼ö,¸ñ,±İ À» 0,1,2,3,4 ·Î ´ëÀÀ½ÃÄÑ dayweekº¯¼ö¿¡ ÀúÀå 
 			if(!strcmp(dayWeek,"¿ù"))
 				dayweek=0;
 			else if(!strcmp(dayWeek,"È­"))
@@ -90,24 +92,25 @@ int recordCombineTimetable(int CombineTimetable[5][13], char *DBname){		//ÅëÇÕ½Ã
 				dayweek=3;
 			else if(!strcmp(dayWeek,"±İ"))
 				dayweek=4;
-			fscanf(fp,"%s", &check);		//°ú¸ñÀ» ÀĞ´Â´Ù. °ú¸ñµµ ÅëÇÕ½Ã°£Ç¥¿¡¼­ ¾È¾²ÀÌ´Â º¯¼öÀÌ¹Ç·Î ÀĞ±â¸¸ ÇÑ´Ù.
-			fscanf(fp,"%s",&check);			//½Ã°£À» ÀĞ´Â´Ù.
+			fscanf(fp,"%s", &buffer);			//°ú¸ñÀ» ÀĞ´Â´Ù. °ú¸ñµµ ÅëÇÕ½Ã°£Ç¥¸¦ ¸¸µé¶§ ºÒÇÊ¿äÇÑ Á¤º¸
+			fscanf(fp,"%s",&buffer);			//½Ã°£À» ÀĞ´Â´Ù.
 
-			for(i=0;i<strlen(check);i++) {			//½Ã°£ ¹®ÀÚ¿­ÀÇ ±æÀÌ¸¦ ¾Ë¾Æ³»¼­ for¹®À¸·Î ÇÑ´Ü¾î¾¿ °³º°Ã³¸®¸¦ ÇÑ´Ù.
-				if(strncmp(check,comma,1)!=0){		//½Ã°£¹®ÀÚ¿­ÀÇ Ã¹´Ü¾î°¡ "," °¡ ¾Æ´Ï¸é 
-					strncat(Time,check,1);			//TimeÀÌ¶ó´Â ¹®ÀÚ¿­¿¡ ½Ã°£¹®ÀÚ¿­ÀÇ Ã¹´Ü¾î¸¦ »ğÀÔ. µ¤¾î¾º¿ì´Â°Ô ¾Æ´Ï¶ó µÚ¿¡ µ¡ºÙÀÌ´Â »ğÀÔÀÌ´Ù. 
-					changeLocation(check);			//changeLocatioin ÇÔ¼ö¸¦ »ç¿ë. ½Ã°£¹®ÀÚ¿­Àº Ã¹´Ü¾î¸¦ Áö¿ì°í ÇÑÄ­¾¿ ¶¯±ä´Ù.
+			for(i=0;i<(int)strlen(buffer);i++) {			//ÀĞ¾îµéÀÎ ½Ã°£ ¹®ÀÚ¿­ÀÇ ±æÀÌ¸¸Å­ for¹®À¸·Î ÇÑ´Ü¾î¾¿ °³º°Ã³¸®¸¦ ÇÑ´Ù.
+				if(strncmp(buffer,comma,1)!=0){		//ÇöÀç ½Ã°£¹®ÀÚ¿­ÀÇ Ã¹´Ü¾î°¡ "," °¡ ¾Æ´Ï¸é 
+					strncat(Time,buffer,1);			//Time¹®ÀÚ¿­¿¡ ½Ã°£¹®ÀÚ¿­ÀÇ Ã¹¹®ÀÚ¸¦ µ¡ºÙ¿©¼­ »ğÀÔ 
+					changeLocation(buffer);			//changeLocatioin ÇÔ¼ö¸¦ »ç¿ë. ½Ã°£¹®ÀÚ¿­ÀÇ Ã¹´Ü¾î¸¦ Áö¿ì°í ÇÑÄ­¾¿ ¾ÕÀ¸·Î ¶¯°ÜÁØ´Ù.
 				}
-				if(strncmp(check,comma,1)==0) {		//½Ã°£¹®ÀÚ¿­ÀÇ Ã¹´Ü¾î°¡ "," ÀÌ¸é
-					changeLocation(check);			//ÇÔ¼öÀÌ¿ë. ","»èÁ¦ÈÄ ÇÑÄ­¾¿ ¶¯±ä´Ù.
-					time=atoi(Time);				//Áö±İ±îÁö »ğÀÔÇÑ Time ¹®ÀÚ¿­À» Á¤¼öÇü time º¯¼ö¿¡ »ğÀÔ
-					CombineTimetable[dayweek][time-1]=1;		//À§¿¡¼­ º¯È¯ÇØÁØ Á¤¼öÇü ¿äÀÏ°ú ½Ã°£À» ÀÌ¿ë. ÅëÇÕ½Ã°£Ç¥¿¡ Ã¼Å©
-					length=strlen(Time);
-					for(j=0; j<length; j++)
+				if(strncmp(buffer,comma,1)==0) {		//ÇöÀç ½Ã°£¹®ÀÚ¿­ÀÇ Ã¹´Ü¾î°¡ "," ÀÌ¸é
+					changeLocation(buffer);				//changeLocatioin ÇÔ¼ö¸¦ »ç¿ë ","»èÁ¦ÈÄ ÇÑÄ­¾¿ ¶¯±ä´Ù.
+					time=atoi(Time);					//Time ¹®ÀÚ¿­À» º¯È¯½ÃÄÑ Á¤¼öÇü time º¯¼ö¿¡ »ğÀÔ
+					CombineTimetable[dayweek][time-1]=1;		//dayweek,time º¯¼ö¸¦ ÀÌ¿ë. ÅëÇÕ½Ã°£Ç¥¿¡¼­ ÇØ´çÇÏ´Â À§Ä¡¸¦ 1·Î º¯°æ
+					length=strlen(Time);				
+					for(j=0; j<length; j++)				//Time¹®ÀÚ¿­ ÃÊ±âÈ­
 						Time[j]='\0';	
-					}		
-				}						
-			time=atoi(check);					//¸¶Áö¸·½Ã°£µÚ¿¡´Â ","°¡ ¾ÈºÙÀ¸¹Ç·Î ¿©±â¼­ ´Ù½ÃÇÑ¹ø Ã³¸®
+				}		
+			}
+			//±æÀÌ¸¸Å­ for¹®À» µ¹¸®°í ³ª¿À¸é ¸¶Áö¸· ','µÚÀÇ ÀÚ·áÃ³¸®°¡ ³²¾ÆÀÖ´Ù. 
+			time=atoi(buffer);					
 			CombineTimetable[dayweek][time-1]=1;
 			length=strlen(Time);
 			for(j=0; j<length; j++)
@@ -115,40 +118,48 @@ int recordCombineTimetable(int CombineTimetable[5][13], char *DBname){		//ÅëÇÕ½Ã
 		}
 	}			
 	fclose(fp);
-	return 0;		//Á¤»óÀûÀ¸·Î ÀĞ¾úÀ¸¸é 0¸®ÅÏ 
+
+	return 0;				//Á¤»óÀûÀ¸·Î ÆÄÀÏÀ» ÀĞ¾î Ã³¸®ÇßÀ¸¸é 0À» ¸®ÅÏ 
 }
 
-void setMajor(char ID[8],char Major[20])	{		//ÇĞ¹ø 3,4ÀÚ¸®¸¦ ¹ÙÅÁÀ¸·Î ÇĞ°ú ¾Ë¾Æ³»´Â ÇÔ¼ö
-	char IDCopy[8];					
-	char keyWord[3]={0};
-	char major[20];
-	char number[3];
-	char noMajor[13];
-	FILE *fp;
-
+void setMajor(char ID[8],char Major[20])	{		//ÇĞ¹ø7ÀÚ¸®¿Í ÇĞ°úÁ¤º¸°¡ µé¾î°¥ ¹®ÀÚ¿­À» ¸Å°³º¯¼ö·Î ¹Ş°í ÇĞ¹ø 3,4¹øÂ°ÀÚ¸®ÀÇ ¼ıÀÚ¸¦ ¹ÙÅÁÀ¸·Î ÇĞ°ú¸¦ ¾Ë¾Æ³»´Â ÇÔ¼ö
+	FILE *fp;					//ÆÄÀÏ Æ÷ÀÎÅÍ
+	char IDCopy[8];				//¹®ÀÚ¿­ Ã³¸®¸¦ °£´ÜÇÏ°Ô ÇÏ±âÀ§ÇØ ÇĞ¹øº¹»çº»À» ÀúÀåÇÒ ¹®ÀÚ¿­
+	char keyWord[3]={0};		//ÇĞ°ú¸¦ ¾Ë¾Æ³»´Âµ¥ ÇÊ¿äÇÑ ÇÙ½ÉÁ¤º¸ÀÎ ÇĞ¹øÀÇ 3,4¹øÂ° ¼ıÀÚ°¡ µé¾î°¥ ¹®ÀÚ¿­
+	char number[3];				//ÅØ½ºÆ® ÆÄÀÏ¿¡¼­ ÀĞ¾î¿Ã ÇĞ°ú¹øÈ£ Á¤º¸¸¦ ÀúÀåÇÒ ¹®ÀÚ¿­
+	char major[20];				//ÅØ½ºÆ® ÆÄÀÏ¿¡¼­ ÀĞ¾î¿Ã ÇĞ°úÀÌ¸§ Á¤º¸¸¦ ÀúÀåÇÒ ¹®ÀÚ¿­
+	char noMajor[13];			//ÀÏÄ¡ÇÏ´Â ÇĞ°ú Á¤º¸°¡ ¾øÀ»°æ¿ì Ã³¸®¸¦ À§ÇÑ ¹®ÀÚ¿­
+	
 	strcpy(noMajor,"ÇĞ°úÁ¤º¸¾øÀ½");		//ÇĞ°úÁ¤º¸¿Í ÀÏÄ¡ÇÏ´Â°Ô ¾øÀ»¶§ Ãâ·ÂÇØÁÙ ¹®Àå
-	strcpy(IDCopy,ID);
-	changeLocation(IDCopy);
-	changeLocation(IDCopy);
-	strncpy(keyWord,IDCopy,2);
+
+	strcpy(IDCopy,ID);			//ÇĞ¹øÀ» º¹»çº»¿¡ ÀúÀå ÀÌÈÄ ÇĞ¹øÀº º¹»çº»¹®ÀÚ¿­À» ÅëÇØ¼­ Ã³¸®
+	changeLocation(IDCopy);		//changeLocationÇÔ¼ö¸¦ ÀÌ¿ëÇØ¼­ ÇĞ¹ø¹®ÀÚ¿­ÀÇ Ã¹¹øÂ° ÀÚ¸®¸¦ »èÁ¦ÇÏ°í ÇÑÄ­¾¿ ¶¯°ÜÁØ´Ù.
+	changeLocation(IDCopy);		//µÎ¹ø¹İº¹À» ÅëÇØ ¿ø·¡ ÇĞ¹ø ¹®ÀÚ¿­ÀÇ 3¹øÂ° ÀÚ¸®°¡ ¸Ç¾Õ¿¡ ¿Àµµ·Ï º¯°æµÇ¾ú´Ù.
+	strncpy(keyWord,IDCopy,2);	//ÇöÀç ÇĞ¹ø¹®ÀÚ¿­ÀÇ 1,2¹øÂ°¿¡ ÇØ´çÇÏ´Â ¹®ÀÚ ,Áï ¿ø·¡ ÇĞ¹øÀÇ 3,4¹øÂ°¿¡ ÇØ´çÇÏ´Â µÎ ¹®ÀÚ¸¦ keyWord¿¡ ÀúÀå
+
 	fp=fopen("major.txt","r");			//major.txt ¿©±â¿¡ ÇĞ¹ø, ÇĞ°ú Á¤º¸°¡ ÀúÀåµÇ¾îÀÖÀ½ 
 	
+	if(fp == NULL){
+		printf("ÇĞ°úÁ¤º¸ ÆÄÀÏ ¿ÀÇÂ ºÒ°¡");
+		return;
+	}
 	while(!feof(fp)){					
-		fscanf(fp,"%s %s",&number,&major);
-		if(!strcmp(number,keyWord))	{			//ÀÏÄ¡ÇÏ´Â ÇĞ¹øÀÏ °æ¿ì ÇĞ°ú Á¤º¸¸¦ Major¿¡ ÀúÀå
-			fclose(fp);
-			strcpy(Major,major);
-			return;
+		fscanf(fp,"%s %s",&number,&major);		//ÇĞ°ú¹øÈ£ Á¤º¸¿Í ÇĞ°úÁ¤º¸¸¦ ÀĞ´Â´Ù.
+		if(!strcmp(number,keyWord))	{			//ÇĞ°ú¹øÈ£¿Í keyWord°¡ ÀÏÄ¡ÇÏ¸é ÇĞ°úÁ¤º¸¸¦ Major¿¡ ÀúÀå
+			fclose(fp);							//ÆÄÀÏÀ» ´İ°í
+			strcpy(Major,major);				//¸Å°³º¯¼ö·Î ¹ŞÀº Major¹®ÀÚ¿­¿¡ Á¤º¸¸¦ ÀúÀåÇÑµÚ
+			return;								//¸®ÅÏ
 		}
 	}
 	fclose(fp);
-	strcpy(Major,noMajor);		//¾øÀ»°æ¿ì "ÇĞ°úÁ¤º¸¾øÀ½" À» Major¿¡ ÀúÀå		
+	strcpy(Major,noMajor);		//ÀÏÄ¡ÇÏ´Â ÇĞ°úÁ¤º¸°¡ ¾ø¾úÀ»°æ¿ì "ÇĞ°úÁ¤º¸¾øÀ½"À» Major¿¡ ÀúÀå		
 }
 
-int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13],char *MyDB,char IDList[4][13]){		//ÀÌ¸§°Ë»öÇÔ¼ö.. (°Ë»öÇÒÀÌ¸§, ÇÔ²²ÇÏ´ÂÈ¸¿øÁß ¸®½ºÆ®¿¡ ¾È¿Ã¶ó°£ È¸¿ø¼ö,»õ¾à¼Ó±¸Á¶Ã¼,ÅëÇÕ½Ã°£Ç¥) ¸¦ º¯¼ö·Î ¹Ş´Â´Ù.
-	int exist=0;
-	char openDB[40];
-	char check[30];
+int searchName(char *name,int count,struct structPromise newPromise,int CombineTimetable[5][13],char *MyDB,char IDList[4][13]){		//ÀÌ¸§°Ë»öÇÔ¼ö.. (°Ë»öÇÒÀÌ¸§, ÇÔ²²ÇÏ´ÂÈ¸¿øÁß ¸®½ºÆ®¿¡ ¾È¿Ã¶ó°£ È¸¿ø¼ö,»õ¾à¼Ó±¸Á¶Ã¼,ÅëÇÕ½Ã°£Ç¥,'ÇĞ¹ø+ÀÌ¸§'¹®ÀÚ¿­,ÇöÀç ÀúÀåµÈ È¸¿ø¸®½ºÆ®) ¸¦ º¯¼ö·Î ¹Ş´Â´Ù.
+	FILE *fp;				//ÆÄÀÏÆ÷ÀÎÅÍ
+	FILE *fp1;
+	char openDB[40];		//¿ÀÇÂ½ÃÅ³ ÆÄÀÏ¸í
+	char buffer[30];
 	char Time[5]={0};
 	char select[2];
 	char ID[8];
@@ -157,10 +168,10 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 	int overlap=1;
 	int limit=0;
 	int i;
+	int exist=0;
 	char comma[1]={','};
 	struct structMember friendID;		//ÀÌ ±¸Á¶Ã¼´Â ÀÌ ÇÔ¼ö³»ºÎ¿¡¼­¸¸ ¾²ÀÓ.. º° È¿¿ëÀº ¾ø°í ±×³É charµÎ°³ ¶Ç ¸¸µé±â ±ÍÂú¾Æ¼­ ½áº» ±¸Á¶Ã¼...
-	FILE *fp;
-	FILE *fp1;
+
 	int x=32, y=22;
 	listBorderDraw2(26,19);
 	gotoxy(x+20,33);printf("           ");
@@ -188,8 +199,8 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 					}
 
 					while (!feof(fp1)) {				//È¸¿øÁ¤º¸¿¡¼­ ÇĞ¹ø°ú ÀÌ¸§À» ÀĞ¾î¿Í ±¸Á¶Ã¼ friendID¿¡ ÀúÀåÇÑ´Ù.
-						fscanf(fp1, "%s", &check);
-						if(!strcmp(check,"È¸¿øÁ¤º¸")){
+						fscanf(fp1, "%s", &buffer);
+						if(!strcmp(buffer,"È¸¿øÁ¤º¸")){
 							fscanf(fp1,"%s", friendID.ID);
 							fscanf(fp1,"%s", friendID.name);
 						}
@@ -344,7 +355,7 @@ int callendar(int Month) {		//´Ş·ÂÃâ·ÂÇÔ¼ö. ¿ùÀ» ÀÎ¼ö·Î ³Ñ°Ü¹Ş´Â´Ù. selectDate Ç
 		
 
 	}
-
+	return y;
 }
 
 int weekday(int year, int month, int day) //³âµµ, ¿ù, ÀÏ À» ÀÔ·Â¹Ş¾Æ ¿äÀÏ Ã£´Â ÇÔ¼ö. ¸®ÅÏ°ªÀº Á¤¼ö.
@@ -639,7 +650,7 @@ int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise 
 	for(i=0; i<Count; i++){
 		newPromise->promiseFriendsName[i]=(char *)malloc(sizeof(char)*20);
 		for(j=0; j<13; j++)
-			newPromise->promiseFriendsName[i][j]=NULL;
+			strcpy(&newPromise->promiseFriendsName[i][j],"\0");
 	}
 	i=0;
 	while(Count>0) {		//ÀÎ¿ø¼ö¸¸Å­ °Ë»öÇÔ¼ö¸¦ µ¹¸°´Ù.
@@ -652,7 +663,7 @@ int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise 
 			Count--;
 			
 			strcpy(nameList[i],Name);		
-				
+
 			gotoxy(x+64,y+6);printf("%s",nameList[0]);	//@@@ÀÌ¸§¸®½ºÆ® Ãâ·Â
 			gotoxy(x+64,y+8);printf("%s",nameList[1]);	//@@@ÀÌ¸§¸®½ºÆ® Ãâ·Â
 			gotoxy(x+64,y+10);printf("%s",nameList[2]);	//@@@ÀÌ¸§¸®½ºÆ® Ãâ·Â
@@ -722,5 +733,9 @@ int promise(structMember *s){		//¾à¼Ó¸¸µé±â ¸ŞÀÎÇÔ¼ö. (ÇöÀç·Î±×ÀÎµÇÇÑ È¸¿ø±¸Á¶Ã¼
 	}
 	if(menuControl=='5'||menuControl =='B'||menuControl =='b')
 		return 0;
+	if(menuControl=='x'||menuControl =='X'){
+		gotoxy(90,45);
+		exit(0);
+	}
 	return 1;
 }
