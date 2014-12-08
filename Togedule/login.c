@@ -1,11 +1,25 @@
 #include"structHeader.h"
+//문자열에서 숫자이외의 값이 들어오는것 체크
+int numberErrorcheck(char *s){
+	int len=strlen(s);
+	int i;
 
+	for(i=0; i<len; i++){
+		if(s[i]<48 || 57<s[i])  //숫자범위 밖이면 1리턴
+			return 1;
+	}
+	return 0;  //아니면 0리턴
+}
+//문자열 길이 체크
+int stringLengthcheck(char *s,int n){
+	if(strlen(s)>n)
+		return 1;  //길이 넘치면 1리턴
+	return 0; 
+}
 void login(structMember *s){
-	char id[8],password[14],fid[8],fname[13];  //fid,fname 파일에서 불러온 학번,이름
-	//structMember s;  //멤버 구조체	
-	FILE *fp1,*fp2=NULL;
-	char txt[]=".txt";  //확장자
-	char fileName[20];  //열기할 파일이름
+	char id[8],password[14];  //fid,fname 파일에서 불러온 학번,이름
+	FILE *fp1,*fp2=NULL;	
+	char fileName[20]="\0";  //열기할 파일이름
 	int loginCount;  //로그인 횟수	
 	char ch;
 	int backspace=0,i=0;
@@ -19,7 +33,17 @@ void login(structMember *s){
 	gotoxy(54, 21); printf("학     번 : "); 
 	gotoxy(54, 23); printf("P       W : "); 
 
-	gotoxy(66, 21); scanf("%s",id); fflush(stdin);  //학번입력
+	while(1){
+		gotoxy(66, 21); scanf("%s",id); fflush(stdin);  //학번입력
+		if(stringLengthcheck(id,7)){}			
+		else if(numberErrorcheck(id)){}			
+		else{		
+			gotoxy(66, 21); printf("              "); break;
+		}
+		gotoxy(60, 27); printf("학번 입력 오류");
+		gotoxy(66, 21); printf("              ");
+	}
+
 	gotoxy(66, 23);  //비밀번호입력
 	for(i=0; i<14; i++){  //비밀번호 입력시 ***로 출력부분
 		ch=getch();		
@@ -51,11 +75,11 @@ void login(structMember *s){
 	fp1=fopen("회원목록.txt","r");  //회원목록 열고
 
 	while(!feof(fp1)){  //파일끝까지 확인
-		fscanf(fp1,"%s %s",fid,fname);  
-		if(!strcmp(id,fid)){  //목록에서 해당id를 찾았을 경우 파일을 열고 나가가고
-			strcpy(fileName,fid);
-			strcat(fileName,fname);
-			strcat(fileName,txt);
+		fscanf(fp1,"%s %s",s->ID,s->name);  
+		if(!strcmp(id,s->ID)){  //목록에서 해당id를 찾았을 경우 파일을 열고 나가고
+
+			getUserfileName(fileName,s,"\0");  //open할 파일이름얻기			
+			printf("%s",fileName);
 			fp2=fopen(fileName,"r");  //회원가입되어있다.
 			fclose(fp1);  //회원목록파일 닫고
 			fp1=NULL;
@@ -113,7 +137,7 @@ void login(structMember *s){
 			}
 		}
 	}
-	
+
 	//PW를 고유코드로 설정->에러->파일에 출력시 널값은 출력안되게.. 수정바람
 	gotoxy(58, 27); printf("PW 고유코드로 초기화");
 	fp2=fopen(fileName,"w");

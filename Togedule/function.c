@@ -88,5 +88,15 @@ void listBorderDraw3(int x, int y){
 }
 //글자색,글자배경색 변경
 void setcolor(int color, int bgcolor){
- SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), ((bgcolor&0xf)<<4) | (color&0xf));
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), ((bgcolor&0xf)<<4) | (color&0xf));
 } 
+
+//파일이름만들기(열기할 파일이름,회원구조체,파일타입(timetable,promiseList등)
+void getUserfileName(char *fileName,structMember *s,char *filetype){
+	strcpy(fileName,s->ID);
+	strcat(fileName,s->name);
+	if(strcmp(filetype,"\0") != 0)
+		strcat(fileName,filetype);
+	strcat(fileName,".txt");
+
+}
