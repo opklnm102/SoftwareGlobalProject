@@ -119,3 +119,15 @@ int stringLengthcheck(char *s,int n){
 		return 1;  //길이 넘치면 1리턴
 	return 0;  //아니면 0리턴
 }
+
+//한글이외의 값 체크
+int hanErrorcheck(char *s){
+	int len=strlen(s);
+	int i;
+
+	for(i=0; i<len; i++){
+		if(0<s[i] && s[i]<127)  //숫자범위 밖이면 1리턴
+			return 1;
+	}
+	return 0;  //아니면 0리턴
+}

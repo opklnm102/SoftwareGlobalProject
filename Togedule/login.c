@@ -21,11 +21,14 @@ void login(structMember *s){
 		gotoxy(66, 21); scanf("%s",id); fflush(stdin);  //학번입력
 		if(stringLengthcheck(id,7)){}  //문자열의 길이 체크
 		else if(numberErrorcheck(id)){}  //숫자이외의 값 체크			
-		else{		
-			gotoxy(60, 27); printf("              "); break;
+		else{  //오류 없을시		    
+			gotoxy(60, 27); printf("              "); //오류메시지 라인클리어
+			break;  
 		}
 		gotoxy(60, 27); printf("학번 입력 오류");
-		gotoxy(66, 21); printf("              ");
+		gotoxy(66, 21); printf("              ");  //학번입력라인 클리어
+		for(j=0; j<8; j++)
+			id[j]='\0';
 	}
 
 	gotoxy(66, 23);  //비밀번호입력
@@ -37,20 +40,20 @@ void login(structMember *s){
 				for(j=0; j<20; j++)
 					password[j]='\0';
 				gotoxy(60, 27); printf("패스워드 입력 오류");
-				gotoxy(66, 23); printf("                "); 
+				gotoxy(66, 23); printf("                  ");  //pw입력라인 클리어 
 				gotoxy(66, 23);
 			}
-			else if(numberErrorcheck(password)){
+			else if(numberErrorcheck(password)){  //숫자이외의 값이 들어오는 오류
 				i=-1;
 				for(j=0; j<20; j++)
 					password[j]='\0';
 				gotoxy(60, 27); printf("패스워드 입력 오류");
-				gotoxy(66, 23); printf("                  "); 
+				gotoxy(66, 23); printf("                  ");  //pw입력라인 클리어 
 				gotoxy(66, 23);
 			}
-			else{
+			else{  //오류 없을시
 				password[i] = '\0';
-				gotoxy(60, 27); printf("                ");
+				gotoxy(60, 27); printf("                ");  //오류메시지 라인클리어
 				printf("\n"); break;
 			}
 		}
@@ -79,7 +82,6 @@ void login(structMember *s){
 	while(!feof(fp1)){  //파일끝까지 확인
 		fscanf(fp1,"%s %s",s->ID,s->name);  
 		if(!strcmp(id,s->ID)){  //목록에서 해당id를 찾았을 경우 파일을 열고 나가고
-
 			getUserfileName(fileName,s,"\0");  //open할 파일이름얻기			
 			fp2=fopen(fileName,"r");  //회원가입되어있다.
 			fclose(fp1);  //회원목록파일 닫고
