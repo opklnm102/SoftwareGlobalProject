@@ -70,7 +70,20 @@ int changeDate(struct structPromise *old,int newCombineTimetable[5][13]) {
 
 void changePromiseName(struct structPromise *old){
 	gotoxy(60,26);printf("                               ");
-	gotoxy(61,26);scanf("%s",&old->promiseName);
+
+	while(1){
+	gotoxy(61,26);scanf("%s",&old->promiseName);  //@@@약속명 입력
+	if(!strcmp(old->promiseName,"0")) {}
+	else if(stringLengthcheck(old->promiseName,40)) {
+		gotoxy(42,23);printf("약속명은 한글 20자, 영문 40자 이하로 입력하세요.");
+		gotoxy(61,26);printf("                                  ");
+	}
+				
+		else{  //오류 없을시		    
+			gotoxy(42,23); printf("                                              "); //오류메시지 라인클리어
+			break;  
+		}
+	}
 }
 
 int checkDateTime(int CombineTimetable[5][13], struct structPromise *old){
@@ -225,9 +238,17 @@ int selectChange(char *DBname, struct structPromise *old, int listnumber, char *
 		}
 		
 		gotoxy(42,11);printf("수정할 내용을 선택하세요 :");
-		gotoxy(69,11);scanf("%s",&select);
-		if(!strcmp(select,"B")||!strcmp(select,"b"))
-			return -1;
+		while(1){
+			gotoxy(69,11);scanf("%s",&select);
+			if(!strcmp(select,"B")||!strcmp(select,"b"))
+				return -1;
+			else if(numberErrorcheck(select)){}
+			else {
+				
+				break;
+			}
+			gotoxy(69,11);printf("       ");
+		}
 		if(!strcmp(select,"1")){
 			changePromiseName(old);
 			if(!strcmp(old->promiseName,"B")||!strcmp(old->promiseName,"b"))
