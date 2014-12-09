@@ -5,7 +5,7 @@ int main()
 	char menuSelect[20];
 	int menu;
 	structMember s;  //다른 메뉴로 회원정보를 넘겨준다.
-	//system("color 04");
+	setcolor(0,15);  //글자색,글자배경색 변경(검정,흰)
 	system("mode con:cols=130 lines=46");  //가로 130, 세로 45 
 
 
