@@ -134,7 +134,7 @@ void changeLocation( char* str );    //문자열 처리함수 맨 앞의 글자를 없애고 한�
 
 //비용관련
 void moneyShare1(structMember *s);  //돈나눠주세요 시작
-void moneyShare2();  //돈나누는 모드 고르는 기능
+void moneyShare2(structMember *s,int peopleCnt,char **transName);  //돈나누는 모드 고르는 기능
 
 //공통으로 쓰이는 것들
 void gotoxy(int x, int y);  //좌표설정

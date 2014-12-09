@@ -128,6 +128,8 @@
 //		}
 //	}
 //	fflush(stdin);
+
+
 //	while(1) {
 //		printf("1 : 공평하게 나누기, 2 : 한 명에게 몰아주기\n");
 //		printf("메뉴를 선택해주세요 : ▶");
@@ -210,7 +212,7 @@
 //	}
 //}
 
-void moneyShare2(structMember *s){	
+void moneyShare1(structMember *s){
 	char DBname[20];
 	FILE *fp;
 	char openDB[30];
@@ -233,8 +235,21 @@ void moneyShare2(structMember *s){
 	char friendNameCopy[8]={0};	
 	char checkPlace[3]={0};
 	int x=35,y=11;
+	int peopleCnt=1;
 	char controlList[3]={0};
-			
+	int beforeDivideMoney; // 나누기 전 돈
+	int finalMoney; // 최종 돈
+	int divisionNumber; // 나누는 수
+	int arrMoney[5]={0, };
+	int baseMoney;
+	int restPeople;
+	int restMoney;
+	int promiseNumber;
+	int menuseletion; //메뉴 선택하는 변수
+	int randomPersonNumber; //랜덤으로 받은 시드값을 저장하는 변수 1,2,3,4,5 중 하나
+	char waiting[20] = {'w','a','i','t',' ','p','l','e','a','s','e','.','.'};
+
+
 	strcpy(DBname,s->ID);
 	strcat(DBname,s->name);
 
@@ -430,8 +445,8 @@ void moneyShare2(structMember *s){
 	fclose(fp);
 	gotoxy(35,10);printf("                                                                                     ");
 	gotoxy(35,25);printf("→ 돈분배할 약속 : ");
-	
-	
+
+
 	while(1) {						//리스트 번호 범위 내의 수만 입력받기
 		gotoxy(56,25);scanf("%s",select);
 		if(!strcmp(select,"b")||!strcmp(select,"B")){
@@ -468,7 +483,7 @@ void moneyShare2(structMember *s){
 			break;		
 	}
 
-	transName=(char**)malloc(sizeof(char*)*4+1);					//학번을 그냥 쓸수 없으니 이름으로 바꿀 문자배열을 또 동적할당 해준다.
+	transName=(char**)malloc(sizeof(char*)*4+1);	//학번을 그냥 쓸수 없으니 이름으로 바꿀 문자배열을 또 동적할당 해준다.
 	for(i=0; i<4; i++) {													
 		transName[i]=(char*)malloc(sizeof(char)*13);
 		strcpy(transName[i],"\0");
@@ -512,6 +527,144 @@ void moneyShare2(structMember *s){
 
 	for(i=0; i<4; i++)
 		printf("%s ",transName[i]);
+
+	//moneyShare2(s,j,transName);  //알고리즘 호출
+
+	////-------------------------------알고리즘 시작----------------------------------------------------------//
+	while(1) {
+		peopleCnt = j+1; //j 사람 수를 peopleCnt에 저장
+		gotoxy(37,40);	printf("나누기 전 돈, 절사할 최소 돈 >>");
+		gotoxy(37,41);  printf("예시) 16500 1000\n");
+		gotoxy(69,40);  scanf("%d %d", &beforeDivideMoney , &divisionNumber); fflush(stdin);
+
+		system("cls");
+		screenBorderDraw();
+		listBorderDraw1(26,12);
+		gotoxy(58,6);
+		printf("☆ 돈 나누기 ☆");
+		gotoxy(45, 15);
+		printf("1.   공평하게 나누기");
+		gotoxy(45, 18);
+		printf("2.   한 명에게 몰아주기\n");
+		gotoxy(50, 30);
+		printf("메뉴를 선택해주세요 : ▶");
+		scanf("%d", &menuseletion); fflush(stdin);
+
+		if( menuseletion==1 || menuseletion==2)
+			break;
+		else printf("메뉴 선택을 다시 해주세요.");
+	}
+
+	switch(menuseletion){
+	case 1:
+
+		//scanf("%d %d", &beforeDivideMoney , &divisionNumber); fflush(stdin);
+
+		baseMoney = (beforeDivideMoney / (peopleCnt * divisionNumber)) * divisionNumber;
+		/*int beforeDivideMoney, peopleCnt=0, divisionNumber, baseMoney = 0, finalMoney, restMoney, i, restPeople;
+		int arrMoney[5] = {0, 0, 0, 0, 0};*/
+
+		restMoney = beforeDivideMoney - ( baseMoney * peopleCnt );
+
+		if (restMoney == 0) {
+			finalMoney = baseMoney+ (restMoney / (peopleCnt * divisionNumber) * divisionNumber);
+
+			for(i=0; i<peopleCnt; i++)
+				arrMoney[i] = finalMoney;
+		} 
+		else {
+			restPeople = ( restMoney / divisionNumber );
+			finalMoney = baseMoney + divisionNumber;
+
+			if (restMoney % divisionNumber == 0) {
+				for(i = 0 ;i<restPeople;i++){
+					arrMoney[i] = finalMoney;
+				}
+				for(i=restPeople;i<5;i++){
+					arrMoney[i] = (baseMoney + (restMoney % divisionNumber));
+				}
+			} 
+			else {
+				if (restPeople != 0)
+					for(i=0;i<restPeople;i++)
+						arrMoney[i] = finalMoney;
+				if (peopleCnt - restPeople - 1 != 0)
+					for(i=restPeople;i<peopleCnt-1;i++)
+						arrMoney[i] = baseMoney;
+				arrMoney[i] = (baseMoney + (restMoney % divisionNumber));					
+			}
+		}
+
+		/*for(i=0; i<18; i++){
+		gotoxy(53+i,32);
+		printf("%c",waiting[i]);
+		Sleep(350);
+		}*/
+
+		for(i=0; i<peopleCnt-1; i++){
+			gotoxy(53,32+i);
+			printf("%d번째 사람 %s: %d원\n", i+1,transName[i],arrMoney[i]);
+		}
+		gotoxy(53,32+i);
+		printf("%d번째 사람 %s: %d원\n", i+1,s->name,arrMoney[i]);
+
+
+		getch(); break;
+
+	case 2:
+		//한 명한테 몰아주기
+		srand((unsigned)time(NULL)); //랜덤 시드 생성
+		fflush(stdin); 
+		randomPersonNumber = ( rand()%peopleCnt );
+		//scanf("%d", &beforeDivideMoney);  fflush(stdin); 
+		arrMoney[randomPersonNumber] = beforeDivideMoney;
+
+		/*for(i=0; i<18; i++){
+		gotoxy(53+i,32);
+		printf("%c",waiting[i]);
+		Sleep(350);
+		}*/
+
+
+		for(i=0; i<peopleCnt-1; i++){ //for (i=0; i<peopleCnt; i++)
+			gotoxy(53,32+i);
+			printf("%d번째 사람 %s: %d원\n", i+1, transName[i], arrMoney[i]);
+		}
+		gotoxy(53,32+i);
+		printf("%d번째 사람 %s: %d원\n", i+1, s->name, arrMoney[i]);
+
+		gotoxy(53, 36);
+		printf("%d번째 사람이 당첨!\n", randomPersonNumber+1);
+
+		getch();
+		break;
+	}
+	/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ알고리즘 끝ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ ㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+
+
+	strcpy(openDB,DBname);  //매개변수로 받은 '학번+이름'에 PromiseList.txt를 붙인 이름을 가진 약속리스트를 읽기모드로 오픈
+	strcat(openDB,"PromiseList.txt");
+	fp = fopen(openDB, "r");
+
+	if ( fp == NULL ) {						//파일이 없을 경우
+		gotoxy(20, 32);printf("현재 생성된 약속리스트가 없습니다.");
+		return ;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//동적할당 해제
 	for(i=0; i<listCount; i++) {											
 		for(j=0; j<4; j++)
 			free(oldPromise[i].promiseFriendsName[j]);
@@ -527,52 +680,129 @@ void moneyShare2(structMember *s){
 	for(i=0; i<4; i++)
 		free(transName[i]);
 	free(transName);
+
 	gotoxy(20,10);printf("메인 메뉴로 돌아가려면 B를 다른 약속을 상세보기하려면 B를 제외한 키를 입력하세요 : ");
 	gotoxy(103,10);scanf("%s",&select);
 	if(!strcmp(select,"b")||!strcmp(select,"B"))
 		return; //return 0;
+	else if(!strcmp(select,"x")||!strcmp(select,"X")){
+		gotoxy(90,45);
+		exit(1);
+	}
 	else
-		return; //return 1;	
-
-
-/*	strcpy(DBname,s->ID);
-	strcat(DBname,s->name);
-
-	screenBorderDraw();
-	listBorderDraw1(26,12);
-	listBorderDraw1(26,25);
-
-	gotoxy(58,10);
-	printf("--나의 약속 리스트--");
-	gotoxy( 6+x, 10+y );
-	printf("   약속명                 약속날짜 \n");*/
-
-
-	/*  gotoxy( 6+x, 12+y );
-	printf("1. 홍대가기                11/28\n");
-	gotoxy( 6+x, 14+y);
-	printf("2. 학교가기                11/12\n");*/
-
-	/*promiseList(DBname);
-
-	gotoxy( 6+x, 20+y );
-	printf("수정하실 약속>> ");
-	gotoxy( 6+x, 23+y );
-	printf(" 약속명          장소          날짜       시간       함께할친구");
-	gotoxy( 6+x, 25+y );
-	printf("학교가기      공학관(405)      11/4        2시         이정훈");
-	gotoxy( 5+x,32+y );
-	printf("수정하시겠습니까?(Y/N)");
-
-	gotoxy( 120, 41 );
-	scanf("%c", &command1 );
-
-	gotoxy( 47, 24);
-	scanf("%d", &command );
-	fflush(stdin);
-	gotoxy( 54, 36);
-	scanf("%c", &command2 );
-	gotoxy( 23, 38 );
-
-	*/
+		return; //return 1
 }
+//
+////구조체,사람수,이름들를 인자로
+//void moneyShare2(structMember *s,int peopleCnt,char **transName){
+//	int beforeDivideMoney; // 나누기 전 돈
+//	int finalMoney; // 최종 돈
+//	int divisionNumber; // 나누는 수
+//	int arrMoney[5]={0, };
+//	int baseMoney;
+//	int restPeople;
+//	int restMoney;
+//	//int promiseNumber;
+//	int menuseletion; //메뉴 선택하는 변수
+//	int randomPersonNumber; //랜덤으로 받은 시드값을 저장하는 변수 1,2,3,4,5 중 하나
+//	char waiting[20] = {'w','a','i','t',' ','p','l','e','a','s','e','.','.'};
+//	int i;
+//
+//	while(1) {
+//		gotoxy(37,40);	printf("나누기 전 돈, 절사할 최소 돈 >>");
+//		gotoxy(37,41);  printf("예시) 16500 1000\n");
+//		gotoxy(69,40);  scanf("%d %d", &beforeDivideMoney , &divisionNumber); fflush(stdin);
+//
+//		system("cls");
+//		screenBorderDraw();
+//		listBorderDraw1(26,12);
+//		gotoxy(58,6);
+//		printf("☆ 돈 나누기 ☆");
+//		gotoxy(45, 15);
+//		printf("1.   공평하게 나누기");
+//		gotoxy(45, 18);
+//		printf("2.   한 명에게 몰아주기\n");
+//		gotoxy(50, 30);
+//		printf("메뉴를 선택해주세요 : ▶");
+//		scanf("%d", &menuseletion); fflush(stdin);
+//
+//		if( menuseletion==1 || menuseletion==2)
+//			break;
+//		else printf("메뉴 선택을 다시 해주세요.");
+//	}
+//
+//	switch(menuseletion){
+//	case 1:
+//		baseMoney = (beforeDivideMoney / (peopleCnt * divisionNumber)) * divisionNumber;
+//		restMoney = beforeDivideMoney - ( baseMoney * peopleCnt );
+//
+//		if (restMoney == 0) {
+//			finalMoney = baseMoney+ (restMoney / (peopleCnt * divisionNumber) * divisionNumber);
+//
+//			for(i=0; i<peopleCnt; i++)
+//				arrMoney[i] = finalMoney;
+//		} 
+//		else {
+//			restPeople = ( restMoney / divisionNumber );
+//			finalMoney = baseMoney + divisionNumber;
+//
+//			if (restMoney % divisionNumber == 0) {
+//				for(i = 0 ;i<restPeople;i++){
+//					arrMoney[i] = finalMoney;
+//				}
+//				for(i=restPeople;i<5;i++){
+//					arrMoney[i] = (baseMoney + (restMoney % divisionNumber));
+//				}
+//			} 
+//			else {
+//				if (restPeople != 0)
+//					for(i=0;i<restPeople;i++)
+//						arrMoney[i] = finalMoney;
+//				if (peopleCnt - restPeople - 1 != 0)
+//					for(i=restPeople;i<peopleCnt-1;i++)
+//						arrMoney[i] = baseMoney;
+//				arrMoney[i] = (baseMoney + (restMoney % divisionNumber));
+//			}
+//		}
+//
+//		/*for(i=0; i<18; i++){
+//			gotoxy(53+i,32);
+//			printf("%c",waiting[i]);
+//			Sleep(350);
+//		}*/
+//
+//
+//		for(i=0; i<peopleCnt; i++){ //for (i=0; i<peopleCnt; i++)
+//			gotoxy(53,32+i);
+//			printf("%d번째 사람 %s: %d원\n", i+1,transName[i],arrMoney[i]);
+//		}
+//
+//		getch(); break;
+//
+//	case 2:
+//		//한 명한테 몰아주기
+//		srand((unsigned)time(NULL)); //랜덤 시드 생성
+//		fflush(stdin); 
+//		randomPersonNumber = ( rand()%peopleCnt );
+//		//scanf("%d", &beforeDivideMoney);  fflush(stdin); 
+//		arrMoney[randomPersonNumber] = beforeDivideMoney;
+//
+//		for(i=0; i<16; i++){
+//			gotoxy(53+i,32);
+//			printf("%c",waiting[i]);
+//			Sleep(100);
+//		}
+//
+//		for(i=0; i<peopleCnt; i++){ //for (i=0; i<peopleCnt; i++)
+//			gotoxy(53,32+i);
+//			printf("%d번째 사람 %s: %d원\n", i+1, transName[i], arrMoney[i]);
+//		}
+//		gotoxy(53, 36);
+//		printf("%d번째 사람이 당첨!\n", randomPersonNumber+1);
+//		getch();
+//		break;
+//	}
+//}
+
+
+
