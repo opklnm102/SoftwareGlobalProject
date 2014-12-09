@@ -75,10 +75,16 @@ void moneyShare2(structMember *s){
 			}
 		}
 	}
-	
+	fclose(fin);
+
+	strcpy(fileName,s->ID);
+	strcat(fileName,s->name);
+	strcat(fileName,"PromiseList.txt"); //1235039이정훈PromiseList.txt
+	fin = fopen(fileName,"r"); // 파일생성
+
 	while(1) // 파일의 끝까지 내용을 fileContents 변수에 저장
 	{
-		fgets(fileContents[contentsCnt], 100, fin);
+		fgets(fileContents[contentsCnt], 100, fin); //fin에서 100만큼까지 최대 읽어서 fileContents[contentsCnt]에 저장
 		contentsCnt++;
 		if (feof(fin)) break;
 	}
@@ -96,22 +102,26 @@ void moneyShare2(structMember *s){
 	//} // 약속 리스트들이 총 6줄이므로 6*i번째의 제목만 출력
 
 	//메뉴를 선택해라
-	printf("약속을 선택하시오.");
+	gotoxy(43,27);
+	printf("약속을 선택하시오 ▶");
+	gotoxy(52,27);
 	scanf("%d", &promiseNumber);
-	printf("%s 약속을 선택하셨습니다.\n", fileContents[(promiseNumber-1)*6+2]);
+	gotoxy(43,28);
+	printf("<%s", fileContents[(promiseNumber-1)*6+2]);
+	gotoxy(55,28);
+	printf(">을 선택하셨습니다.\n");
 	//사람 인원수 구하기
-	
 	peopleCnt=1;
 	if (fileContents[(promiseNumber-1)*6+4][0]==NULL) {
 		printf("입력오류!!!!");
 	}
 	else {
 		for (i=0; ; i++)
-		{
-			if (fileContents[(promiseNumber-1)*6+4][i]==',') {
+		{ //해당하는 사람 숫자를 불러온다.
+			if (fileContents[(promiseNumber-1)*6+6][i]==',') {
 				peopleCnt++;
 			}
-			if (fileContents[(promiseNumber-1)*6+4][i]==NULL) {
+			if (fileContents[(promiseNumber-1)*6+6][i]==NULL) {
 				peopleCnt++;
 				break;
 			}
@@ -175,7 +185,7 @@ void moneyShare2(structMember *s){
 		/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ알고리즘 끝ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ ㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
 
 		for(i=0; i<peopleCnt; i++){ //for (i=0; i<peopleCnt; i++)
-			printf("%d\n", arrMoney[i]);
+			printf("%d번째 사람 : %d원\n", i+1,arrMoney[i]);
 		}
 
 		getch(); break;
