@@ -38,7 +38,7 @@ void mainMenu(structMember *s){
 			while(check){check=promise(s);}
 			break;
 		case '4' :  //돈 나눠주세요
-			moneyShare1(s); break;
+			moneyShare2(s); break;
 		case '5' :  //나갈래요
 			exit(1);
 		}

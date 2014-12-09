@@ -16,8 +16,6 @@ void mystatus(structMember *s){
 	printf("--현재시간표--");
 	timetableDraw(s);  //시간표 출력
 	mystatus_promiseList(DBname);  //약속리스트 출력
-
-	getch();
 }
 
 void promiselistBorderDraw(int x, int y){  
@@ -77,77 +75,83 @@ void mystatus_promiseList(char *DBname){
 		}
 
 		for(i=0; i<listCount; i++) {	
-				if(i==10){
-						gotoxy(8,36); printf("다음리스트를 보려면 >키를 입력하세요.");
-						while(1){
-							gotoxy(46,36);scanf("%s",&controlList);
-							if(!strcmp(controlList,">"))
-								break;
-							gotoxy(46,36);printf("     ");
-						}
-						if(!strcmp(controlList,">")){
-							promiselistBorderDraw(3,7);  //약속리스트 틀
-							gotoxy(x+11,y+1); printf("약속명      ");
-							strcpy(controlList,"\0");
-						}
-						else
-							scanf("%s",&controlList);
-						gotoxy(8,36);printf("                                               ");						
-
+			if(i==10){
+				gotoxy(8,36); printf("다음리스트를 보려면 >키를 입력하세요.");
+				while(1){
+					gotoxy(46,36);scanf("%s",&controlList);
+					if(!strcmp(controlList,"b") || !strcmp(controlList,"B"))  //뒤로가기
+						return;
+					else if(!strcmp(controlList,"x") || !strcmp(controlList,"X")){  //종료
+						gotoxy(90,45);
+						exit(1);
 					}
-					else if(i!=0&&i!=5&&i%10==0&&i+1!=listCount){
-						gotoxy(8,36);printf("이전리스트 <, 다음리스트 >");
-						while(1){
-							gotoxy(46,36);scanf("%s",&controlList);
-							if(!strcmp(controlList,"<")||!strcmp(controlList,">"))
-								break;
-							
-							gotoxy(46,36);printf("     ");
-						}
-						if(!strcmp(controlList,">")){
-							promiselistBorderDraw(3,7);  //약속리스트 틀
-							gotoxy(x+11,y+1); printf("약속명      ");
-							strcpy(controlList,"\0");
-						}
-						else if(!strcmp(controlList,"<")){
-							promiselistBorderDraw(3,7);  //약속리스트 틀
-						gotoxy(x+11,y+1); printf("약속명      ");
-							i=i-20;
-							numbering=numbering-10;
-							strcpy(controlList,"\0");
-						}
-						else
-							scanf("%s",&controlList);
-						gotoxy(8,36);printf("                                               ");
-					}
-					
-					gotoxy(x+5,y+3+2*(i%10));printf("%2d     %-20s ",numbering,Promise[i].promiseName);
-					numbering++;
-					if(i+1==listCount&&listCount>5){
-						gotoxy(8,36);printf("처음으로 돌아가려면 <키를 입력하세요.");
-						while(1){
-							gotoxy(46,36);scanf("%s",&controlList);
-							if(!strcmp(controlList,"<"))
-								break;
-							gotoxy(46,36);printf("     ");
-						}						
-						if(!strcmp(controlList,"<")){
-							promiselistBorderDraw(3,7);  //약속리스트 틀(35,11);	
-							gotoxy(x+11,y+1); printf("약속명      ");
-							i=-1;
-							numbering=1;
-							strcpy(controlList,"\0");
-						}
-						
-						gotoxy(8,36);printf("                                               ");
-					}
+					if(!strcmp(controlList,">"))
+						break;
+					gotoxy(46,36);printf("     ");
 				}
+				if(!strcmp(controlList,">")){
+					promiselistBorderDraw(3,7);  //약속리스트 틀
+					gotoxy(x+11,y+1); printf("약속명      ");
+					strcpy(controlList,"\0");
+				}
+				gotoxy(8,36); printf("                                               ");	
+			}
+			else if(i!=0&&i!=5&&i%10==0&&i+1!=listCount){
+				gotoxy(8,36);printf("이전리스트 <, 다음리스트 >");
+				while(1){
+					gotoxy(46,36);scanf("%s",&controlList);
+					if(!strcmp(controlList,"b") || !strcmp(controlList,"B"))  //뒤로가기
+						return;
+					else if(!strcmp(controlList,"x") || !strcmp(controlList,"X")){  //종료
+						gotoxy(90,45);
+						exit(1);
+					}
+					if(!strcmp(controlList,"<")||!strcmp(controlList,">"))
+						break;
 
+					gotoxy(46,36);printf("     ");
+				}
+				if(!strcmp(controlList,">")){
+					promiselistBorderDraw(3,7);  //약속리스트 틀
+					gotoxy(x+11,y+1); printf("약속명      ");
+					strcpy(controlList,"\0");
+				}
+				else if(!strcmp(controlList,"<")){
+					promiselistBorderDraw(3,7);  //약속리스트 틀
+					gotoxy(x+11,y+1); printf("약속명      ");
+					i=i-20;
+					numbering=numbering-10;
+					strcpy(controlList,"\0");
+				}				
+				gotoxy(8,36);printf("                                               ");
+			}
 
-
-
-
-
+			gotoxy(x+5,y+3+2*(i%10));printf("%2d     %-20s ",numbering,Promise[i].promiseName);
+			numbering++;
+			if(i+1==listCount&&listCount>5){
+				gotoxy(8,36);printf("처음으로 돌아가려면 <키를 입력하세요.");
+				while(1){
+					gotoxy(46,36);scanf("%s",&controlList);
+					if(!strcmp(controlList,"b") || !strcmp(controlList,"B"))  //뒤로가기
+						return;
+					else if(!strcmp(controlList,"x") || !strcmp(controlList,"X")){  //종료
+						gotoxy(90,45);
+						exit(1);
+					}
+					if(!strcmp(controlList,"<"))
+						break;
+					gotoxy(46,36);printf("     ");
+				}						
+				if(!strcmp(controlList,"<")){
+					promiselistBorderDraw(3,7);  //약속리스트 틀(35,11);	
+					gotoxy(x+11,y+1); printf("약속명      ");
+					i=-1;
+					numbering=1;
+					strcpy(controlList,"\0");
+				}						
+				gotoxy(8,36);printf("                                               ");
+			}
+		}
 		fclose(fp);
 	}
 }
