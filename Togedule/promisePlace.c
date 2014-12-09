@@ -36,8 +36,8 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 		placeSelect=atoi(placeSelectChar);
 		if(1 <= placeSelect && placeSelect <= 4) break;
 		gotoxy(x-15,y+22);printf("리스트에 있는 것중에 고르시오");
-		getch();
-		system("cls");
+		gotoxy(x+1,y+21);printf("        ");
+
 	}
 	if(!strcmp(placeSelectChar,"b")||!strcmp(placeSelectChar,"B")){
 		fclose(fp1);

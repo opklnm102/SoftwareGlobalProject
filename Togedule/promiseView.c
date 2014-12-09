@@ -24,7 +24,7 @@ int ViewAllPromise(char *DBname,char *logID) {
 	int x=35,y=11;
 	char controlList[3]={0};
 	screenBorderDraw();	
-	gotoxy(56,6); printf("☆ 약속삭제 ☆");
+	gotoxy(54,6); printf("☆ 약속 상세보기 ☆");
 	gotoxy(54,8); printf("- 나의 약속리스트 -");
 	listBorderDraw2(x,y);
 	strcpy(openDB,DBname);
