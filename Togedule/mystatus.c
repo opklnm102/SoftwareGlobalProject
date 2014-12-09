@@ -16,6 +16,8 @@ void mystatus(structMember *s){
 	printf("--현재시간표--");
 	timetableDraw(s);  //시간표 출력
 	mystatus_promiseList(DBname);  //약속리스트 출력
+
+	getch();
 }
 
 void promiselistBorderDraw(int x, int y){  

@@ -26,7 +26,7 @@ typedef struct structPromise{
 	char Promisedate[10];  //약속날짜
 	char promiseFreindsCount[2];//추가
 	char **promiseFriendsName;  //인원수의 입력을 받아 동적할당 {“김동희”, “이설희”}
-	//비용 포인터 만들어야함
+	char cost[10];//비용 포인터 만들어야함
 }structPromise;
 
 //과목 구조체

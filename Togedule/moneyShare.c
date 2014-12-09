@@ -212,15 +212,14 @@
 //	}
 //}
 
-void moneyShare1(structMember *s){
-	char DBname[20];
+void moneyShare1(structMember *s){	
 	FILE *fp;
-	char openDB[30];
+	char fileName[30];
 	char textFile[]=".txt";
 	char check[41];
 	struct structPromise *oldPromise;
 	int listCount=0;
-	int i,j,k;
+	int i,j,k,l=0;
 	int numbering=1;
 	char **friendsName;
 	char **cost;
@@ -244,23 +243,23 @@ void moneyShare1(structMember *s){
 	int baseMoney;
 	int restPeople;
 	int restMoney;
-	int promiseNumber;
 	int menuseletion; //메뉴 선택하는 변수
 	int randomPersonNumber; //랜덤으로 받은 시드값을 저장하는 변수 1,2,3,4,5 중 하나
 	char waiting[20] = {'w','a','i','t',' ','p','l','e','a','s','e','.','.'};
-
-
-	strcpy(DBname,s->ID);
-	strcat(DBname,s->name);
-
-	screenBorderDraw();	
+	char buffer[70];
+	int promiselistCount;
+	int friendCount;
+	structPromise *pl;
+	
+	screenBorderDraw();  //전체틀 그리기	
 	gotoxy(56,6); printf("☆ 비용 ☆");
 	gotoxy(54,8); printf("- 나의 약속리스트 -");
-	listBorderDraw2(x,y);
-	strcpy(openDB,DBname);
-	strcat(openDB,"PromiseList");
-	strcat(openDB,textFile);
-	fp = fopen(openDB, "r");
+	listBorderDraw2(x,y);  //리스트메뉴틀 그리기
+
+	//열기할 파일 이름 만들기
+	getUserfileName(fileName,s,"PromiseList");
+
+	fp = fopen(fileName, "r");  //내 약속리스트 파일 열기
 	if ( fp == NULL ) {
 		gotoxy(x+12,y+1); printf("현재 생성된 약속리스트가 없습니다.");
 		Sleep(3000);
@@ -283,7 +282,6 @@ void moneyShare1(structMember *s){
 						strcpy(&oldPromise[i].promiseFriendsName[j][k],"\0");
 				}
 			}
-
 
 			friendsName=(char**)malloc(sizeof(char*)*listCount);									//일단 학번이 한줄단위로 줄줄이 써있으니 그것을 읽어오는 문자열을 하나 동적할당한다.
 			for(i=0; i<listCount; i++) {
@@ -491,9 +489,9 @@ void moneyShare1(structMember *s){
 			strcpy(&transName[i][j],"\0");
 	}
 
-	strcpy(openDB,"회원목록.txt");						//학번을 이름으로 바꿔준다. 회원목록 txt를 5번동안 열고 닫고 하며 반복... 회원 숫자를 계산하기 귀찮으므로 그냥 5번 반복
+	strcpy(fileName,"회원목록.txt");						//학번을 이름으로 바꿔준다. 회원목록 txt를 5번동안 열고 닫고 하며 반복... 회원 숫자를 계산하기 귀찮으므로 그냥 5번 반복
 	for(i=0;i<4;i++){
-		fp = fopen(openDB, "r");
+		fp = fopen(fileName, "r");
 		while (!feof(fp)) {		
 			fscanf(fp, "%s %s", &ID, &listName);										//학번과 이름을 한줄 읽는다.
 			if(!strcmp(ID,oldPromise[listnumber].promiseFriendsName[i])){				//검색할 학번과 같은 학번이면
@@ -508,10 +506,10 @@ void moneyShare1(structMember *s){
 	for(i=0;i<4;i++){
 		if(!strcmp(transName[i],"\0"))
 			break;
-		strcpy(openDB,oldPromise[listnumber].promiseFriendsName[i]);
-		strcat(openDB,transName[i]);
+		strcpy(fileName,oldPromise[listnumber].promiseFriendsName[i]);
+		strcat(fileName,transName[i]);
 		j++;
-		k=recordCombineTimetable(CombineTimetable,openDB);
+		k=recordCombineTimetable(CombineTimetable,fileName);
 
 	}
 	itoa(j,oldPromise[listnumber].promiseFreindsCount,10);
@@ -557,7 +555,6 @@ void moneyShare1(structMember *s){
 
 	switch(menuseletion){
 	case 1:
-
 		//scanf("%d %d", &beforeDivideMoney , &divisionNumber); fflush(stdin);
 
 		baseMoney = (beforeDivideMoney / (peopleCnt * divisionNumber)) * divisionNumber;
@@ -641,22 +638,92 @@ void moneyShare1(structMember *s){
 	}
 	/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ알고리즘 끝ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ ㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
 
-
-	strcpy(openDB,DBname);  //매개변수로 받은 '학번+이름'에 PromiseList.txt를 붙인 이름을 가진 약속리스트를 읽기모드로 오픈
-	strcat(openDB,"PromiseList.txt");
-	fp = fopen(openDB, "r");
-
+	
+	//열기할 파일 이름 만들기
+	getUserfileName(fileName,s,"PromiseList");
+	fp = fopen(fileName, "r");
 	if ( fp == NULL ) {						//파일이 없을 경우
 		gotoxy(20, 32);printf("현재 생성된 약속리스트가 없습니다.");
 		return ;
 	}
+	while(!feof(fp)){
+		fscanf(fp,"%s",buffer);
+		if(!strcmp(buffer,"약속리스트")){
+			fscanf(fp,"%d",&promiselistCount);
+			pl=(structPromise *)malloc(sizeof(structPromise)*promiselistCount);
+			for(i=0; i<promiselistCount; i++){// 리스트의 수만큼 파일안에 있는 정보 읽어서 저장
+				for(j=0; j<70; j++)
+					buffer[j]='\0';
 
+				fscanf(fp,"%s",pl[i].promiseName);  //약속명
+				fseek(fp,2,SEEK_CUR);
+				fgets(pl[i].promisePlace,40,fp);  //장소
+				fscanf(fp,"%s",pl[i].promiseTime);  //시간
+				fscanf(fp,"%s",pl[i].Promisedate);  //날짜
+				fscanf(fp,"%s",buffer);  //친구들
+				friendCount=1;
+				k=0;
+				for(j=0; buffer[j] != '\0'; j++){
+					if(buffer[j] == ',')
+						friendCount++;
+				}
+				 //친구들 학번 저장할곳 할당
+				pl[i].promiseFriendsName=(char **)malloc(sizeof(char *)*friendCount); 
+				for(j=0; j<friendCount; j++)
+					pl[i].promiseFriendsName[j]=(char *)malloc(sizeof(char)*9);
 
+				itoa(friendCount,pl[i].promiseFreindsCount,10);
+				for(j=0; j<friendCount; j++){
+					for(l=0; l<9; l++)
+						pl[i].promiseFriendsName[j][l]='\0';
+				}
 
+				for(j=0,l=0; buffer[j] != '\0'; j++){
+					if(buffer[j] == ','){
+						pl[i].promiseFriendsName[k][l]='\0';
+						k++;
+						l=0;
+					}
+					else
+						pl[i].promiseFriendsName[k][l++]=buffer[j];					
+				}
+				pl[i].promiseFriendsName[k][l]='\0';
 
+				//for(j=0; j<friendCount; j++)  //학번 확인을 위한 임시 코드
+				//	printf("%s\n",pl[i].promiseFriendsName[j]);
+				//if(i != promiselistCount-1)
+					fseek(fp,2,SEEK_CUR);
+				fgets(pl[i].cost,10,fp);				
+			}
+		}
+	}
+	fclose(fp);
 
+	fp=fopen(fileName,"w");
+	fprintf(fp,"%s\n","약속리스트");
+	fprintf(fp,"%d\n",promiselistCount);
+	for(i=0; i<promiselistCount; i++){
+		fprintf(fp,"%s\n",pl[i].promiseName);
+		fprintf(fp,"%s",pl[i].promisePlace);
+		fprintf(fp,"%s\n",pl[i].promiseTime);
+		fprintf(fp,"%s\n",pl[i].Promisedate);
 
-
+		friendCount=atoi(pl[i].promiseFreindsCount);
+		for(j=0; j<friendCount; j++){
+			fprintf(fp,"%s",pl[i].promiseFriendsName[j]);
+			if(j != friendCount-1)
+				fprintf(fp,"%s",",");
+			else if(j == friendCount-1)
+				fprintf(fp,"%s","\n");
+		}
+		if(i == listnumber)
+			fprintf(fp,"%d\n",arrMoney[friendCount]);  //수정 내돈은 arrMoney마지막에 있다.
+		else if(pl[i].cost[0] == 10 || i == promiselistCount-1)
+			fprintf(fp,"%s",pl[i].cost);
+		else
+			fprintf(fp,"%s",pl[i].cost);
+	}
+	fclose(fp);
 
 
 
@@ -682,16 +749,21 @@ void moneyShare1(structMember *s){
 	free(transName);
 
 	gotoxy(20,10);printf("메인 메뉴로 돌아가려면 B를 다른 약속을 상세보기하려면 B를 제외한 키를 입력하세요 : ");
-	gotoxy(103,10);scanf("%s",&select);
-	if(!strcmp(select,"b")||!strcmp(select,"B"))
+	gotoxy(103,10);scanf("%s",&select); fflush(stdin);
+	if(!strcmp(select,"b")||!strcmp(select,"B")){  //뒤로가기
 		return; //return 0;
-	else if(!strcmp(select,"x")||!strcmp(select,"X")){
+	}
+	else if(!strcmp(select,"x")||!strcmp(select,"X")){  //종료
 		gotoxy(90,45);
 		exit(1);
 	}
 	else
 		return; //return 1
 }
+
+
+
+
 //
 ////구조체,사람수,이름들를 인자로
 //void moneyShare2(structMember *s,int peopleCnt,char **transName){
