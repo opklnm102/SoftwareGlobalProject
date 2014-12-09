@@ -1,7 +1,6 @@
 #include"structHeader.h"
 
-int main()
-{
+int main() {
 	char menuSelect;
 	structMember s;  //다른 메뉴로 회원정보를 넘겨준다.
 	//system("color 04");
