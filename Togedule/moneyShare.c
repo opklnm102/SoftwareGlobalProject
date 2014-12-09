@@ -534,8 +534,50 @@ void moneyShare1(structMember *s){
 	while(1) {
 		peopleCnt = j+1; //j 사람 수를 peopleCnt에 저장
 		gotoxy(37,40);	printf("나누기 전 돈, 절사할 최소 돈 >>");
-		gotoxy(37,41);  printf("예시) 16500 1000\n");
-		gotoxy(69,40);  scanf("%d %d", &beforeDivideMoney , &divisionNumber); fflush(stdin);
+		// printf("예시) 16500 1000\n");
+		//scanf("%d %d", &beforeDivideMoney , &divisionNumber); fflush(stdin);
+
+
+		gotoxy(37,41);
+		printf("예시) 16500 1000\n");
+		gotoxy(69,40); 
+
+		//하나라도 문자가 들어가는 경우. 음수는 통과함
+			do { 
+
+				fflush(stdin);
+				gotoxy(37,42);
+				printf("절사할 돈을 작게하거나 양수를 입력하세요.");
+				gotoxy(69,40);
+			} 
+			while(scanf("%d %d", &beforeDivideMoney, &divisionNumber)!=2 || (beforeDivideMoney < 0) || (divisionNumber < 0) || (beforeDivideMoney < divisionNumber) || beforeDivideMoney == divisionNumber);
+
+		////하나라도 음수일 경우 절사할 돈이 더 클 경우
+		//while ( (beforeDivideMoney < 0) || (divisionNumber < 0) || (beforeDivideMoney < divisionNumber) ){
+		//	
+		//	if( beforeDivideMoney < 0 || divisionNumber < 0 ) {
+		//		do {
+		//			fflush(stdin);
+		//			gotoxy(37,42);
+		//			printf("양수를 입력해주세요. ");
+		//			gotoxy(69,40);
+		//			scanf("%d %d", &beforeDivideMoney, &divisionNumber);
+		//		}
+		//		while ( beforeDivideMoney < 0 || divisionNumber < 0 );
+		//	}
+
+		//	if( beforeDivideMoney < divisionNumber ) {
+		//		do {
+		//			fflush(stdin);
+		//			gotoxy(37,42);
+		//			printf("나누기 전 돈이 절사할 돈보다 커야합니다.");
+		//			gotoxy(69,40);
+		//			scanf("%d %d", &beforeDivideMoney, &divisionNumber);
+		//		}
+		//		while(beforeDivideMoney < divisionNumber);
+		//	}
+		//}
+
 
 		system("cls");
 		screenBorderDraw();
@@ -550,9 +592,17 @@ void moneyShare1(structMember *s){
 		printf("메뉴를 선택해주세요 : ▶");
 		scanf("%d", &menuseletion); fflush(stdin);
 
-		if( menuseletion==1 || menuseletion==2)
+		while(1){
+			if( menuseletion==1 || menuseletion==2 )
+				break;
+			else {
+				gotoxy(50, 30);
+				printf("메뉴 선택을 다시 해주세요.");
+				scanf("%d", &menuseletion); fflush(stdin);
+			}
 			break;
-		else printf("메뉴 선택을 다시 해주세요.");
+		}
+		break;
 	}
 
 	switch(menuseletion){
