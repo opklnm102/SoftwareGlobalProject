@@ -12,7 +12,7 @@ void pwFind(){
 	char fileName[20];  //열기할 파일이름
 	int con=1;  
 	int x=34, y=3;  //좌표
-	int backspace=0,i;
+	int backspace=0,i,j;
 	char ch;
 
 	while(con){
@@ -25,19 +25,98 @@ void pwFind(){
 		gotoxy(20+x, 18+y); printf("고유코드  : ");
 		gotoxy(20+x, 21+y); printf("새로운 PW : ");
 
-		gotoxy(34+x,15+y); scanf("%s",id); fflush(stdin);
-		gotoxy(34+x,18+y); scanf("%s",backupPassword); fflush(stdin);
-		gotoxy(34+x,21+y); 
-		for(i=0; i<14; i++){  //비밀번호 입력시 ***로 출력부분
-			ch=getch();		
+		while(1){
+			for(j=0; j<8; j++)  //초기화
+				s.ID[j]='\0';
+			gotoxy(34+x,15+y); scanf("%s",s.ID); fflush(stdin);
+			if(!strcmp(s.ID,"b") || !strcmp(s.ID,"B"))  //뒤로가기
+				return;
+			else if(!strcmp(s.ID,"x") || !strcmp(s.ID,"X")){  //종료
+				gotoxy(90,45);
+				exit(1);
+			}
+			if(stringLengthcheck(s.ID,7)){  //문자열의 길이 체크
+				gotoxy(20+x,25+y);  printf("학번을 7자리내로 입력하세요.");
+			}  
+			else if(numberErrorcheck(s.ID)){  //숫자이외의 값 체크
+				gotoxy(20+x,25+y);  printf("                             ");  //오류메시지 라인클리어
+				gotoxy(22+x,25+y);  printf("학번을 숫자만 입력하세요.   ");			
+			}  			
+			else{  //오류 없을시		  
+				gotoxy(20+x,25+y);  printf("                             ");  //오류메시지 라인클리어
+				break;  
+			}
+			gotoxy(34+x,15+y);  printf("                       ");  //학번입력라인 클리어			
+		}		
+
+		//고유코드입력
+		while(1){
+			for(j=0; j<14; j++)  //초기화
+				s.backupPassword[j]='\0';
+			gotoxy(34+x,18+y); scanf("%s",s.backupPassword); fflush(stdin);  //고유코드 입력
+			if(!strcmp(s.backupPassword,"b") || !strcmp(s.backupPassword,"B"))  //뒤로가기
+				return;
+			else if(!strcmp(s.backupPassword,"x") || !strcmp(s.backupPassword,"X")){  //종료
+				gotoxy(90,45);
+				exit(1);
+			}
+			if(strlen(s.backupPassword)<4 || stringLengthcheck(s.backupPassword,13)){  //문자열의 길이 체크
+				gotoxy(18+x,25+y);  printf("고유코드는 4~13자리로 입력하세요.");				
+			}  
+			else if(numberErrorcheck(s.backupPassword)){  //숫자이외의 값 체크
+				gotoxy(18+x,25+y); printf("                                  ");  //오류메시지 라인클리어
+				gotoxy(22+x,25+y);  printf("고유코드는 숫자만 입력하세요.");
+			}  			
+			else{  //오류 없을시		  
+				gotoxy(22+x,25+y); printf("                                  ");  //오류메시지 라인클리어
+				break;  
+			}		
+			gotoxy(34+x,18+y);  printf("                    ");  //고유코드입력라인 클리어			
+		}
+
+		for(j=0; j<20; j++)  //초기화
+			s.password[j]='\0';
+		gotoxy(34+x,21+y);  //비밀번호입력
+		for(i=0; i<20; i++){  //비밀번호 입력시 ***로 출력부분
+			ch=getch();	
+			if(ch == 'x' || ch == 'X'){  //종료
+
+				gotoxy(90,45);
+				getch();
+				exit(1);
+			}
+			else if(ch == 'B' || ch == 'b'){  //뒤로가기
+				getch();
+				return;
+			}
 			if(ch == 13){  //enter키(비밀번호입력끝부분) 확인
-				newPassword[i] = '\0';
-				printf("\n"); break;
+				if(i<4 || i>13){  //길이 오류
+					i=-1;
+					for(j=0; j<20; j++)  //초기화
+						s.password[j]='\0';
+					gotoxy(18+x,25+y); printf("패스워드는 4~13자리로 입력하세요.");
+					gotoxy(34+x,21+y); printf("                    ");  //패스워드입력 라인클리어
+					gotoxy(34+x,21+y);
+				}
+				else if(numberErrorcheck(s.password)){  //숫자이외의 값이 들어오는 오류
+					i=-1;
+					for(j=0; j<20; j++)  //초기화
+						s.password[j]='\0';
+					gotoxy(18+x,25+y);  printf("                                 ");  //오류메시지 라인클리어
+					gotoxy(20+x,25+y); printf("패스워드는 숫자만 입력하세요.    ");
+					gotoxy(34+x,21+y); printf("                       ");  //패스워드입력 라인클리어 
+					gotoxy(34+x,21+y);
+				}
+				else{  //오류없을시
+					s.password[i] = '\0';
+					gotoxy(18+x,25+y);  printf("                                 ");  //오류메시지 라인클리어 
+					printf("\n"); break;
+				}
 			}
 			else if(ch == 8){  //키보드의 backspace동작
 				if(i<1)
-					backspace=0;
-				if(backspace){
+					backspace=0;  //backspace동작 안함
+				if(backspace){  //backspace동작 함  
 					i -= 2;
 					printf("\b \b");  
 					fflush(stdin);				
@@ -47,7 +126,7 @@ void pwFind(){
 			}
 			else{
 				backspace=1;  //backspace인식 가능
-				newPassword[i] = ch;
+				s.password[i] = ch;
 				printf("*");
 				fflush(stdin);
 			}

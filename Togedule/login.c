@@ -19,14 +19,24 @@ void login(structMember *s){
 
 	while(1){
 		gotoxy(66, 21); scanf("%s",id); fflush(stdin);  //학번입력
-		if(stringLengthcheck(id,7)){}  //문자열의 길이 체크
-		else if(numberErrorcheck(id)){}  //숫자이외의 값 체크			
-		else{  //오류 없을시		    
-			gotoxy(60, 27); printf("              "); //오류메시지 라인클리어
-			break;  
+		if(!strcmp(id,"b") || !strcmp(id,"B"))  //뒤로가기
+			return;
+		else if(!strcmp(id,"x") || !strcmp(id,"X")){  //종료
+			gotoxy(90,45);
+			exit(1);
 		}
-		gotoxy(60, 27); printf("학번 입력 오류");
-		gotoxy(66, 21); printf("              ");  //학번입력라인 클리어
+		if(stringLengthcheck(id,7)){  //문자열의 길이 체크
+			gotoxy(54, 27); printf("학번을 7자리내로 입력하세요.");		
+		}  
+		else if(numberErrorcheck(id)){   //숫자이외의 값 체크	
+			gotoxy(54, 27); printf("                           "); //오류메시지 라인클리어
+			gotoxy(56, 27); printf("학번을 숫자만 입력하세요.  ");
+		} 		
+		else{  //오류 없을시		    
+			gotoxy(54, 27); printf("                           "); //오류메시지 라인클리어
+			break;  
+		}		
+		gotoxy(66, 21); printf("                         ");  //학번입력라인 클리어
 		for(j=0; j<8; j++)
 			id[j]='\0';
 	}
@@ -34,26 +44,36 @@ void login(structMember *s){
 	gotoxy(66, 23);  //비밀번호입력
 	for(i=0; i<20; i++){  //비밀번호 입력시 ***로 출력부분
 		ch=getch();		
+		if(ch == 'x' || ch == 'X'){  //종료
+			gotoxy(90,45);
+			getch();
+			exit(1);
+		}
+		else if(ch == 'B' || ch == 'b'){  //뒤로가기
+			getch();
+			return;
+		}
 		if(ch == 13){  //enter키(비밀번호입력끝부분) 확인
 			if(i<4 || i>13){  //길이 오류
 				i=-1;
 				for(j=0; j<20; j++)
 					password[j]='\0';
-				gotoxy(60, 27); printf("패스워드 입력 오류");
-				gotoxy(66, 23); printf("                  ");  //pw입력라인 클리어 
+				gotoxy(52, 27); printf("패스워드는 4~13자리로 입력하세요.");
+				gotoxy(66, 23); printf("                       ");   //pw입력라인 클리어 
 				gotoxy(66, 23);
 			}
 			else if(numberErrorcheck(password)){  //숫자이외의 값이 들어오는 오류
 				i=-1;
 				for(j=0; j<20; j++)
 					password[j]='\0';
-				gotoxy(60, 27); printf("패스워드 입력 오류");
-				gotoxy(66, 23); printf("                  ");  //pw입력라인 클리어 
+				gotoxy(52, 27); printf("                                ");   //오류메시지 라인클리어
+				gotoxy(54, 27); printf("패스워드는 숫자만 입력하세요.  ");
+				gotoxy(66, 23); printf("                       ");   //pw입력라인 클리어 
 				gotoxy(66, 23);
 			}
 			else{  //오류 없을시
 				password[i] = '\0';
-				gotoxy(60, 27); printf("                ");  //오류메시지 라인클리어
+				gotoxy(52, 27); printf("                                 ");   //오류메시지 라인클리어
 				printf("\n"); break;
 			}
 		}
@@ -114,29 +134,39 @@ void login(structMember *s){
 			gotoxy(54, 23); printf("P       W : ");
 			gotoxy(66, 23); printf("                         ");  //전시도의 *를 지우기위해
 
-			gotoxy(66, 23);  //비밀번호 입력 		
+			gotoxy(66, 23);  //비밀번호입력
 			for(i=0; i<20; i++){  //비밀번호 입력시 ***로 출력부분
-				ch=getch();		
+				ch=getch();	
+				if(ch == 'x' || ch == 'X'){  //종료
+					gotoxy(90,45);
+					getch();
+					exit(1);
+				}
+				else if(ch == 'B' || ch == 'b'){  //뒤로가기
+					getch();
+					return;
+				}
 				if(ch == 13){  //enter키(비밀번호입력끝부분) 확인
 					if(i<4 || i>13){  //길이 오류
 						i=-1;
 						for(j=0; j<20; j++)
 							password[j]='\0';
-						gotoxy(60, 27); printf("패스워드 입력 오류");
-						gotoxy(66, 23); printf("                "); 
+						gotoxy(52, 27); printf("패스워드는 4~13자리로 입력하세요.");
+						gotoxy(66, 23); printf("                       ");   //pw입력라인 클리어 
 						gotoxy(66, 23);
 					}
-					else if(numberErrorcheck(password)){
+					else if(numberErrorcheck(password)){  //숫자이외의 값이 들어오는 오류
 						i=-1;
 						for(j=0; j<20; j++)
 							password[j]='\0';
-						gotoxy(60, 27); printf("패스워드 입력 오류");
-						gotoxy(66, 23); printf("                  "); 
+						gotoxy(52, 27); printf("                                ");   //오류메시지 라인클리어
+						gotoxy(54, 27); printf("패스워드는 숫자만 입력하세요.   ");
+						gotoxy(66, 23);printf("                       ");   //pw입력라인 클리어 
 						gotoxy(66, 23);
 					}
-					else{
+					else{  //오류 없을시
 						password[i] = '\0';
-						gotoxy(60, 27); printf("                ");
+						gotoxy(52, 27); printf("                                 ");   //오류메시지 라인클리어
 						printf("\n"); break;
 					}
 				}
@@ -157,7 +187,7 @@ void login(structMember *s){
 					printf("*");
 					fflush(stdin);
 				}
-			}
+			}				
 		}
 	}
 
