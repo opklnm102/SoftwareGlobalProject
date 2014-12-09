@@ -88,5 +88,46 @@ void listBorderDraw3(int x, int y){
 }
 //글자색,글자배경색 변경
 void setcolor(int color, int bgcolor){
- SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), ((bgcolor&0xf)<<4) | (color&0xf));
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), ((bgcolor&0xf)<<4) | (color&0xf));
 } 
+
+//파일이름만들기(열기할 파일이름,회원구조체,파일타입(timetable,promiseList등)
+void getUserfileName(char *fileName,structMember *s,char *filetype){
+	strcpy(fileName,s->ID);
+	strcat(fileName,s->name);
+	if(strcmp(filetype,"\0") != 0)
+		strcat(fileName,filetype);
+	strcat(fileName,".txt");
+
+}
+
+//문자열에서 숫자이외의 값이 들어오는것 체크
+int numberErrorcheck(char *s){
+	int len=strlen(s);
+	int i;
+
+	for(i=0; i<len; i++){
+		if(s[i]<48 || 57<s[i])  //숫자범위 밖이면 1리턴
+			return 1;
+	}
+	return 0;  //아니면 0리턴
+}
+
+//문자열 길이 체크(문자열이랑 길이를 인자)
+int stringLengthcheck(char *s,int n){
+	if(strlen(s)>n)
+		return 1;  //길이 넘치면 1리턴
+	return 0;  //아니면 0리턴
+}
+
+//한글이외의 값 체크
+int hanErrorcheck(char *s){
+	int len=strlen(s);
+	int i;
+
+	for(i=0; i<len; i++){
+		if(0<s[i] && s[i]<127)  //숫자범위 밖이면 1리턴
+			return 1;
+	}
+	return 0;  //아니면 0리턴
+}

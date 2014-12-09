@@ -5,7 +5,7 @@ void moneyShare2(structMember *s){
 	FILE *fin;
 	int i;
 	char fileName[30];
-	char fileContents[100][100]={0};
+	char fileContents[600][100]={0};
 	int beforeDivideMoney; // 나누기 전 돈
 	int finalMoney; // 최종 돈
 	int peopleCnt; // 사람 숫자
@@ -23,7 +23,7 @@ void moneyShare2(structMember *s){
 	char promiseName[41];	//약속 이름을 저장
 	int listCount=0;		//리스트 개수
 	char promiseDate[10];	//약속 날짜를 저장
-	int x=20, y=17;	
+	int x=35, y=6;	
 	/*--------------------------------변수 끝났다---------------------------------*/
 	
 	/*
@@ -47,11 +47,11 @@ void moneyShare2(structMember *s){
 	}
 	
 	while (!feof(fin)) {			//약속리스트 열어서 약속의 이름과 날짜를 읽어서 출력, 최대 10개까지 출력
-		gotoxy(16,13); printf("▷ 나의 약속리스트\n");
+		gotoxy(55,4); printf("▷ 나의 약속리스트\n");
 		fscanf(fin, "%s", &buffer);
 		if(!strcmp(buffer,"약속리스트")){
 			fscanf(fin,"%d", &listCount);
-			gotoxy(20, 32); printf("현재 잡혀있는 약속 개수 %d",listCount);
+			gotoxy(62, 25); printf("현재 잡혀있는 약속 개수 %d",listCount);
 			for(i=0; i<listCount; i++){
 				fscanf(fin,"%s", promiseName);
 				fgets(buffer,41,fin);
@@ -63,22 +63,28 @@ void moneyShare2(structMember *s){
 				fgets(buffer,41,fin);
 				gotoxy(x,y);printf("○ %s / %s",promiseName,promiseDate);
 				y=y+3;
-				if(x==20&&y==32){		//한쪽에 5개를 찍은뒤 옆줄로 이동해서 다시 5개 찍음(최대 10개)
-					x=44;
-					y=17;
+				if(x==35&&y==21){		//한쪽에 5개를 찍은뒤 옆줄로 이동해서 다시 5개 찍음(최대 10개)
+					x=75;
+					y=6;
 				}
-				if(x==44&&y==32){		//10개를 꽉채워 찍은 경우 알림문구 표시
-					gotoxy(17, 35);printf("나의 약속리스트는 10개까지만 표시됩니다.");
-					gotoxy(17, 36);printf("상세한 약속을 보려면 약속보기를 선택하세요.");
+				if(x==75&&y==21){		//10개를 꽉채워 찍은 경우 알림문구 표시
+					gotoxy(53, 22);printf("나의 약속리스트는 10개까지만 표시됩니다.");
+					gotoxy(55, 23);printf("상세한 약속은 약속 메뉴로 들어가세요.");
 					break;
 				}
 			}
 		}
 	}
-	
+	fclose(fin);
+
+	strcpy(fileName,s->ID);
+	strcat(fileName,s->name);
+	strcat(fileName,"PromiseList.txt"); //1235039이정훈PromiseList.txt
+	fin = fopen(fileName,"r"); // 파일생성
+
 	while(1) // 파일의 끝까지 내용을 fileContents 변수에 저장
 	{
-		fgets(fileContents[contentsCnt], 100, fin);
+		fgets(fileContents[contentsCnt], 100, fin); //fin에서 100만큼까지 최대 읽어서 fileContents[contentsCnt]에 저장
 		contentsCnt++;
 		if (feof(fin)) break;
 	}
@@ -96,22 +102,26 @@ void moneyShare2(structMember *s){
 	//} // 약속 리스트들이 총 6줄이므로 6*i번째의 제목만 출력
 
 	//메뉴를 선택해라
-	printf("약속을 선택하시오.");
+	gotoxy(43,27);
+	printf("약속을 선택하시오 ▶");
+	gotoxy(52,27);
 	scanf("%d", &promiseNumber);
-	printf("%s 약속을 선택하셨습니다.\n", fileContents[(promiseNumber-1)*6+2]);
+	gotoxy(43,28);
+	printf("<%s", fileContents[(promiseNumber-1)*6+2]);
+	gotoxy(55,28);
+	printf(">을 선택하셨습니다.\n");
 	//사람 인원수 구하기
-	
 	peopleCnt=1;
 	if (fileContents[(promiseNumber-1)*6+4][0]==NULL) {
 		printf("입력오류!!!!");
 	}
 	else {
 		for (i=0; ; i++)
-		{
-			if (fileContents[(promiseNumber-1)*6+4][i]==',') {
+		{ //해당하는 사람 숫자를 불러온다.
+			if (fileContents[(promiseNumber-1)*6+6][i]==',') {
 				peopleCnt++;
 			}
-			if (fileContents[(promiseNumber-1)*6+4][i]==NULL) {
+			if (fileContents[(promiseNumber-1)*6+6][i]==NULL) {
 				peopleCnt++;
 				break;
 			}
@@ -175,7 +185,7 @@ void moneyShare2(structMember *s){
 		/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ알고리즘 끝ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ ㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
 
 		for(i=0; i<peopleCnt; i++){ //for (i=0; i<peopleCnt; i++)
-			printf("%d\n", arrMoney[i]);
+			printf("%d번째 사람 : %d원\n", i+1,arrMoney[i]);
 		}
 
 		getch(); break;

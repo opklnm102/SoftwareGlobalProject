@@ -6,9 +6,9 @@ void membership(){
 	char txt[]=".txt";  //확장자
 	char ask;  //저장 여부
 	FILE *fp1,*fp2;	
-	char fileName[30];
+	char fileName[20]="\0";
 	int con=1;
-	int backspace=0,i;
+	int backspace=0,i,j;
 	char ch;
 
 	//----------------------------UI그리기-----------------------------------------------
@@ -23,20 +23,55 @@ void membership(){
 		gotoxy(22+x,15+y); printf("이    름 : "); 
 		gotoxy(22+x,17+y); printf("고유코드 : ");
 
-	//----------------------------회원가입정보입력-----------------------------------------------
+		//----------------------------회원가입정보입력-----------------------------------------------
+		//학번입력
+		while(1){
+			for(j=0; j<8; j++)  //초기화
+				s.ID[j]='\0';
+			gotoxy(34+x,11+y); scanf("%s",s.ID); fflush(stdin);  
+			if(stringLengthcheck(s.ID,7)){}  //문자열의 길이 체크
+			else if(numberErrorcheck(s.ID)){}  //숫자이외의 값 체크			
+			else{  //오류 없을시		  
+				gotoxy(28+x,21+y);  printf("              ");  //오류메시지 라인클리어
+				break;  
+			}
+			gotoxy(28+x,21+y);  printf("학번 입력 오류");
+			gotoxy(34+x,11+y);  printf("              ");  //학번입력라인 클리어			
+		}
 
-		gotoxy(34+x,11+y); scanf("%s",s.ID);  fflush(stdin);
+		//비밀번호입력
+		for(j=0; j<20; j++)  //초기화
+						s.password[j]='\0';
 		gotoxy(34+x,13+y); 
-		for(i=0; i<14; i++){  //비밀번호 입력시 ***로 출력부분
+		for(i=0; i<20; i++){  //비밀번호 입력시 ***로 출력부분
 			ch=getch();		
 			if(ch == 13){  //enter키(비밀번호입력끝부분) 확인
-				s.password[i] = '\0';
-				printf("\n"); break;
+				if(i<4 || i>13){  //길이 오류
+					i=-1;
+					for(j=0; j<20; j++)  //초기화
+						s.password[j]='\0';
+					gotoxy(28+x,21+y); printf("패스워드 입력 오류");
+					gotoxy(34+x,13+y); printf("                ");  //오류메시지 라인클리어
+					gotoxy(34+x,13+y);
+				}
+				else if(numberErrorcheck(s.password)){  //숫자이외의 값이 들어오는 오류
+					i=-1;
+					for(j=0; j<20; j++)  //초기화
+						s.password[j]='\0';
+					gotoxy(28+x,21+y); printf("패스워드 입력 오류");
+					gotoxy(34+x,13+y); printf("                  ");  //오류메시지 라인클리어 
+					gotoxy(34+x,13+y);
+				}
+				else{  //오류없을시
+					s.password[i] = '\0';
+					gotoxy(28+x,21+y); printf("                  ");  //오류메시지 라인클리어 
+					printf("\n"); break;
+				}
 			}
 			else if(ch == 8){  //키보드의 backspace동작
 				if(i<1)
-					backspace=0;
-				if(backspace){
+					backspace=0;  //backspace동작 안함
+				if(backspace){  //backspace동작 함  
 					i -= 2;
 					printf("\b \b");  
 					fflush(stdin);				
@@ -50,14 +85,42 @@ void membership(){
 				printf("*");
 				fflush(stdin);
 			}
-		}			
-		gotoxy(34+x,15+y); scanf("%s",s.name);  fflush(stdin);
-		gotoxy(34+x,17+y); scanf("%s",s.backupPassword);  fflush(stdin);
+		}
+
+		//이름입력
+		while(1){
+			for(j=0; j<13; j++)  //초기화
+				s.name[j]='\0';
+			gotoxy(34+x,15+y); scanf("%s",s.name);  fflush(stdin);  //이름 입력  
+			if(stringLengthcheck(s.name,12)){}  //문자열의 길이 체크
+			else if(hanErrorcheck(s.name)){}  //한글이외의 값 체크			
+			else{  //오류 없을시		  
+				gotoxy(28+x,21+y);  printf("              ");  //오류메시지 라인클리어
+				break;  
+			}
+			gotoxy(28+x,21+y);  printf("이름 입력 오류");
+			gotoxy(34+x,15+y);  printf("              ");  //이름입력라인 클리어			
+		}
+
+		//고유코드입력
+		while(1){
+			for(j=0; j<14; j++)  //초기화
+				s.backupPassword[j]='\0';
+			gotoxy(34+x,17+y); scanf("%s",s.backupPassword); fflush(stdin);  //고유코드 입력 
+			if(strlen(s.backupPassword)<4 || stringLengthcheck(s.backupPassword,13)){}  //문자열의 길이 체크
+			else if(numberErrorcheck(s.backupPassword)){}  //숫자이외의 값 체크			
+			else{  //오류 없을시		  
+				gotoxy(28+x,21+y); printf("                  ");  //오류메시지 라인클리어
+				break;  
+			}
+			gotoxy(28+x,21+y);  printf("고유코드 입력 오류");
+			gotoxy(34+x,17+y);  printf("                  ");  //고유코드입력라인 클리어			
+		}
 
 		gotoxy(19+x,20+y); printf("모든 입력이 끝났습니까? (Y/N) ");
 		scanf("%c",&ask); fflush(stdin);
 
-	//---------------------------회원정보 txt에 저장-----------------------------------------------
+		//---------------------------회원정보 txt에 저장-----------------------------------------------
 
 		if(ask == 'y' || ask == 'Y'){
 			strcpy(fileName,s.ID);			
@@ -74,7 +137,7 @@ void membership(){
 				con=0;
 				fclose(fp1);
 				fclose(fp2);
-				gotoxy(60, 29); printf("회원 가입 완료!!!");
+				gotoxy(60, 29); printf("회원 가입 완료!!!    ");
 				getch();
 			}
 			else{  //파일이 있을 경우

@@ -1,14 +1,12 @@
 #include"structHeader.h"
 
 void login(structMember *s){
-	char id[8],password[14],fid[8],fname[13];  //fid,fname 파일에서 불러온 학번,이름
-	//structMember s;  //멤버 구조체	
-	FILE *fp1,*fp2=NULL;
-	char txt[]=".txt";  //확장자
-	char fileName[20];  //열기할 파일이름
+	char id[8]="\0",password[20]="\0";  //fid,fname 파일에서 불러온 학번,이름
+	FILE *fp1,*fp2=NULL;	
+	char fileName[20]="\0";  //열기할 파일이름
 	int loginCount;  //로그인 횟수	
 	char ch;
-	int backspace=0,i=0;
+	int backspace=0,i=0,j;
 
 	//----------------------------UI그리기-----------------------------------------------
 	screenBorderDraw();  //전체틀출력
@@ -19,19 +17,50 @@ void login(structMember *s){
 	gotoxy(54, 21); printf("학     번 : "); 
 	gotoxy(54, 23); printf("P       W : "); 
 
-	gotoxy(66, 21); scanf("%s",id); fflush(stdin);  //학번입력
+	while(1){
+		gotoxy(66, 21); scanf("%s",id); fflush(stdin);  //학번입력
+		if(stringLengthcheck(id,7)){}  //문자열의 길이 체크
+		else if(numberErrorcheck(id)){}  //숫자이외의 값 체크			
+		else{  //오류 없을시		    
+			gotoxy(60, 27); printf("              "); //오류메시지 라인클리어
+			break;  
+		}
+		gotoxy(60, 27); printf("학번 입력 오류");
+		gotoxy(66, 21); printf("              ");  //학번입력라인 클리어
+		for(j=0; j<8; j++)
+			id[j]='\0';
+	}
+
 	gotoxy(66, 23);  //비밀번호입력
-	for(i=0; i<14; i++){  //비밀번호 입력시 ***로 출력부분
+	for(i=0; i<20; i++){  //비밀번호 입력시 ***로 출력부분
 		ch=getch();		
 		if(ch == 13){  //enter키(비밀번호입력끝부분) 확인
-
-			password[i] = '\0';
-			printf("\n"); break;
+			if(i<4 || i>13){  //길이 오류
+				i=-1;
+				for(j=0; j<20; j++)
+					password[j]='\0';
+				gotoxy(60, 27); printf("패스워드 입력 오류");
+				gotoxy(66, 23); printf("                  ");  //pw입력라인 클리어 
+				gotoxy(66, 23);
+			}
+			else if(numberErrorcheck(password)){  //숫자이외의 값이 들어오는 오류
+				i=-1;
+				for(j=0; j<20; j++)
+					password[j]='\0';
+				gotoxy(60, 27); printf("패스워드 입력 오류");
+				gotoxy(66, 23); printf("                  ");  //pw입력라인 클리어 
+				gotoxy(66, 23);
+			}
+			else{  //오류 없을시
+				password[i] = '\0';
+				gotoxy(60, 27); printf("                ");  //오류메시지 라인클리어
+				printf("\n"); break;
+			}
 		}
 		else if(ch == 8){  //키보드의 backspace동작
 			if(i<1)
-				backspace=0;
-			if(backspace){
+				backspace=0;  //backspace동작 안함
+			if(backspace){  //backspace동작 함  
 				i -= 2;
 				printf("\b \b");  
 				fflush(stdin);				
@@ -51,11 +80,9 @@ void login(structMember *s){
 	fp1=fopen("회원목록.txt","r");  //회원목록 열고
 
 	while(!feof(fp1)){  //파일끝까지 확인
-		fscanf(fp1,"%s %s",fid,fname);  
-		if(!strcmp(id,fid)){  //목록에서 해당id를 찾았을 경우 파일을 열고 나가가고
-			strcpy(fileName,fid);
-			strcat(fileName,fname);
-			strcat(fileName,txt);
+		fscanf(fp1,"%s %s",s->ID,s->name);  
+		if(!strcmp(id,s->ID)){  //목록에서 해당id를 찾았을 경우 파일을 열고 나가고
+			getUserfileName(fileName,s,"\0");  //open할 파일이름얻기			
 			fp2=fopen(fileName,"r");  //회원가입되어있다.
 			fclose(fp1);  //회원목록파일 닫고
 			fp1=NULL;
@@ -83,20 +110,40 @@ void login(structMember *s){
 		}
 		else{  //로그인 실패
 			loginCount++;
-			gotoxy(60, 27); printf("로그인 %d회 실패",loginCount); 
+			gotoxy(60, 27); printf("로그인 %d회 실패     ",loginCount); 
 			gotoxy(54, 23); printf("P       W : ");
 			gotoxy(66, 23); printf("                         ");  //전시도의 *를 지우기위해
-			gotoxy(66, 23); 
-			for(i=0; i<14; i++){  //비밀번호 입력시 ***로 출력부분
+
+			gotoxy(66, 23);  //비밀번호 입력 		
+			for(i=0; i<20; i++){  //비밀번호 입력시 ***로 출력부분
 				ch=getch();		
 				if(ch == 13){  //enter키(비밀번호입력끝부분) 확인
-					password[i] = '\0';
-					printf("\n"); break;
+					if(i<4 || i>13){  //길이 오류
+						i=-1;
+						for(j=0; j<20; j++)
+							password[j]='\0';
+						gotoxy(60, 27); printf("패스워드 입력 오류");
+						gotoxy(66, 23); printf("                "); 
+						gotoxy(66, 23);
+					}
+					else if(numberErrorcheck(password)){
+						i=-1;
+						for(j=0; j<20; j++)
+							password[j]='\0';
+						gotoxy(60, 27); printf("패스워드 입력 오류");
+						gotoxy(66, 23); printf("                  "); 
+						gotoxy(66, 23);
+					}
+					else{
+						password[i] = '\0';
+						gotoxy(60, 27); printf("                ");
+						printf("\n"); break;
+					}
 				}
 				else if(ch == 8){  //키보드의 backspace동작
 					if(i<1)
-						backspace=0;
-					if(backspace){
+						backspace=0;  //backspace동작 안함
+					if(backspace){  //backspace동작 함  
 						i -= 2;
 						printf("\b \b");  
 						fflush(stdin);				
@@ -113,7 +160,7 @@ void login(structMember *s){
 			}
 		}
 	}
-	
+
 	//PW를 고유코드로 설정->에러->파일에 출력시 널값은 출력안되게.. 수정바람
 	gotoxy(58, 27); printf("PW 고유코드로 초기화");
 	fp2=fopen(fileName,"w");

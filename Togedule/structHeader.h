@@ -126,7 +126,9 @@ void listBorderDraw2(int x, int y);	//이름검색리스트틀출력
 void listBorderDraw3(int x, int y);	//약속함께할회원리스트틀출력
 void checkInput();  //버퍼에 남아있는거 체크
 void setcolor(int color, int bgcolor);  //글자색,글자배경색 변경
-
+void getUserfileName(char *fileName,structMember *s,char *filetype);  //파일이름만들기
+int numberErrorcheck(char *s);  //문자열에서 숫자이외의 값이 들어오는것 체크
+int stringLengthcheck(char *s,int n);  //문자열 길이 체크(문자열이랑 길이를 인자)
 /*-------------------------------함수원형선언 끝--------------------------------*/
 
 
