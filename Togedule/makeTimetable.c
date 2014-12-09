@@ -1,167 +1,332 @@
 #include"structHeader.h"
+//과목개수전달오류
+void makeTimetable(structMember *s) {
+
+	int SubjectNumOfoneday[5]={0}, subjectTotalNum=0;
+
+	InputSubjectNum(SubjectNumOfoneday,&subjectTotalNum, s);
+	InputSubjectNameAndClass(SubjectNumOfoneday,subjectTotalNum, s);
+}
 
 
-//시간표 월~금 과목갯수 입력 함수
-void InputSubjectCnt(structMember *s) {
+//● 시간표 월~금 과목갯수 입력 함수
+void InputSubjectNum(int* SubjectNumOfoneday, int* subjectTotalNum, structMember *s) {
 
-	int i, subjectTotalCnt=0;
-	int SubjectCntOfday[5]={0};
 	char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"};
+	char tmpSubjectNum[3];
+	char *endP;
+	int i;
 
 
 	screenBorderDraw() ;
 	listBorderDraw(3,12);
+	fflush(stdin);
 
+	/*----------과목 개수 제한문 출력----------*/
+	gotoxyPrint(6, 29,"▩ 하루 최대과목 개수는 5개 이하입니다.");
+	gotoxyPrint(6, 30,"▩ 총 최대과목 개수는 13개 이하입니다.");
 
-	gotoxy(6, 29);
-	printf("** 하루 최대과목 갯수는 5개이하.");
-	gotoxy(6, 30);
-	printf("**  총 최대과목 갯수는 13개 이하.");
-
+	/*----------요일 별로 과목 개수 입력받는 while문----------*/
 	while (1) {
-		gotoxy(20,15);
-		printf("- 시간표 만들기 -");
+
+		/*----------과목 개수 입력받는 틀 출력----------*/
+		gotoxyPrint(20, 15,"- 시간표 만들기 -");
 
 		for(i=0;i<5;i++){
 			gotoxy(7, 18+i*2);
-			printf(" %s요일 과목 갯수 : ", dayOfWeek[i]);
+			printf(" %s요일 과목 개수 : ", dayOfWeek[i]);
 		}
 
+		/*----------요일 별로 과목 개수 입력 받기----------*/
 		for(i=0;i<5;i++){
+
+			fflush(stdin);
+
+			//요일별로 과목 개수 입력
 			gotoxy(27,18+i*2);
-			scanf("%d", &SubjectCntOfday[i]);
+			fgets(tmpSubjectNum,sizeof(tmpSubjectNum), stdin);
+			if( (endP=strchr(tmpSubjectNum, '\n')) != NULL ) {
+				*endP = '\0';
 
-			//하루과목갯수가 초과할 경우
-			if(SubjectCntOfday[i] > 5 ) {
-				gotoxy(27, 18+i*2);
-				printf(" ◀하루최대과목개수(5개)초과!");
-				Sleep(1000);
-				gotoxy(27, 18+i*2);
-				printf("                            ");
-				gotoxy(27, 18+i*2);
-				printf("   ");
-				i--;
+				/*----------(키 입력이 한 문자인 경우)----------*/
+
+				//하루과목개수가 5이상 9이하인 경우 (한자리 문자)
+				if(tmpSubjectNum[0] > '5' && tmpSubjectNum[0] <= '9') {
+					warningSubjectNumOfOneday(i,"◀하루최대과목개수(5개)초과");
+					i--;
+				}
+
+				//입력값이 문자인 경우
+				else if((tmpSubjectNum[0] < '0' || tmpSubjectNum[0] > '9') && tmpSubjectNum[0] != '\0') {
+					warningSubjectNumOfOneday(i,"◀숫자를 입력해주세요");
+					i--;
+				}
+
+				//입력 없이 Enter를 누른 경우
+				else if(tmpSubjectNum[0] == '\0') {
+					warningSubjectNumOfOneday(i,"◀과목개수를 입력해주세요");
+					i--;
+				}
+				//과목 개수 입력이 올바른 경우
+				else {
+					SubjectNumOfoneday[i] = tmpSubjectNum[0] - '0';
+					*subjectTotalNum += SubjectNumOfoneday[i];
+				}
 			}
 
-			else {
-				subjectTotalCnt += SubjectCntOfday[i];
+			/*----------(키 입력이 두 문자 이상인 경우)----------*/
+			else{
+
+				//과목개수를 음수로 입력한 경우
+				if(tmpSubjectNum[0] == '-') {
+					warningSubjectNumOfOneday(i,"◀양수로 입력해주세요");
+					i--;
+				}
+				//두자리이상의 숫자를 입력한 경우
+				else if((tmpSubjectNum[0] > '0' && tmpSubjectNum[0] <= '9') ) {
+
+
+					if(tmpSubjectNum[1] < '0' || tmpSubjectNum[1] > '9') {
+						warningSubjectNumOfOneday(i,"◀숫자를 입력해주세요");
+						i--;
+					}
+					else {
+						warningSubjectNumOfOneday(i,"◀하루최대과목개수(5개)초과");
+						i--;
+					}
+
+
+
+				}
+				//문자가 입력된 경우
+				else if((tmpSubjectNum[0] < '0' || tmpSubjectNum[0] > '9' )) {
+
+					warningSubjectNumOfOneday(i,"◀숫자를 입력해주세요");
+					i--;
+				}
+				//그외 나머지인 경우
+				else {
+					warningSubjectNumOfOneday(i,"◀입력이 잘못되었습니다.");
+					i--;
+				}
+
 			}
 
 		}
-		//총과목갯수가 초과할 경우
-		if(subjectTotalCnt > 13 ){
 
-			for(i=0;i<5;i++){
-				gotoxy(27, 18+i*2);
-				printf("    ");
-			}
+		/*----------(시간표의 총 과목개수가 초과할 경우)----------*/
+		if(*subjectTotalNum > 13 ){
 
-			gotoxy(12, 28);
-			printf(" ※ 총 최대 과목수(13개)를 초과. ※\n");
+			// 스크린에 입력한 데이터를 지우고 경고문 출력 후 while문을 다시 반복
+			for(i=0;i<5;i++)
+				gotoxyPrint(27, 18+i*2, "    ");
+			
+			gotoxyPrint(12, 28, " ※ 총 최대 과목수(13개)를 초과. ※\n");
 			Sleep(1000);
-			gotoxy(8, 28);
-			printf("                                              ");
-			subjectTotalCnt =0;
+			gotoxyPrint(8, 28, "                                              ");
+			*subjectTotalNum =0;
 		}
+
+		/*----------(시간표의 총 과목개수가 초과하지 않는 경우)----------*/
 		else {
+
+			//while문 끝냄
 			break;
 		}
 	}
-	InputSubjectNameAndClass(SubjectCntOfday,subjectTotalCnt, s) ;
 }
 
-// 이름/교시 입력함수
-void InputSubjectNameAndClass(int* SubjectCntOfday, int subjectTotalCnt, structMember *s) {
+//● 과목명/교시 입력함수
+void InputSubjectNameAndClass(int* SubjectNumOfoneday, int subjectTotalNum, structMember *s) {
 
+	char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"};
 	structSubject* subjectPointer;
 	structSubject tmpSubject;
-	char dayOfWeek[5][4] = {"월", "화", "수", "목", "금"};
+	char *endPointer;
+	int StartCourYOfSubject=12;
+	int frameCourY=0, inputCurY=0;
+	int subjectCnt=0;
 	int i, j;
-	int tmp=12;
-	int y=0, k=0;
 
+	/*----------과목 총 개수만큼 동적할당----------*/
+	subjectPointer = (structSubject*)malloc(sizeof(structSubject)*subjectTotalNum);
 
-	subjectPointer = (structSubject*)malloc(sizeof(structSubject)*subjectTotalCnt);
-
+	/*----------요일별 과목 이름/교시 입력 틀 출력----------*/
 	for( i = 0; i < 5; i++){
-		if( SubjectCntOfday[i] != 0 ) {
-			y++;
-			gotoxy(64,10+y);
-			printf("*＊＊＊＊＊＊＊＊＊＊＊- %s요일 -＊＊＊＊＊＊*＊＊＊＊＊\n", dayOfWeek[i]);
 
-			for(j=0; j <SubjectCntOfday[i] ; j++){
-				// 과목 구조체에 시간표 요일 입력
-				strcpy(subjectPointer[k].dayOfWeek,dayOfWeek[i]);
-				k++;
-				y++;
-				gotoxy(65,10+y);
-				printf(" %d. 과목명 :                       교시 :       \n",j+1);
+		/*----------(요일 별로 과목 개수가 0개가 아닌 경우)----------*/
+		if( SubjectNumOfoneday[i] != 0 ) {
+			frameCourY++;
+			gotoxy(59,10+frameCourY);
+			printf("＊＊＊＊＊＊＊＊＊＊＊＊＊＊- %s요일 -＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊\n", dayOfWeek[i]);
+
+			//해당 요일의 하루당 과목 개수만큼 과목명/교시 틀 출력
+			for(j=0; j <SubjectNumOfoneday[i] ; j++){
+				strcpy(subjectPointer[subjectCnt++].dayOfWeek,dayOfWeek[i]);
+				frameCourY++;
+				gotoxy(60,10+frameCourY);
+				printf(" %d. 과목명 :                          교시 :       \n",j+1);
 			}
-			y++;
-			gotoxy(65,10+y);
-			printf("\n");
+			frameCourY++;
+			gotoxyPrint(60,10+frameCourY, "\n");
 		}
 	}
 
-	//이름/교시 입력 조건문
-	gotoxy(65, 31);
-	printf("** 과목명은 5자이내.");
-	gotoxy(65, 32);
-	printf("** ex) 교시 : 1,2,3 으로 입력.");
+	/*----------과목명/교시 입력 제한문 출력----------*/
+	gotoxyPrint(60, 12+frameCourY, "▩ 과목명은 빈칸없이 5자이내 입니다.");
+	gotoxyPrint(60, 13+frameCourY, "▩ 과목교시는 1,2,3 으로 입력 해주세요.");
+	gotoxyPrint(60, 14+frameCourY, "▩ 과목교시는 숫자와 ','이외의 문자는 입력되지 않습니다.");
 
-	k=0;
+	subjectCnt=0;
 	fflush(stdin);
-	//과목 이름/교시 입력
+
+	/*----------과목명/교시 입력----------*/
 	for( i = 0; i < 5; i++){
 
 		strcpy(tmpSubject.dayOfWeek,dayOfWeek[i]);
 
-		for(j=0; j <SubjectCntOfday[i] ; j++){
+		for(j=0; j <SubjectNumOfoneday[i] ; j++){
 
-			y = j+tmp;
-			//과목이름
-			gotoxy(78,y);
-			gets(tmpSubject.subjectName);
+			/*----------과목명 입력----------*/
+			inputCurY = j+StartCourYOfSubject;
 
-			//과목교시
 			while(1) {
-				gotoxy(107,y);
-				gets(tmpSubject.subjectClass);
 
-				//과목중복교시 검사
-				if (checkOverlappingClass(subjectPointer,tmpSubject,subjectTotalCnt) == 0){
-					gotoxy(107,y);
-					printf("◀교시중복!");
-					Sleep(1000);
-					gotoxy(107,y);
-					printf("           ");
-					strcpy(tmpSubject.subjectClass,"");
-					//scanf("%s",&subjectPointer[k].subjectClass);
+				fflush(stdin);
+				gotoxy(73,inputCurY);
+				fgets(tmpSubject.subjectName, 11, stdin);
+
+				/*----------(키 입력이 5자(한글기준) 이내인 경우)----------*/
+				if( (endPointer=strchr(tmpSubject.subjectName, '\n')) != NULL ) {
+					*endPointer = '\0';
+
+					//입력없이 Enter를 누른 경우
+					if(tmpSubject.subjectName[0] == '\0'){
+						strcpy(tmpSubject.subjectName,"");
+						warningSubjectName(inputCurY,"◀과목명을미입력했습니다.");
+					}
+
+					//과목명에 빈칸이 있는 경우
+					else if (checkBlankOfSubjectName(tmpSubject.subjectName) == 0) {
+						strcpy(tmpSubject.subjectName,"");
+						warningSubjectName(inputCurY,"◀과목명에빈칸이있습니다.");
+
+					}
+
+					//과목명 조건에 만족하는 경우
+					else {
+						break;
+					}
 				}
-				else
+
+				/*----------(키 입력이 5자 이상인 경우)----------*/
+				else {
+					strcpy(tmpSubject.subjectName,"");
+					warningSubjectName(inputCurY,"◀과목명5자를초과했습니다.");
+				}
+
+			}
+
+
+
+			/*----------과목교시 입력----------*/
+			while(1) {
+
+				//과목교시 입력
+				fflush(stdin);
+				gotoxy(104,inputCurY);
+				fgets(tmpSubject.subjectClass,sizeof(tmpSubject.subjectClass), stdin);
+
+			/*----------(키 입력이 10자 이내인 경우)----------*/
+			if( (endPointer=strchr(tmpSubject.subjectClass, '\n')) != NULL ) {
+				*endPointer = '\0';
+
+				//숫자와','이외의 문자가 들어올때
+				if(checkCharaterInClass(tmpSubject.subjectClass) == 0) {
+					warningSubjectClass( inputCurY,"◀','와숫자이외의문자");
+					strcpy(tmpSubject.subjectClass,"");
+				}
+
+				//교시를 입력하지 않고 Enter를 쳤을때
+				else if(tmpSubject.subjectClass[0] == '\0') {
+					warningSubjectClass( inputCurY,"◀교시를미입력했습니다");
+					strcpy(tmpSubject.subjectClass,"");
+				}
+
+				//교시를 중복되게 쳤을때
+				else if (checkOverlappingInClass(subjectPointer,tmpSubject,subjectTotalNum) == 0){
+					warningSubjectClass( inputCurY,"◀교시가중복됩니다");
+					strcpy(tmpSubject.subjectClass,"");
+				}
+
+				//1~13교시 이외의 교시를 입력 했을때
+				else if(checkNumInClass(tmpSubject.subjectClass) == 0){
+					warningSubjectClass( inputCurY,"◀1~13이외교시입니다");
+					strcpy(tmpSubject.subjectClass,"");
+				}
+				//입력이 올바를 때
+				else 
 					break;
 
-			}
-			
-			strcpy(subjectPointer[k].subjectName,tmpSubject.subjectName);
-			strcpy(subjectPointer[k].subjectClass,tmpSubject.subjectClass);
 
+
+			}
+			/*----------(키 입력이 10자 이상인 경우)----------*/
+			else{
+				warningSubjectClass(inputCurY,"◀교시글자수초과했습니다");
+					strcpy(tmpSubject.subjectClass,"");
+			}
+			}
+
+			/*----------과목명/교시 입력후 동적할당한 변수에 저장 및 tmpSubject(변수)  초기화---------*/
+			strcpy(subjectPointer[subjectCnt].subjectName,tmpSubject.subjectName);
+			strcpy(subjectPointer[subjectCnt].subjectClass,tmpSubject.subjectClass);
 			strcpy(tmpSubject.subjectName,"");
 			strcpy(tmpSubject.subjectClass,"");
-			
 
-
-			if(j+1 == SubjectCntOfday[i]){
-				tmp = 3+y; 
+			/*----------다음 요일 시작 y좌표 계산---------*/
+			if(j+1 == SubjectNumOfoneday[i]){
+				StartCourYOfSubject = 3+inputCurY; 
 			}
-			k++;
+
+			//과목명/교시입력이 완료된 후 다음 과목명/교시입력을 위해 카운트 증가
+			subjectCnt++;
 		}
 		printf("\n");
 	}
 
+	//입력된 시간표정보를 txt파일에 저장
+	saveTimetalbe(subjectPointer,subjectTotalNum, s);
 
-	saveTimetalbe(subjectPointer,subjectTotalCnt, s);
 	free(subjectPointer);
 	system("cls"); 
+
+
+}
+
+void warningSubjectNumOfOneday(int y, char* warning) {
+
+
+	gotoxyPrint(27, 18+y*2, warning);
+	Sleep(1000);
+	gotoxyPrint(27, 18+y*2, "                           ");
+
+}
+
+void warningSubjectName(int y, char* warning) {
+
+
+	gotoxyPrint(72,y, warning);
+	Sleep(1500);
+	gotoxyPrint(72,y, "                          ");
+
+}
+
+void warningSubjectClass(int y, char* warning) {
+
+
+	gotoxyPrint(104,y, warning);
+	Sleep(1000);
+	gotoxyPrint(104,y, "                       ");
 
 }

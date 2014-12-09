@@ -64,15 +64,35 @@ void timetableMenu(structMember *s); //시간표메뉴함수
 void timetableDraw(structMember *s); //시간표그리기함수
 void saveTimetalbe(structSubject* subjectPointer, int subjectTotalCnt, structMember *s); //시간표 txt로 저장하는 함수
 void classAtoi(char *dayOfWeek, int *savedClass); //교시를 char->int으로 바꾸어주는 함수
-int checkOverlappingClass(structSubject* subjectPointer,structSubject subject,int subjectTotalCnt); //중복교시체크함수
-void InputSubjectCnt(structMember *s); // 시간표만들기 - 월~금 과목갯수 입력 함수
-void InputSubjectNameAndClass( int* SubjectCntOfday, int subjectTotalCnt, structMember *s) ; // 시간표만들기 - 이름/교시 입력함수
-void modifyMenu(structMember *s); //시간표수정메뉴함수
-void modifySubjectInfo(structMember *s); // 시간표 과목정보 수정함수
-void addSubject(structMember *s); //시간표 과목 추가
-void removeSubject(structMember *s); //시간표 과목 삭제
+int checkOverlappingInClass(structSubject* subjectPointer,structSubject subject,int subjectTotalCnt); //중복교시체크함수
+int checkNumInClass(char* subjectClass);//교시체크함수
+int checkCharaterInClass(char* subjectClass);//교시문자체크함수
+int checkBlankOfSubjectName(char* subjectName); //과목명 빈칸 체크함수
+char* getUserTextFileName(structMember *s); //
 void sortTimetable(structSubject* subjectPointer,int subjectTotalCnt, structMember *s); // 시간표 (요일)정렬 함수
 void removeTimetable(structMember *s); //시간표삭제함수(시간표txt파일삭제)
+void makeTimetable(structMember *s);
+void InputSubjectNum(int* SubjectNumOfoneday, int* subjectTotalNum, structMember *s); // 시간표만들기 - 월~금 과목갯수 입력 함수
+void InputSubjectNameAndClass( int* SubjectCntOfday, int subjectTotalCnt, structMember *s) ; // 시간표만들기 - 이름/교시 입력함수
+void warningSubjectNumOfOneday(int y,char* warning); //하루과목개수 경고함수
+void warningSubjectName(int y, char* warning); //과목이름 경고함수
+void warningSubjectClass(int y, char* warning); //과목교시 경고함수
+void modifyMenu(structMember *s); //시간표수정메뉴함수
+void modifySubjectInfo(structMember *s); // 시간표 과목정보 수정함수
+int checkModifyDay(char* modifyDay); //수정요일체크 함수
+int checkChoiceOfSubject(char* modifySubject, int subjectCntOfModifyDay); //수정과목선택체크함수
+void warningModifyDay(char* warning); //수정요일 경고함수
+void warningChoiceOfSubject(char* warning);//수정과목선택 경고함수
+void warningDayOfModifySubect(char* warning); //수정과목요일 경고함수
+void warningNameOfModifySubect(char* warning); //수정과목명 경고함수
+void warningClassOfModifySubect(char* warning);//수정과목교시 경고함수
+void warningDayOfAddSubect(char* warning);
+void warningNameOfAddSubect(char* warning);
+void warningClassOfAddSubect(char* warning);
+void addSubject(structMember *s); //시간표 과목 추가
+void OutputSubjectToModifyTheDay(char*ModifyDay);//수정할 요일에 해당하는 과목 출력함수
+void removeSubject(structMember *s); //시간표 과목 삭제
+void warningRemoveAnwer(char* warning);
 
 //약속관련
 
@@ -129,6 +149,8 @@ void setcolor(int color, int bgcolor);  //글자색,글자배경색 변경
 void getUserfileName(char *fileName,structMember *s,char *filetype);  //파일이름만들기
 int numberErrorcheck(char *s);  //문자열에서 숫자이외의 값이 들어오는것 체크
 int stringLengthcheck(char *s,int n);  //문자열 길이 체크(문자열이랑 길이를 인자)
+int hanErrorcheck(char *s);  //한글이외의 값 체크 
+void gotoxyPrint(int x, int y, char* word);
 /*-------------------------------함수원형선언 끝--------------------------------*/
 
 
