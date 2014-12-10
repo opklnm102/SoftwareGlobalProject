@@ -58,6 +58,7 @@ int changeDate(struct structPromise *old,int newCombineTimetable[5][13]) {
 	int time;
 	dayofweek=selectDate(newCombineTimetable,old);
 	time=atoi(old->promiseTime);
+	time=time-8;
 	if(dayofweek!=-1&&newCombineTimetable[dayofweek][time-1]==1) {
 		gotoxy(26,34);printf("현재 정해진 시간에는 약속을 잡을 수 없습니다. 시간을 수정하겠습니다.\n");
 		Sleep(2000);
@@ -74,6 +75,10 @@ void changePromiseName(struct structPromise *old){
 	while(1){
 	gotoxy(61,26);scanf("%s",&old->promiseName);  //@@@약속명 입력
 	if(!strcmp(old->promiseName,"0")) {}
+	else if(!strcmp(old->promiseName,"x")||!strcmp(old->promiseName,"X")){
+		gotoxy(90,45);
+		exit(0);
+	}
 	else if(stringLengthcheck(old->promiseName,40)) {
 		gotoxy(42,23);printf("약속명은 한글 20자, 영문 40자 이하로 입력하세요.");
 		gotoxy(61,26);printf("                                  ");
@@ -119,9 +124,10 @@ int checkDateTime(int CombineTimetable[5][13], struct structPromise *old){
 	Month=atoi(month);
 	Day=atoi(date);
 	dayofweek=weekday(year,Month,Day);
+	dayofweek--;
 	strcpy(stime,old->promiseTime);
 	Time=atoi(stime);
-
+	Time=Time-8;
 	if(CombineTimetable[dayofweek][Time-1]==1)
 		return -1;
 	return 0;
@@ -232,7 +238,6 @@ int selectChange(char *DBname, struct structPromise *old, int listnumber, char *
 		gotoxy(42,30);printf("3. 약속날짜     : %s",old->Promisedate);
 		gotoxy(42,32);printf("4. 약속시간     : %s",old->promiseTime);
 		gotoxy(42,34);printf("5. 함께할 친구  : ");
-		strcpy(copyName,name[0]);
 		for(i=0; i<4; i++){
 			printf("%s  ",name[i]);
 		}
@@ -242,6 +247,10 @@ int selectChange(char *DBname, struct structPromise *old, int listnumber, char *
 			gotoxy(69,11);scanf("%s",&select);
 			if(!strcmp(select,"B")||!strcmp(select,"b"))
 				return -1;
+			else if(!strcmp(select,"x")||!strcmp(select,"X")){
+				gotoxy(90,45);
+				exit(0);
+			}
 			else if(numberErrorcheck(select)){}
 			else {
 				
@@ -298,7 +307,6 @@ int selectChange(char *DBname, struct structPromise *old, int listnumber, char *
 		gotoxy(42,30);printf("3. 약속날짜     : %s",old->Promisedate);
 		gotoxy(42,32);printf("4. 약속시간     : %s",old->promiseTime);
 		gotoxy(42,34);printf("5. 함께할 친구  : ");
-		strcpy(copyName,name[0]);
 		for(i=0; i<4; i++){
 			printf("%s  ",name[i]);
 		}
@@ -353,7 +361,8 @@ int promiseChange(char *DBname,char *logID){
 	fp = fopen(openDB, "r");
 	if ( fp == NULL ) {
 		gotoxy(x+12,y+1);printf("현재 생성된 약속리스트가 없습니다.");
-		return 1;
+		Sleep(1000);
+		return 0;
 	}
 	while (!feof(fp)) {			//약속리스트 열어서 리스트에 적혀진 개수만큼 이름과 날짜를 읽어서 출력하는 부분
 		
@@ -426,6 +435,10 @@ int promiseChange(char *DBname,char *logID){
 								free(cost);
 								return 0;
 							}
+							if(!strcmp(controlList,"x")||!strcmp(controlList,"X")){
+								gotoxy(90,45);
+								exit(0);
+							}
 							if(!strcmp(controlList,"@")||!strcmp(controlList,">"))
 								break;
 							gotoxy(110,10);printf("     ");
@@ -463,6 +476,10 @@ int promiseChange(char *DBname,char *logID){
 									free(cost[i]);
 								free(cost);
 								return 0;
+							}
+							else if(!strcmp(controlList,"x")||!strcmp(controlList,"X")){
+								gotoxy(90,45);
+								exit(0);
 							}
 							if(!strcmp(controlList,"@")||!strcmp(controlList,"<")||!strcmp(controlList,">"))
 								break;
@@ -512,6 +529,10 @@ int promiseChange(char *DBname,char *logID){
 								free(cost);
 								return 0;
 							}
+							else if(!strcmp(controlList,"x")||!strcmp(controlList,"X")){
+								gotoxy(90,45);
+								exit(0);
+							}
 							if(!strcmp(controlList,"@")||!strcmp(controlList,"<"))
 								break;
 							gotoxy(110,10);printf("     ");
@@ -552,6 +573,10 @@ int promiseChange(char *DBname,char *logID){
 				free(cost[i]);
 			free(cost);
 			return 0;
+		}
+		else if(!strcmp(select,"x")||!strcmp(select,"X")){
+			gotoxy(90,45);
+			exit(0);
 		}
 		listnumber=atoi(select);	
 		if(listnumber>0&&listnumber<numbering)
@@ -637,6 +662,10 @@ int promiseChange(char *DBname,char *logID){
 			Check=selectChange(DBname,&changePromise,listnumber,transName,CombineTimetable);		//selectChange 함수사용, (현재읽어온 약속리스트정보구조체, 사용자가 선택한 약속리스트번호, 함께하는 회원 이름)을 인수로 넘겨준다.
 			break;
 		}	
+		if(!strcmp(select,"x")||!strcmp(select,"X")){
+			gotoxy(90,45);
+			exit(0);
+		}
 		if(!strcmp(select,"N")||!strcmp(select,"n")){
 			for(i=0; i<listCount; i++) {											
 				for(k=0; k<4; k++)
@@ -768,7 +797,7 @@ int promiseChange(char *DBname,char *logID){
 		free(oldPromise[i].promiseFriendsName);
 	}
 	free(oldPromise);
-	for(i=0; i<j; i++)
+	for(i=0; i<friendsCount; i++)
 		free(changePromise.promiseFriendsName[i]);
 	free(changePromise.promiseFriendsName);
 	for(i=0; i<listCount; i++)

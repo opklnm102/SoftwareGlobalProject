@@ -161,7 +161,7 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 	char openDB[40];		//¿ÀÇÂ½ÃÅ³ ÆÄÀÏ¸í
 	char buffer[30];
 	char Time[5]={0};
-	char select[2];
+	char select[10];
 	char ID[8];
 	char listName[13];
 	char major[20]={0};
@@ -236,6 +236,10 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 			gotoxy(x+20,33);scanf("%s",select);
 			if(!strcmp(select,"b")||!strcmp(select,"B"))
 				return -1;
+			else if(!strcmp(select,"x")||!strcmp(select,"X")){
+				gotoxy(90,45);
+				exit(0);
+			}
 			overlap=atoi(select);	
 			if(overlap>0&&overlap<=limit){
 				gotoxy(x,34);printf("                                         ");
@@ -243,6 +247,7 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 			}
 			gotoxy(x,34);printf("¸®½ºÆ® ¹üÀ§ ³»ÀÇ ¼ıÀÚ¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
 			gotoxy(x+20,33);printf("     ");
+			strcpy(select,"\0");
 		}
 		limit=1;
 		strcpy(openDB,"È¸¿ø¸ñ·Ï");		//È¸¿ø¸ñ·ÏÀ» ´Ù½Ã ¿¬´Ù.
@@ -281,8 +286,10 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 	return exist;			//exist¸¦ ¸®ÅÏ°ªÀ¸·Î °¡Áø´Ù. ÀÌ¸§°Ë»öÀÌ ‰çÀ¸¸é 0ÀÌ ¸®ÅÏ, ¾ø´Â ÀÌ¸§ÀÌ¸é À§¿¡¼­ 1À» ¸®ÅÏÇÏ°Ô µÇÀÖ´Ù. ¸®½ºÆ®¹øÈ£ ÀÔ·Â½Ã B,bÅ° ÀÔ·Â½Ã -1¸®ÅÏ 
 }
 
-int callendar(int Month) {		//´Ş·ÂÃâ·ÂÇÔ¼ö. ¿ùÀ» ÀÎ¼ö·Î ³Ñ°Ü¹Ş´Â´Ù. selectDate ÇÔ¼ö¿¡¼­ ÀÔ·Â¹ŞÀº ´ŞÀ» ³Ñ°Ü¹ŞÀ½.
+int callendar(int Month,char *dateLimit) {		//´Ş·ÂÃâ·ÂÇÔ¼ö. ¿ùÀ» ÀÎ¼ö·Î ³Ñ°Ü¹Ş´Â´Ù. selectDate ÇÔ¼ö¿¡¼­ ÀÔ·Â¹ŞÀº ´ŞÀ» ³Ñ°Ü¹ŞÀ½.
 	int last,th,year,day,date,x,z,y,m;
+	
+	int copyYear;
 	time_t curr;
 	int i=0;
 	struct tm *d;
@@ -290,6 +297,7 @@ int callendar(int Month) {		//´Ş·ÂÃâ·ÂÇÔ¼ö. ¿ùÀ» ÀÎ¼ö·Î ³Ñ°Ü¹Ş´Â´Ù. selectDate Ç
 	d=localtime(&curr);
 	year = d->tm_year;
 	y=year+1900;			//ÇöÀç ³âµµ¸¦ °è»ê.. 2014³âÀÌ ÀúÀåµÈ´Ù. 
+	copyYear=y;
 	m=Month;				//¿ùÀº ÀÎ¼ö¸¦ ±×´ë·Î ÀÌ¿ë
 	if((m>=1)&&(m<=12))		//¿©±â´Â °¢ ´Ş¸¶´Ù 31ÀÏ, 30ÀÏ, 28ÀÏ, 29ÀÏ À» ³ª´²ÁÖ´Â ºÎºĞ
 	{
@@ -348,8 +356,8 @@ int callendar(int Month) {		//´Ş·ÂÃâ·ÂÇÔ¼ö. ¿ùÀ» ÀÎ¼ö·Î ³Ñ°Ü¹Ş´Â´Ù. selectDate Ç
 				else if(date>=last)
 				{
 					printf("\n");
-
-					return y;
+					itoa(date,dateLimit,10);
+					return copyYear;
 				}
 			}
 		}
@@ -358,19 +366,34 @@ int callendar(int Month) {		//´Ş·ÂÃâ·ÂÇÔ¼ö. ¿ùÀ» ÀÎ¼ö·Î ³Ñ°Ü¹Ş´Â´Ù. selectDate Ç
 		
 
 	}
-	return y;
+	return copyYear;
 }
 
 int weekday(int year, int month, int day) //³âµµ, ¿ù, ÀÏ À» ÀÔ·Â¹Ş¾Æ ¿äÀÏ Ã£´Â ÇÔ¼ö. ¸®ÅÏ°ªÀº Á¤¼ö.
 {
-         int year_1 = year / 100;
-
-	int year_2 = year - year_1 * 100;
-
+    int day_year=0,count_year=1;
+	int result;
+	int day_month=0,count_month=1;
+	int every_month[12]={31,28,31,30,31,30,31,31,30,31,30,31};
+	int last_day;	 
  
-
-	return (day + (month + 1) * 26 / 10 + year_2 + (year_2 / 4) + (year_1 / 4) - 2 * year_1 - 2) % 7;
-
+	for(count_year=1;count_year<year;count_year++)
+	{
+		result=(count_year%4==0)&&(count_year%100!=0)||(count_year%400==0);
+		if(result==1)
+			day_year+=366;
+		else
+			day_year+=365;
+	}
+	result=(year%4==0)&&(year%100!=0)||(year%400==0);
+	if(result==1)
+		every_month[1]=29;
+	for(count_month=0;count_month<month-1;count_month++) {
+		day_month+=every_month[count_month];
+	}
+	
+	last_day=day_year+day_month+day;
+	return last_day%7;
 }
 
 int selectDate(int CombineTimetable[5][13],structPromise *newPromise){	//¸¸µé ¾à¼ÓÀÇ ³¯Â¥ ÀÔ·Â¹Ş´Â ÇÔ¼ö
@@ -379,6 +402,8 @@ int selectDate(int CombineTimetable[5][13],structPromise *newPromise){	//¸¸µé ¾à
 	char month[10];
 	char day[10];
 	char temp[10]={0};
+	char dateLimit[10]={0};
+	int datelimit;
 	int dayofWeek;
 	int Day;
 	int Month;
@@ -433,6 +458,10 @@ int selectDate(int CombineTimetable[5][13],structPromise *newPromise){	//¸¸µé ¾à
 		}
 		else if(!strcmp(month,"b")||!strcmp(month,"B"))
 			return -1;
+		else if(!strcmp(day,"x")||!strcmp(day,"X")){
+				gotoxy(90,45);
+				exit(0);
+		}
 		gotoxy(x+30,y+4); printf("                             ");
 		gotoxy(x,y+5); printf("¾à¼ÓÀ» ÀâÀ» ´ŞÀº 1¿ù~12¿ù »çÀÌ·Î ÀÔ·ÂÇÏ¼¼¿ä.");
 	}
@@ -453,59 +482,72 @@ int selectDate(int CombineTimetable[5][13],structPromise *newPromise){	//¸¸µé ¾à
 	}
 	strcpy(newPromise->Promisedate,temp);
 	strcat(newPromise->Promisedate,"/");
-	year=callendar(Month);							//ÀÔ·Â¹ŞÀº ¿ùÀ» °¡Áö°í callendarÇÔ¼ö»ç¿ë. ¿ÃÇØ ´Ş·ÂÀ» Ãâ·Â 
+	year=callendar(Month,dateLimit);							//ÀÔ·Â¹ŞÀº ¿ùÀ» °¡Áö°í callendarÇÔ¼ö»ç¿ë. ¿ÃÇØ ´Ş·ÂÀ» Ãâ·Â 
 	
-	
-	
+	datelimit=atoi(dateLimit);
 	gotoxy(x,y+15);printf("¿äÀÏÀº ³¯Â¥ÀÔ·Â¿¡ µû¶ó ÀÚµ¿À¸·Î ¼±ÅÃµË´Ï´Ù.");
-	gotoxy(x,y+16);printf("³¯Â¥ÀÔ·ÂÀÌ ³¡³ª¸é ¾à¼Ó½Ã°£(±³½Ã)À» ÀÔ·ÂÇÏ¼¼¿ä.");
+	gotoxy(x,y+16);printf("³¯Â¥ÀÔ·ÂÀÌ ³¡³ª¸é ¾à¼Ó½Ã°£À» ÀÔ·ÂÇÏ¼¼¿ä.");
+	gotoxy(x,y+17);printf("±³½Ã¼ıÀÚ¿¡ 8À» ´õÇÏ¸é °£ÆíÇÏ°Ô ½Ã°£À» °è»êÇÒ ¼ö ÀÖ½À´Ï´Ù.");
 	while(1){
-		gotoxy(x,y+18);printf("¾à¼ÓÀ» ÀâÀ» ³¯Â¥ ÀÔ·Â(ex 10ÀÏ) :");		//ÀÏÀ» ÀÔ·ÂÇÏ¸é
+		gotoxy(x,y+19);printf("¾à¼ÓÀ» ÀâÀ» ³¯Â¥ ÀÔ·Â(ex 10ÀÏ) :");		//ÀÏÀ» ÀÔ·ÂÇÏ¸é
 		while(1){
-			gotoxy(x+34,y+18);scanf("%s",&day);
-			if(!strcmp(day,"1ÀÏ")||!strcmp(day,"2ÀÏ")||!strcmp(day,"3ÀÏ")||!strcmp(day,"4ÀÏ")||!strcmp(day,"5ÀÏ")||!strcmp(day,"6ÀÏ")||!strcmp(day,"7ÀÏ")||!strcmp(day,"8ÀÏ")||!strcmp(day,"9ÀÏ")||!strcmp(day,"10ÀÏ")) {
+			while(1){
+				gotoxy(x+34,y+19);scanf("%s",&day);
+				if(!strcmp(day,"1ÀÏ")||!strcmp(day,"2ÀÏ")||!strcmp(day,"3ÀÏ")||!strcmp(day,"4ÀÏ")||!strcmp(day,"5ÀÏ")||!strcmp(day,"6ÀÏ")||!strcmp(day,"7ÀÏ")||!strcmp(day,"8ÀÏ")||!strcmp(day,"9ÀÏ")||!strcmp(day,"10ÀÏ")) {
 				
-				gotoxy(x,y+19); printf("                                                       ");
-				break;
+					gotoxy(x,y+20); printf("                                                       ");
+					break;
+				}
+				else if(!strcmp(day,"11ÀÏ")||!strcmp(day,"12ÀÏ")||!strcmp(day,"13ÀÏ")||!strcmp(day,"14ÀÏ")||!strcmp(day,"15ÀÏ")||!strcmp(day,"16ÀÏ")||!strcmp(day,"17ÀÏ")||!strcmp(day,"18ÀÏ")||!strcmp(day,"19ÀÏ")||!strcmp(day,"20ÀÏ")) {
+					gotoxy(x,y+20); printf("                                                       ");
+					break;
+				}
+				else if(!strcmp(day,"21ÀÏ")||!strcmp(day,"22ÀÏ")||!strcmp(day,"23ÀÏ")||!strcmp(day,"24ÀÏ")||!strcmp(day,"25ÀÏ")||!strcmp(day,"26ÀÏ")||!strcmp(day,"27ÀÏ")||!strcmp(day,"28ÀÏ")||!strcmp(day,"29ÀÏ")||!strcmp(day,"30ÀÏ")||!strcmp(day,"31ÀÏ")) {
+					gotoxy(x,y+20); printf("                                                       ");
+					break;
+				}
+				else if(!strcmp(day,"b")||!strcmp(day,"B"))
+					return -1;
+				else if(!strcmp(day,"x")||!strcmp(day,"X")){
+				gotoxy(90,45);
+				exit(0);
+				}
+				gotoxy(x+34,y+19);printf("             ");
+				gotoxy(x,y+20);printf("¾à¼ÓÀÏÀº ´Ş·ÂÀÇ ¹üÀ§ ³»¿¡¼­ ¼ıÀÚ+ÀÏ ´ÜÀ§·Î ÀÔ·ÂÇÏ¼¼¿ä.");
+				strcpy(day,"\0");
 			}
-			else if(!strcmp(day,"11ÀÏ")||!strcmp(day,"12ÀÏ")||!strcmp(day,"13ÀÏ")||!strcmp(day,"14ÀÏ")||!strcmp(day,"15ÀÏ")||!strcmp(day,"16ÀÏ")||!strcmp(day,"17ÀÏ")||!strcmp(day,"18ÀÏ")||!strcmp(day,"19ÀÏ")||!strcmp(day,"20ÀÏ")) {
-				gotoxy(x,y+19); printf("                                                       ");
-				break;
-			}
-			else if(!strcmp(day,"21ÀÏ")||!strcmp(day,"22ÀÏ")||!strcmp(day,"23ÀÏ")||!strcmp(day,"24ÀÏ")||!strcmp(day,"25ÀÏ")||!strcmp(day,"26ÀÏ")||!strcmp(day,"27ÀÏ")||!strcmp(day,"28ÀÏ")||!strcmp(day,"29ÀÏ")||!strcmp(day,"30ÀÏ")||!strcmp(day,"31ÀÏ")) {
-				gotoxy(x,y+19); printf("                                                       ");
-				break;
-			}
-			else if(!strcmp(day,"b")||!strcmp(day,"B"))
-			return -1;
-			gotoxy(x+34,y+18);printf("             ");
-			gotoxy(x,y+19);printf("¾à¼ÓÀÏÀº ´Ş·ÂÀÇ ¹üÀ§ ³»¿¡¼­ ¼ıÀÚ+ÀÏ ´ÜÀ§·Î ÀÔ·ÂÇÏ¼¼¿ä.");
-			strcpy(day,"\0");
-		}
 		
-		length=strlen(temp);
-		for(i=0; i<length; i++)
-			temp[i]='\0';
-		length=strlen(day);
-		for(i=0;i<length;i++) {
-			if(strncmp(day,"ÀÏ",1)!=0){
-				strncat(temp,day,1);
-				changeLocation(day);
+			length=strlen(temp);
+			for(i=0; i<length; i++)
+				temp[i]='\0';
+			length=strlen(day);
+			for(i=0;i<length;i++) {
+				if(strncmp(day,"ÀÏ",1)!=0){
+					strncat(temp,day,1);
+					changeLocation(day);
+				}
+				if(strncmp(day,"ÀÏ",1)==0) {				//'ÀÏ'ÀÌ¶ó´Â ´Ü¾î¸¦ Á¦¿ÜÇÏ°í ¼ıÀÚºÎºĞ¸¸ ¶¼³»¾î¼­ Á¤¼öÇü º¯¼ö Day¿¡ ÀúÀå  
+					Day=atoi(temp);
+					break;
+				}		
 			}
-			if(strncmp(day,"ÀÏ",1)==0) {				//'ÀÏ'ÀÌ¶ó´Â ´Ü¾î¸¦ Á¦¿ÜÇÏ°í ¼ıÀÚºÎºĞ¸¸ ¶¼³»¾î¼­ Á¤¼öÇü º¯¼ö Day¿¡ ÀúÀå  
-				Day=atoi(temp);
+			if(Day<=datelimit){
+				gotoxy(x,y+20); printf("                                                       ");
 				break;
-			}		
+			}
+			gotoxy(x,y+20); printf("                                                       ");
+			gotoxy(x,y+20);printf("%d¿ù´ŞÀº %dÀÏ±îÁö¸¸ ÀÔ·Â °¡´ÉÇÑ ´ŞÀÔ´Ï´Ù.",Month,datelimit);
+			gotoxy(x+34,y+19);printf("             ");
 		}
 		strcat(newPromise->Promisedate,temp);
 		dayofWeek=weekday(year,Month,Day);
 		
-		if(dayofWeek==0||dayofWeek==1||dayofWeek==2||dayofWeek==3||dayofWeek==4){
-
+		if(dayofWeek==1||dayofWeek==2||dayofWeek==3||dayofWeek==4||dayofWeek==5){
+			dayofWeek--;
 			break;
 		}
-		gotoxy(x,y+19);printf("¾à¼ÓÀº ÁÖÁß¿¡¸¸ ÀâÀ» ¼ö ÀÖ½À´Ï´Ù.");
-		gotoxy(x+34,y+18);printf("      ");
+		gotoxy(x,y+20);printf("¾à¼ÓÀº ÁÖÁß¿¡¸¸ ÀâÀ» ¼ö ÀÖ½À´Ï´Ù.");
+		gotoxy(x+34,y+19);printf("      ");
 		strcpy(day,"\0");
 	}
 	return dayofWeek;
@@ -519,19 +561,23 @@ void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofW
 	int i;
 	int Time;
 	int length;
-	int x=26, y=31;
+	int x=26, y=32;
 	strcpy(newPromise->promiseTime,"\0");	//B,b ÀÔ·Â Ã¼Å©¸¦ À§ÇØ ÃÊ±âÈ­
-	gotoxy(x,y);printf("¾à¼Ó½Ã°£À» ÀÔ·Â(ex 13½Ã) :");
-	gotoxy(x,y+1);printf("ex) 1±³½Ã¿¡ ¾à¼ÓÀ» ÀâÀ¸·Á¸é 9½Ã,5±³½Ã¿¡ ¾à¼ÓÀ» ÀâÀ¸·Á¸é 13½Ã");
+	gotoxy(x,y);printf("¾à¼Ó½Ã°£À» ÀÔ·Â (ex 13½Ã) :");
+	gotoxy(x,y+1);printf("ex) 5±³½Ã¿¡ ¾à¼ÓÀ» ÀâÀ¸·Á¸é 13½Ã");
 	while(1){
 		gotoxy(x+27,y);scanf("%s",&time);
-		if(!strcmp(time,"9½Ã")||!strcmp(time,"10½Ã")||!strcmp(time,"11½Ã")||!strcmp(time,"12½Ã")||!strcmp(time,"13½Ã")||!strcmp(time,"14½Ã")||!strcmp(time,"15½Ã")||!strcmp(time,"16½Ã")||!strcmp(time,"17½Ã")||!strcmp(time,"18½Ã")||!strcmp(time,"19½Ã")||!strcmp(time,"20½Ã")||!strcmp(time,"21½Ã")) {
+		if(!strcmp(time,"x")||!strcmp(time,"X")){
+			gotoxy(90,45);
+			exit(0);
+		}
+		else if(!strcmp(time,"9½Ã")||!strcmp(time,"10½Ã")||!strcmp(time,"11½Ã")||!strcmp(time,"12½Ã")||!strcmp(time,"13½Ã")||!strcmp(time,"14½Ã")||!strcmp(time,"15½Ã")||!strcmp(time,"16½Ã")||!strcmp(time,"17½Ã")||!strcmp(time,"18½Ã")||!strcmp(time,"19½Ã")||!strcmp(time,"20½Ã")||!strcmp(time,"21½Ã")) {
 			gotoxy(x,y+2); printf("                                                            ");
 			break;
 		}
 		else if(!strcmp(time,"b")||!strcmp(time,"B"))
 			return;	
-		gotoxy(x,y+2);printf("¾à¼Ó½Ã°£Àº 9½Ã~21½Ã »çÀÌÀÇ Á¤°¢ ½Ã°£À» ÀÔ·ÂÇÏ¼¼¿ä. ex) 13½Ã");
+		gotoxy(x,y+2);printf("¾à¼Ó½Ã°£Àº 9½Ã~21½Ã »çÀÌÀÇ Á¤°¢ ½Ã°£À» ÀÔ·ÂÇÏ¼¼¿ä.");
 		gotoxy(x+27,y);printf("              ");
 	}		
 	strcpy(timeCopy,time);
@@ -565,13 +611,21 @@ void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofW
 
 		while(1){
 			gotoxy(x+27,y);scanf("%s",&time);
-			if(!strcmp(time,"9½Ã")||!strcmp(time,"10½Ã")||!strcmp(time,"11½Ã")||!strcmp(time,"12½Ã")||!strcmp(time,"13½Ã")||!strcmp(time,"14½Ã")||!strcmp(time,"15½Ã")||!strcmp(time,"16½Ã")||!strcmp(time,"17½Ã")||!strcmp(time,"18½Ã")||!strcmp(time,"19½Ã")||!strcmp(time,"20½Ã")||!strcmp(time,"21½Ã")) {
-				gotoxy(x,y+2); printf("                                                            ");
+			if(!strcmp(time,"x")||!strcmp(time,"X")){
+			gotoxy(90,45);
+			exit(0);
+			}
+			else if(!strcmp(time,"9½Ã")||!strcmp(time,"10½Ã")||!strcmp(time,"11½Ã")||!strcmp(time,"12½Ã")||!strcmp(time,"13½Ã")||!strcmp(time,"14½Ã")||!strcmp(time,"15½Ã")||!strcmp(time,"16½Ã")||!strcmp(time,"17½Ã")||!strcmp(time,"18½Ã")||!strcmp(time,"19½Ã")||!strcmp(time,"20½Ã")||!strcmp(time,"21½Ã")) {
+				gotoxy(x,y+2); printf("                                                  ");
+				gotoxy(x,y+3);printf("                               "); 
+				gotoxy(x,y+4);printf("                                                        ");
 				break;
 			}
 			else if(!strcmp(time,"b")||!strcmp(time,"B"))
 				return;
-			gotoxy(x,y+2);printf("¾à¼Ó½Ã°£Àº 9½Ã~21½Ã »çÀÌÀÇ Á¤°¢ ½Ã°£À» ÀÔ·ÂÇÏ¼¼¿ä. ex) 13½Ã");
+			gotoxy(x,y+3);printf("                              "); 
+			gotoxy(x,y+4);printf("                                                            ");
+			gotoxy(x,y+2);printf("¾à¼Ó½Ã°£Àº 9½Ã~21½Ã »çÀÌÀÇ Á¤°¢ ½Ã°£À» ÀÔ·ÂÇÏ¼¼¿ä.");
 			gotoxy(x+27,y);printf("              ");
 		}	
 		strcpy(timeCopy,time);
@@ -688,6 +742,10 @@ void selectName(char *DBname,struct structPromise *newPromise) {	//¾à¼Ó¸í ÇÔ¼ö. 
 	while(1){
 	gotoxy(x+10,y);scanf("%s",&newPromise->promiseName);  //@@@¾à¼Ó¸í ÀÔ·Â
 	if(!strcmp(newPromise->promiseName,"0")) {}
+	else if(!strcmp(newPromise->promiseName,"x")||!strcmp(newPromise->promiseName,"X")){
+			gotoxy(90,45);
+			exit(0);
+		}
 	else if(stringLengthcheck(newPromise->promiseName,40)) {
 		gotoxy(x+10,y-1);printf("¾à¼Ó¸íÀº ÇÑ±Û 20ÀÚ, ¿µ¹® 40ÀÚ ÀÌÇÏ·Î ÀÔ·ÂÇÏ¼¼¿ä.");
 		gotoxy(x+10,y);printf("                                         ");
@@ -713,15 +771,20 @@ int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise 
 	int x=26, y=12;
 	while(1){
 		gotoxy(x+60,y);scanf("%s",&newPromise->promiseFreindsCount); //@@@ÀÎ¿ø¼ö ÀÔ·Â
-		if(!strcmp(newPromise->promiseFreindsCount,"1")||!strcmp(newPromise->promiseFreindsCount,"2")||!strcmp(newPromise->promiseFreindsCount,"3")||!strcmp(newPromise->promiseFreindsCount,"4")){  //¿À·ù ¾øÀ»½Ã		    
+		if(!strcmp(newPromise->promiseFreindsCount,"b")||!strcmp(newPromise->promiseFreindsCount,"B"))
+			return 0;
+		else if(!strcmp(newPromise->promiseFreindsCount,"x")||!strcmp(newPromise->promiseFreindsCount,"X")){
+			gotoxy(90,45);
+			exit(0);
+			}
+		else if(!strcmp(newPromise->promiseFreindsCount,"1")||!strcmp(newPromise->promiseFreindsCount,"2")||!strcmp(newPromise->promiseFreindsCount,"3")||!strcmp(newPromise->promiseFreindsCount,"4")){  //¿À·ù ¾øÀ»½Ã		    
 			gotoxy(x+50,y-1); printf("                                                "); //¿À·ù¸Ş½ÃÁö ¶óÀÎÅ¬¸®¾î
 			break;  
 		}
 		gotoxy(x+50,y-1);printf("ÀÎ¿ø¼ö´Â 1~4 ¹üÀ§ÀÇ ¼ıÀÚ·Î ÀÔ·ÂÇÏ¼¼¿ä.");
 		gotoxy(x+50,y); printf(" ÀÎ¿ø¼ö :                                           ");
 	}
-	if(!strcmp(newPromise->promiseFreindsCount,"b")||!strcmp(newPromise->promiseFreindsCount,"B"))
-		return 0;
+	
 	Count=atoi(newPromise->promiseFreindsCount);				//ÀÎ¿ø¼ö¸¦ intÇüÀ¸·Î ¹Ù²ãÁÖ°í newPromiseÀÇ promiseFriendsCount ¿¡ µ¿ÀûÇÒ´ç
 	CountCopy=Count;
 	newPromise->promiseFriendsName=(char **)malloc(sizeof(char*)*Count+2);	
@@ -735,7 +798,13 @@ int selectFriends(char *DBname,int CombineTimetable[5][13],struct structPromise 
 		gotoxy(x+12,y+4);printf("                              ");
 		while(1){
 			gotoxy(x+12,y+4);scanf("%s",&Name);  //@@@°Ë»öÇÒ ÀÌ¸§ ÀÔ·Â
-			if(stringLengthcheck(Name,12)) {
+			if(!strcmp(Name,"b")||!strcmp(Name,"B"))			
+				break;
+			else if(!strcmp(Name,"x")||!strcmp(Name,"X")){
+			gotoxy(90,45);
+			exit(0);
+			}
+			else if(stringLengthcheck(Name,12)) {
 					gotoxy(x+12,y+3);printf("                                            ");
 				gotoxy(x+12,y+3);printf("ÀÌ¸§Àº ÇÑ±Û 6ÀÚ³»·Î ÀÔ·ÂÇÏ¼¼¿ä.");
 				gotoxy(x+12,y+4);printf("                                        ");

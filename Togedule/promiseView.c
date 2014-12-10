@@ -33,7 +33,7 @@ int ViewAllPromise(char *DBname,char *logID) {
 	fp = fopen(openDB, "r");
 	if ( fp == NULL ) {
 		gotoxy(x+12,y+1); printf("현재 생성된 약속리스트가 없습니다.");
-		Sleep(3000);
+		Sleep(1000);
 		return 0;
 	}
 	while (!feof(fp)) {			//약속리스트 열어서 리스트에 적혀진 개수만큼 이름과 날짜를 읽어서 출력하는 부분
@@ -105,6 +105,10 @@ int ViewAllPromise(char *DBname,char *logID) {
 								free(cost);
 								return 0;
 							}
+							else if(!strcmp(controlList,"x")||!strcmp(controlList,"X")){
+								gotoxy(90,45);
+								exit(0);
+							}
 							if(!strcmp(controlList,"@")||!strcmp(controlList,">"))
 								break;
 							gotoxy(110,10);printf("     ");
@@ -142,6 +146,10 @@ int ViewAllPromise(char *DBname,char *logID) {
 									free(cost[i]);
 								free(cost);
 								return 0;
+							}
+							else if(!strcmp(controlList,"x")||!strcmp(controlList,"X")){
+								gotoxy(90,45);
+								exit(0);
 							}
 							if(!strcmp(controlList,"@")||!strcmp(controlList,"<")||!strcmp(controlList,">"))
 								break;
@@ -191,6 +199,10 @@ int ViewAllPromise(char *DBname,char *logID) {
 								free(cost);
 								return 0;
 							}
+							else if(!strcmp(controlList,"x")||!strcmp(controlList,"X")){
+								gotoxy(90,45);
+								exit(0);
+							}
 							if(!strcmp(controlList,"@")||!strcmp(controlList,"<"))
 								break;
 							gotoxy(110,10);printf("     ");
@@ -231,6 +243,10 @@ int ViewAllPromise(char *DBname,char *logID) {
 				free(cost[i]);
 			free(cost);
 			return 0;
+		}
+		else if(!strcmp(select,"x")||!strcmp(select,"X")){
+			gotoxy(90,45);
+			exit(0);
 		}
 		listnumber=atoi(select);	
 		if(listnumber>0&&listnumber<numbering)
@@ -314,6 +330,10 @@ int ViewAllPromise(char *DBname,char *logID) {
 	gotoxy(103,10);scanf("%s",&select);
 	if(!strcmp(select,"b")||!strcmp(select,"B"))
 		return 0;
+	else if(!strcmp(select,"x")||!strcmp(select,"X")){
+		gotoxy(90,45);
+		exit(0);
+	}
 	else
 		return 1;
 }

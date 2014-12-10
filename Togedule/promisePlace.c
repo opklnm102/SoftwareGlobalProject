@@ -33,6 +33,10 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 		gotoxy(x+1,y+21);scanf("%s",&placeSelectChar); fflush(stdin);
 		if(!strcmp(placeSelectChar,"b")||!strcmp(placeSelectChar,"B"))
 			break;
+		else if(!strcmp(placeSelectChar,"x")||!strcmp(placeSelectChar,"X")){
+			gotoxy(90,45);
+			exit(0);
+		}
 		placeSelect=atoi(placeSelectChar);
 		if(1 <= placeSelect && placeSelect <= 4) break;
 		gotoxy(x-15,y+22);printf("리스트에 있는 것중에 고르시오");
@@ -43,6 +47,7 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 		fclose(fp1);
 		return;
 	}
+
 	switch(placeSelect){  //장소리스트 대분류 선택
 	case 1 :
 		strcpy(place,"학습관련시설");		
@@ -95,6 +100,10 @@ void promisePlace(char *DBname,struct structPromise *newPromise){
 		 gotoxy(x+2,y+25);scanf("%s",&placeSelectChar); fflush(stdin);
 		 if(!strcmp(placeSelectChar,"b")||!strcmp(placeSelectChar,"B"))
 			break;
+		 else if(!strcmp(placeSelectChar,"x")||!strcmp(placeSelectChar,"X")){
+			gotoxy(90,45);
+			exit(0);
+		}
 		placeSelect=atoi(placeSelectChar);
 		if(1 <= placeSelect && placeSelect <= placeCount) break;
 		gotoxy(x,y+25);printf("       ");

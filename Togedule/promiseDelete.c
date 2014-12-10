@@ -105,6 +105,10 @@ int deleteAllPromise(char *DBname,char *logID) {
 								free(cost);
 								return 0;
 							}
+							else if(!strcmp(controlList,"x")||!strcmp(controlList,"X")){
+								gotoxy(90,45);
+								exit(0);
+							}
 							if(!strcmp(controlList,"@")||!strcmp(controlList,">"))
 								break;
 							gotoxy(110,10);printf("     ");
@@ -142,6 +146,10 @@ int deleteAllPromise(char *DBname,char *logID) {
 									free(cost[i]);
 								free(cost);
 								return 0;
+							}
+							else if(!strcmp(controlList,"x")||!strcmp(controlList,"X")){
+								gotoxy(90,45);
+								exit(0);
 							}
 							if(!strcmp(controlList,"@")||!strcmp(controlList,"<")||!strcmp(controlList,">"))
 								break;
@@ -191,6 +199,10 @@ int deleteAllPromise(char *DBname,char *logID) {
 								free(cost);
 								return 0;
 							}
+							else if(!strcmp(controlList,"x")||!strcmp(controlList,"X")){
+								gotoxy(90,45);
+								exit(0);
+							}
 							if(!strcmp(controlList,"@")||!strcmp(controlList,"<"))
 								break;
 							gotoxy(110,10);printf("     ");
@@ -231,6 +243,10 @@ int deleteAllPromise(char *DBname,char *logID) {
 				free(cost[i]);
 			free(cost);
 			return 0;
+		}
+		else if(!strcmp(select,"x")||!strcmp(select,"X")){
+			gotoxy(90,45);
+			exit(0);
 		}
 		listnumber=atoi(select);	
 		if(listnumber>0&&listnumber<numbering)
@@ -317,6 +333,10 @@ int deleteAllPromise(char *DBname,char *logID) {
 				free(transName[i]);
 			free(transName);
 			return 0;
+		}
+		if(!strcmp(select,"x")||!strcmp(select,"X")){
+			gotoxy(90,45);
+			exit(0);
 		}
 		if(!strcmp(select,"Y")||!strcmp(select,"y"))
 			break;

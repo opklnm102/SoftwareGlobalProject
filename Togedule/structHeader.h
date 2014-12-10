@@ -126,7 +126,7 @@ int searchName(char *name,int count,struct structPromise newPromise,int CombineT
 void setMajor(char ID[8],char Major[20]);   //학번 3번째,4번째 자리를 바탕으로 학과정보를 알아내는 함수
 int recordCombineTimetable(int CombineTimetable[5][13], char *DBname);   //통합시간표에 정보를 추가하는 함수, 통합시간표와 '학번+이름' 문자열을 매개변수로 받아서 처리
 int selectDate(int CombineTimetable[5][13],structPromise *newPromise);    //만들 약속의 날짜 입력받는 함수
-int callendar(int Month);    //달력출력함수. 월을 매개변수로 넘겨받는다. selectDate 함수에서 입력받은 달을 넘겨받음.
+int callendar(int Month,char *dateLimit);    //달력출력함수. 월을 매개변수로 넘겨받는다. selectDate 함수에서 입력받은 달을 넘겨받음.
 int weekday(int year, int month, int day);   //년도, 월, 일 을 매개변수로 받아 요일 찾는 함수. 리턴값은 정수형태
 void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofWeek);    //만들 약속의 시간을 입력받는 함수
 void saveFriendsID(char ID[8], char *DB);    //학번을 매개변수로 받아 학번+이름을 알아내는 함수
