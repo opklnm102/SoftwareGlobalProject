@@ -547,6 +547,8 @@ void moneyShare1(structMember *s){
 				gotoxy(37,42);
 				printf("절사할 돈을 작게하거나 양수를 입력하세요.");
 				gotoxy(69,40);
+				printf("         ");
+				gotoxy(69,40);
 			} 
 			while(scanf("%d %d", &beforeDivideMoney, &divisionNumber)!=2 || (beforeDivideMoney < 0) || (divisionNumber < 0) || (beforeDivideMoney < divisionNumber) || beforeDivideMoney == divisionNumber);
 
