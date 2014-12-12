@@ -131,3 +131,15 @@ int hanErrorcheck(char *s){
 	}
 	return 0;  //아니면 0리턴
 }
+
+void gotoxyPrint(int x, int y, char* word) {
+
+	COORD Cur;
+	Cur.X=x;
+	Cur.Y=y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),Cur);
+
+	printf(word);
+}
+
+

@@ -250,7 +250,7 @@ void moneyShare1(structMember *s){
 	int promiselistCount;
 	int friendCount;
 	structPromise *pl;
-	
+
 	screenBorderDraw();  //전체틀 그리기	
 	gotoxy(56,6); printf("☆ 비용 ☆");
 	gotoxy(54,8); printf("- 나의 약속리스트 -");
@@ -541,16 +541,15 @@ void moneyShare1(structMember *s){
 		gotoxy(69,40); 
 
 		//하나라도 문자가 들어가는 경우. 음수는 통과함
-			do { 
+		do { 
 
-				fflush(stdin);
-				gotoxy(37,42);
-				printf("절사할 돈을 작게하거나 양수를 입력하세요.");
-				gotoxy(69,40);
-				printf("         ");
-				gotoxy(69,40);
-			} 
-			while(scanf("%d %d", &beforeDivideMoney, &divisionNumber)!=2 || (beforeDivideMoney < 0) || (divisionNumber < 0) || (beforeDivideMoney < divisionNumber) || beforeDivideMoney == divisionNumber);
+			fflush(stdin);
+			gotoxy(37,42);
+			printf("절사할 돈을 작게하거나 양수를 입력하세요.");
+			gotoxy(69,40);   printf("              ");
+			gotoxy(69,40);
+		} 
+		while(scanf("%d %d", &beforeDivideMoney, &divisionNumber)!=2 || (beforeDivideMoney < 0) || (divisionNumber < 0) || (beforeDivideMoney < divisionNumber) || beforeDivideMoney == divisionNumber);
 
 		////하나라도 음수일 경우 절사할 돈이 더 클 경우
 		//while ( (beforeDivideMoney < 0) || (divisionNumber < 0) || (beforeDivideMoney < divisionNumber) ){
@@ -690,7 +689,7 @@ void moneyShare1(structMember *s){
 	}
 	/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ알고리즘 끝ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ ㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
 
-	
+
 	//열기할 파일 이름 만들기
 	getUserfileName(fileName,s,"PromiseList");
 	fp = fopen(fileName, "r");
@@ -706,6 +705,8 @@ void moneyShare1(structMember *s){
 			for(i=0; i<promiselistCount; i++){// 리스트의 수만큼 파일안에 있는 정보 읽어서 저장
 				for(j=0; j<70; j++)
 					buffer[j]='\0';
+				for(j=0; j<10; j++)
+					pl[i].cost[j]='\0';
 
 				fscanf(fp,"%s",pl[i].promiseName);  //약속명
 				fseek(fp,2,SEEK_CUR);
@@ -718,8 +719,8 @@ void moneyShare1(structMember *s){
 				for(j=0; buffer[j] != '\0'; j++){
 					if(buffer[j] == ',')
 						friendCount++;
-				}
-				 //친구들 학번 저장할곳 할당
+				}				
+				//친구들 학번 저장할곳 할당
 				pl[i].promiseFriendsName=(char **)malloc(sizeof(char *)*friendCount); 
 				for(j=0; j<friendCount; j++)
 					pl[i].promiseFriendsName[j]=(char *)malloc(sizeof(char)*9);
@@ -744,13 +745,14 @@ void moneyShare1(structMember *s){
 				//for(j=0; j<friendCount; j++)  //학번 확인을 위한 임시 코드
 				//	printf("%s\n",pl[i].promiseFriendsName[j]);
 				//if(i != promiselistCount-1)
-					fseek(fp,2,SEEK_CUR);
+				fseek(fp,2,SEEK_CUR);
 				fgets(pl[i].cost,10,fp);				
 			}
 		}
 	}
 	fclose(fp);
 
+	//자신의 파일에 비용 저장
 	fp=fopen(fileName,"w");
 	fprintf(fp,"%s\n","약속리스트");
 	fprintf(fp,"%d\n",promiselistCount);
@@ -775,7 +777,47 @@ void moneyShare1(structMember *s){
 		else
 			fprintf(fp,"%s",pl[i].cost);
 	}
-	fclose(fp);
+	fclose(fp);	
+
+	//친구꺼 파일에 비용 저장
+	for(k=0,l=0; k<peopleCnt-1; k++){
+
+		strcpy(fileName,pl[listnumber].promiseFriendsName[k]);  //학번복사
+		strcat(fileName,transName[k]);
+		strcat(fileName,"PromiseList.txt");
+
+		friendsavecost(pl,listnumber,fileName,arrMoney,k);
+
+		//fp=fopen(fileName,"w");
+		//fprintf(fp,"%s\n","약속리스트");
+		//fprintf(fp,"%d\n",promiselistCount);
+		//for(i=0; i<promiselistCount; i++){
+		//	fprintf(fp,"%s\n",pl[i].promiseName);
+		//	fprintf(fp,"%s",pl[i].promisePlace);
+		//	fprintf(fp,"%s\n",pl[i].promiseTime);
+		//	fprintf(fp,"%s\n",pl[i].Promisedate);
+
+		//	friendCount=atoi(pl[i].promiseFreindsCount);
+		//	for(j=0; j<friendCount; j++){
+		//		fprintf(fp,"%s",pl[i].promiseFriendsName[j]);
+		//		if(j != friendCount-1)
+		//			fprintf(fp,"%s",",");
+		//		else if(j == friendCount-1)
+		//			fprintf(fp,"%s","\n");
+		//	}
+		//	if(strcmp(pl[listnumber].promiseName,pl[i].promiseName)==0)
+		//		fprintf(fp,"%d\n",arrMoney[k]);  //수정 내돈은 arrMoney마지막에 있다.
+		//	else if(pl[i].cost[0] == 10 || i == promiselistCount-1)
+		//		fprintf(fp,"%s",pl[i].cost);
+		//	else
+		//		fprintf(fp,"%s",pl[i].cost);
+		//}
+		//fclose(fp);
+	}
+
+	
+
+
 
 
 
@@ -800,6 +842,8 @@ void moneyShare1(structMember *s){
 		free(transName[i]);
 	free(transName);
 
+
+
 	gotoxy(20,10);printf("메인 메뉴로 돌아가려면 B를 다른 약속을 상세보기하려면 B를 제외한 키를 입력하세요 : ");
 	gotoxy(103,10);scanf("%s",&select); fflush(stdin);
 	if(!strcmp(select,"b")||!strcmp(select,"B")){  //뒤로가기
@@ -814,7 +858,114 @@ void moneyShare1(structMember *s){
 }
 
 
+void friendsavecost(structPromise *loginpl,int listnumber,char *fileName,int *arrMoney,int friendnum){
+	FILE *fp;
+	char buffer[70];
+	int promiselistCount;
+	int friendCount;
+	structPromise *pl;
+	int i,j,k,l;
 
+	//친구꺼 읽기
+	fp=fopen(fileName,"r");
+
+	if ( fp == NULL ) {						//파일이 없을 경우
+		gotoxy(20, 32);printf("현재 생성된 약속리스트가 없습니다.");
+		return ;
+	}
+	while(!feof(fp)){
+		fscanf(fp,"%s",buffer);
+		if(!strcmp(buffer,"약속리스트")){
+			fscanf(fp,"%d",&promiselistCount);
+			pl=(structPromise *)malloc(sizeof(structPromise)*promiselistCount);
+			for(i=0; i<promiselistCount; i++){// 리스트의 수만큼 파일안에 있는 정보 읽어서 저장
+				for(j=0; j<70; j++)
+					buffer[j]='\0';
+				for(j=0; j<10; j++)
+					pl[i].cost[j]='\0';
+
+				fscanf(fp,"%s",pl[i].promiseName);  //약속명
+				fseek(fp,2,SEEK_CUR);
+				fgets(pl[i].promisePlace,40,fp);  //장소
+				fscanf(fp,"%s",pl[i].promiseTime);  //시간
+				fscanf(fp,"%s",pl[i].Promisedate);  //날짜
+				fscanf(fp,"%s",buffer);  //친구들
+				friendCount=1;
+				k=0;
+				for(j=0; buffer[j] != '\0'; j++){
+					if(buffer[j] == ',')
+						friendCount++;
+				}				
+				//친구들 학번 저장할곳 할당
+				pl[i].promiseFriendsName=(char **)malloc(sizeof(char *)*friendCount); 
+				for(j=0; j<friendCount; j++)
+					pl[i].promiseFriendsName[j]=(char *)malloc(sizeof(char)*9);
+
+				itoa(friendCount,pl[i].promiseFreindsCount,10);
+				for(j=0; j<friendCount; j++){
+					for(l=0; l<9; l++)
+						pl[i].promiseFriendsName[j][l]='\0';
+				}
+
+				for(j=0,l=0; buffer[j] != '\0'; j++){
+					if(buffer[j] == ','){
+						pl[i].promiseFriendsName[k][l]='\0';
+						k++;
+						l=0;
+					}
+					else
+						pl[i].promiseFriendsName[k][l++]=buffer[j];					
+				}
+				pl[i].promiseFriendsName[k][l]='\0';
+
+				//for(j=0; j<friendCount; j++)  //학번 확인을 위한 임시 코드
+				//	printf("%s\n",pl[i].promiseFriendsName[j]);
+				//if(i != promiselistCount-1)
+				fseek(fp,2,SEEK_CUR);
+				fgets(pl[i].cost,10,fp);				
+			}
+		}
+	}
+	fclose(fp);
+	
+
+		//친구꺼 파일에 비용 저장
+	fp=fopen(fileName,"w");
+	fprintf(fp,"%s\n","약속리스트");
+	fprintf(fp,"%d\n",promiselistCount);
+	for(i=0; i<promiselistCount; i++){
+		fprintf(fp,"%s\n",pl[i].promiseName);
+		fprintf(fp,"%s",pl[i].promisePlace);
+		fprintf(fp,"%s\n",pl[i].promiseTime);
+		fprintf(fp,"%s\n",pl[i].Promisedate);
+
+		friendCount=atoi(pl[i].promiseFreindsCount);
+		for(j=0; j<friendCount; j++){
+			fprintf(fp,"%s",pl[i].promiseFriendsName[j]);
+			if(j != friendCount-1)
+				fprintf(fp,"%s",",");
+			else if(j == friendCount-1)
+				fprintf(fp,"%s","\n");
+		}
+		if(!strcmp(loginpl[listnumber].promiseName,pl[i].promiseName) && !strcmp(loginpl[listnumber].Promisedate,pl[i].Promisedate) && !strcmp(loginpl[listnumber].promiseTime,pl[i].promiseTime))
+			fprintf(fp,"%d\n",arrMoney[friendnum]);  //수정 내돈은 arrMoney마지막에 있다.
+		else if(pl[i].cost[0] == 10 || i == promiselistCount-1)
+			fprintf(fp,"%s",pl[i].cost);
+		else
+			fprintf(fp,"%s",pl[i].cost);
+	}
+	fclose(fp);	
+
+
+
+
+
+
+
+
+
+
+}
 
 //
 ////구조체,사람수,이름들를 인자로

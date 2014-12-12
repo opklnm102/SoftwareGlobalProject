@@ -1,6 +1,5 @@
 #include"structHeader.h"
 
-
 //●시간표 수정메뉴
 void modifyMenu (structMember *s) {
 
@@ -15,11 +14,12 @@ void modifyMenu (structMember *s) {
 
 		/*----------시간표 수정 메뉴 출력----------*/
 		gotoxyPrint(22, 15, "*시간표 수정메뉴*");
-		gotoxyPrint(17, 18, " 1) 시간표 과목정보 수정 ");
-		gotoxyPrint(17, 20, " 2) 시간표 과목 추가 ");
-		gotoxyPrint(17, 22, " 3) 시간표 과목 삭제 ");
-		gotoxyPrint(17, 24, " 4) 시간표 수정메뉴 나가기 ");
-		gotoxyPrint(17, 26, "메뉴선택(숫자) >> ");
+		gotoxyPrint(17, 18, " 1 시간표 과목정보 수정 ");
+		gotoxyPrint(17, 20, " 2 시간표 과목 추가 ");
+		gotoxyPrint(17, 22, " 3 시간표 과목 삭제 ");
+		gotoxyPrint(17, 24, " 4 시간표 수정메뉴 나가기 ");
+		gotoxyPrint(11, 27, "원하는 선택 메뉴의 숫자를 입력해주세요");
+		gotoxyPrint(10, 28, " >> ");
 
 		/*----------메뉴 선택지 입력------------*/
 		fflush(stdin);
@@ -41,13 +41,26 @@ void modifyMenu (structMember *s) {
 			//시간표수정메뉴나가기
 			case '4': return;
 			//한 문자가 들어왔지만 선택지에 없는 문자일 때
-			default: gotoxyPrint(17, 28, "●메뉴선택이 잘못되었습니다.●"); fflush(stdin); Sleep(1000);
+			case 'b': return;
+			case 'B': return;
+			case 'x': exit(0);
+			case 'X': exit(0);
+			default:
+				{
+					
+				if(choiceMenu[0] == '\0') {
+					gotoxyPrint(16, 30, "●메뉴를 선택하지 않았습니다●"); fflush(stdin); Sleep(1000);
+				}
+	
+				gotoxyPrint(16, 30, "●메뉴선택이 잘못되었습니다●"); fflush(stdin); Sleep(1000);
+			
+				}
 			}
 		}
 
 		/*----------(키 입력이 두 문자 이상인 경우)----------*/
 		else{
-			gotoxyPrint(17, 28, "●메뉴선택이 잘못되었습니다.●");
+			gotoxyPrint(16, 30, "●메뉴선택이 잘못되었습니다.●");
 			fflush(stdin);
 			Sleep(1000);
 		}
@@ -106,6 +119,7 @@ void modifySubjectInfo(structMember *s) {
 
 		gotoxyPrint(20, 14, "- 시간표 수정 -");
 		gotoxyPrint(7, 16, "수정할 과목의 요일 : ");
+		gotoxyPrint(5, 33, "▩ 수정할 과목의 요일예시: '월' 또는 '월요일' ");
 		
 
 			/*----------수정할 과목의 요일 입력----------*/
@@ -120,8 +134,15 @@ void modifySubjectInfo(structMember *s) {
 
 					checkDay = checkModifyDay(modifyDay);
 
+					if((modifyDay[0] == 'b'|| modifyDay[0] == 'B' )&& modifyDay[1] == '\0' ){
+						gotoxyPrint(5, 33, "                                              ");
+						return;
+					}
+				
+					else if((modifyDay[0] == 'x'|| modifyDay[0] == 'X' )&& modifyDay[1] == '\0' )  exit(0);
+
 					/*----------(입력이 있지만 요일(월~금)을 입력하지 않은 경우)----------*/
-					if(checkDay == 0){
+					else if(checkDay == 0){
 						warningModifyDay("◀수정할요일을입력해주세요");
 						fflush(stdin);
 						strcpy(modifyDay,"");
@@ -135,14 +156,20 @@ void modifySubjectInfo(structMember *s) {
 
 					}
 
+					
+
 					/*----------(요일을 한개 입력한 경우)----------*/
 					else {
+
 
 						/*----------수정할 해당 요일 과목출력 ----------*/
 						for(day=0; day<5; day++) {
 
 							// 무슨 요일인지 체크
-							if (strstr(modifyDay, dayOfWeek[day])) { 
+
+								if(strstr(modifyDay, dayOfWeek[day])) {
+
+									if(strstr(modifyDay,"요일") || (strcmp(modifyDay,dayOfWeek[day]) == 0 )) {
 
 								// 사용자 시간표에서 사용자가 입력한 요일 찾기
 								for(i=0; i<subjectTotalNum; i++) {
@@ -152,21 +179,33 @@ void modifySubjectInfo(structMember *s) {
 
 										OrderOfSubject[subjectCntOfModifyDay] = i+1; //시간표 몇번째에 과목이 있는지 저장
 										gotoxy(15, 19 + subjectCntOfModifyDay * 2 );
-										printf("%d) %s %s %s교시", subjectCntOfModifyDay+1, subjectPointer[i].dayOfWeek, subjectPointer[i].subjectName, subjectPointer[i].subjectClass);
+										printf("%d %s %s %s교시", subjectCntOfModifyDay+1, subjectPointer[i].dayOfWeek, subjectPointer[i].subjectName, subjectPointer[i].subjectClass);
 										subjectCntOfModifyDay++;
 									}
 								}
 
 								//수정할 요일에 과목이 없는 경우
 								if(OrderOfSubject[0] == 0) {
-									gotoxyPrint(13, 22, "●해당 요일에 과목이 없습니다.●");
+									gotoxyPrint(13, 22, "●해당 요일에 과목이 없습니다●");
 									Sleep(1000);
 									gotoxyPrint(13, 22, "                                ");
 									gotoxyPrint(28, 16, "               ");
 									strcpy(modifyDay,"");
 									break;
 								}
-							}
+									}
+
+									else{
+										warningModifyDay("◀요일입력이 잘못되었습니다");
+						fflush(stdin);
+						strcpy(modifyDay,"");
+						break;
+
+
+									}
+								}
+
+
 						}
 						//수정할 과목을 선택했을 경우
 						if(OrderOfSubject[0] != 0) {
@@ -186,13 +225,15 @@ void modifySubjectInfo(structMember *s) {
 			}
 
 			fflush(stdin);
-			gotoxyPrint(5, 30, "과목선택(숫자) >> ");
-
+			gotoxyPrint(10, 29, "수정할 과목의 해당 숫자를 입력해주세요");
+			gotoxyPrint(10, 30, " >> ");
+			
+			
 
 			/*----------수정할 과목의 요일에서 과목 선택하는 while문----------*/
 			while(1) {
 				fflush(stdin);
-				gotoxy(23,30);
+				gotoxy(13,30);
 				fgets(modifySubject, sizeof(modifySubject), stdin);
 
 
@@ -201,7 +242,19 @@ void modifySubjectInfo(structMember *s) {
 
 					checkChoice = checkChoiceOfSubject(modifySubject, subjectCntOfModifyDay);
 
-					if( checkChoice == 0) {
+					if((modifySubject[0] == 'b'|| modifySubject[0] == 'B' )&& modifySubject[1] == '\0' ){
+						gotoxyPrint(5, 33, "                                              ");
+						return;
+					}
+				
+					else if((modifySubject[0] == 'x'|| modifySubject[0] == 'X' )&& modifySubject[1] == '\0' )  exit(0);
+
+					else if(modifySubject[0] == '\0') {
+						warningChoiceOfSubject("◀수정할과목을선택해주세요");
+						strcpy(modifySubject,"");
+					}
+
+					else if( checkChoice == 0) {
 						intModifySubjectNum = atoi(&modifySubject[0])-1;
 						break;
 					}
@@ -214,15 +267,12 @@ void modifySubjectInfo(structMember *s) {
 						strcpy(modifySubject,"");
 					}
 
-					else if(modifySubject[0] == '\0') {
-						warningChoiceOfSubject("◀수정할과목을선택해주세요");
-						strcpy(modifySubject,"");
-					}
-
 					else {
 						warningChoiceOfSubject("◀숫자외의문자를입력하셨습니다");
 						strcpy(modifySubject,"");
 					}
+
+
 				}
 				else {
 					warningChoiceOfSubject("◀입력이 잘못되었습니다");
@@ -235,7 +285,7 @@ void modifySubjectInfo(structMember *s) {
 
 			/*----------수정할 과목 (원래) 정보 출력----------*/
 			listBorderDraw(3,12);
-
+			gotoxyPrint(5, 33, "                                               ");
 			gotoxyPrint(6, 14, "＊＊＊＊＊＊＊＊＊＊＊현재＊＊＊＊＊＊＊＊＊＊＊");
 			gotoxy(9, 16);
 			printf("요  일 : %s",subjectPointer[OrderOfSubject[intModifySubjectNum]-1].dayOfWeek);
@@ -251,8 +301,8 @@ void modifySubjectInfo(structMember *s) {
 			gotoxyPrint(9, 27, "과목명 :");
 			gotoxyPrint(9, 29, "교  시 :");
 
-			gotoxyPrint(3, 34, "▩ 과목요일예시: '월' 또는 '월요일' ");
-			gotoxyPrint(3, 35, "▩ 과목명은 빈칸없이 5자이내 입니다.");
+			gotoxyPrint(3, 34, "▩ 과목요일예시: '월' 또는 '월요일'");
+			gotoxyPrint(3, 35, "▩ 과목명은 빈칸없이 5자이내 입니다");
 			gotoxyPrint(3, 36, "▩ 과목교시는 숫자와 ','이외의 문자는 입력되지 않습니다");
 			gotoxyPrint(3, 37, "▩ 과목교시예시: '1,2,3' ");
 			
@@ -272,7 +322,18 @@ void modifySubjectInfo(structMember *s) {
 
 					checkDay = checkModifyDay(modifyDay);
 
-					if(checkDay == 0){
+
+					if((modifyDay[0] == 'b'|| modifyDay[0] == 'B' )&& modifyDay[1] == '\0' ) {
+						gotoxyPrint(3, 34, "                                    ");
+						gotoxyPrint(3, 35, "                                    ");
+						gotoxyPrint(3, 36, "                                                      ");
+						gotoxyPrint(3, 37, "                                    ");
+						return;
+					}
+				
+					else if((modifyDay[0] == 'x'|| modifyDay[0] == 'X' )&& modifyDay[1] == '\0' )  exit(0);
+
+					else if(checkDay == 0){
 						warningDayOfModifySubect("◀수정할요일을입력해주세요");
 						fflush(stdin);
 						strcpy(modifyDay,"");
@@ -286,18 +347,22 @@ void modifySubjectInfo(structMember *s) {
 
 					}
 
+
 					/*----------(요일을 한개 입력한 경우)----------*/
 					else {
 
 						for(i =0; i<5; i++) {
 							if(strstr(modifyDay, dayOfWeek[i]) ) {
-								strcpy(tmpSubject.dayOfWeek, dayOfWeek[i]);
-								break;
+									strcpy(tmpSubject.dayOfWeek, dayOfWeek[i]);
+									break;
 							}
+
 						}
 
 						break;
+
 					}
+
 
 				}
 				else {
@@ -306,6 +371,8 @@ void modifySubjectInfo(structMember *s) {
 					strcpy(modifyDay,"");
 
 				}
+							
+			
 			}
 
 
@@ -320,11 +387,22 @@ void modifySubjectInfo(structMember *s) {
 				if( (endP=strchr(tmpSubject.subjectName, '\n')) != NULL ) {
 					*endP = '\0';
 
+					if((tmpSubject.subjectName[0] == 'b'|| tmpSubject.subjectName[0] == 'B' )&& tmpSubject.subjectName[1] == '\0' ) {
+						gotoxyPrint(3, 34, "                                    ");
+						gotoxyPrint(3, 35, "                                    ");
+						gotoxyPrint(3, 36, "                                                      ");
+						gotoxyPrint(3, 37, "                                    ");
+						return;
+					}
+				
+					else if((tmpSubject.subjectName[0] == 'x'|| tmpSubject.subjectName[0] == 'X' )&& tmpSubject.subjectName[1] == '\0' )  exit(0);
+
 					//입력없이 Enter를 누른 경우
-					if(tmpSubject.subjectName[0] == '\0'){
+					else if(tmpSubject.subjectName[0] == '\0'){
 						strcpy(tmpSubject.subjectName,"");
 						warningNameOfModifySubect("◀과목명을미입력했습니다.");
 					}
+
 
 					//과목명에 빈칸이 있는 경우
 					else if (checkBlankOfSubjectName(tmpSubject.subjectName) == 0) {
@@ -345,6 +423,9 @@ void modifySubjectInfo(structMember *s) {
 					warningNameOfModifySubect("◀과목명5자를초과했습니다.");
 				}
 
+				if(!strstr(tmpSubject.dayOfWeek,""))
+							break;
+
 			}
 
 
@@ -361,8 +442,18 @@ void modifySubjectInfo(structMember *s) {
 			if( (endP=strchr(tmpSubject.subjectClass, '\n')) != NULL ) {
 				*endP = '\0';
 
+				if((tmpSubject.subjectClass[0] == 'b'|| tmpSubject.subjectClass[0] == 'B' )&& tmpSubject.subjectClass[1] == '\0' ) {
+						gotoxyPrint(3, 34, "                                    ");
+						gotoxyPrint(3, 35, "                                    ");
+						gotoxyPrint(3, 36, "                                                      ");
+						gotoxyPrint(3, 37, "                                    ");
+						return;
+					}
+				
+				else if((tmpSubject.subjectClass[0] == 'x'|| tmpSubject.subjectClass[0] == 'X' )&& tmpSubject.subjectClass[1] == '\0' )  exit(0);
+
 				//숫자와','이외의 문자가 들어올때
-				if(checkCharaterInClass(tmpSubject.subjectClass) == 0) {
+				else if(checkCharaterInClass(tmpSubject.subjectClass) == 0) {
 					warningClassOfModifySubect("◀','와숫자이외의문자입니다");
 					strcpy(tmpSubject.subjectClass,"");
 				}
@@ -446,7 +537,7 @@ void addSubject(structMember *s) {
 
 	/*----------(사용자의 시간표 텍스트 파일이 없는 경우)----------*/
 	if(fp == NULL ) {
-		gotoxyPrint(8, 20, "●시간표가 없습니다. 시간표를 만들어주세요.●");
+		gotoxyPrint(8, 20, "●시간표가 없습니다. 시간표를 만들어주세요●");
 		Sleep(1500);
 		return;
 	}
@@ -467,7 +558,7 @@ void addSubject(structMember *s) {
 		gotoxyPrint(9, 21, "과목명 :");
 		gotoxyPrint(9, 23, "교  시 :");
 		gotoxyPrint(3, 34, "▩ 과목요일예시: '월' 또는 '월요일' ");
-		gotoxyPrint(3, 35, "▩ 과목명은 빈칸없이 5자이내 입니다.");
+		gotoxyPrint(3, 35, "▩ 과목명은 빈칸없이 5자이내 입니다");
 		gotoxyPrint(3, 36, "▩ 과목교시는 숫자와 ','이외의 문자는 입력되지 않습니다");
 		gotoxyPrint(3, 37, "▩ 과목교시예시: '1,2,3' ");
 
@@ -487,7 +578,18 @@ void addSubject(structMember *s) {
 
 					checkDay = checkModifyDay(addDay);
 
-					if(checkDay == 0){
+					if((addDay[0] == 'b'|| addDay[0] == 'B' )&& addDay[1] == '\0' ){
+						gotoxyPrint(3, 34, "                                       ");
+						gotoxyPrint(3, 35, "                                       ");
+						gotoxyPrint(3, 36, "                                                      ");
+						gotoxyPrint(3, 37, "                         ");
+						return;
+					}
+				
+			
+					else if((addDay[0] == 'x'|| addDay[0] == 'X' )&& addDay[1] == '\0' )  exit(0);
+
+					else if(checkDay == 0){
 						warningDayOfAddSubect("◀추가할요일을입력해주세요");
 						fflush(stdin);
 						strcpy(addDay,"");
@@ -501,16 +603,18 @@ void addSubject(structMember *s) {
 
 					}
 
+
 					/*----------(요일을 한개 입력한 경우)----------*/
 					else {
 
 						for(i =0; i<5; i++) {
 							if(strstr(addDay, dayOfWeek[i]) ) {
-								strcpy(tmpSubject.dayOfWeek, dayOfWeek[i]);
-								break;
+							
+									strcpy(tmpSubject.dayOfWeek, dayOfWeek[i]);
+									break;
+
 							}
 						}
-
 						break;
 					}
 
@@ -536,11 +640,25 @@ void addSubject(structMember *s) {
 				if( (endP=strchr(tmpSubject.subjectName, '\n')) != NULL ) {
 					*endP = '\0';
 
+					if((tmpSubject.subjectName[0] == 'b'|| tmpSubject.subjectName[0] == 'B' )&& tmpSubject.subjectName[1] == '\0' ){
+						
+						gotoxyPrint(3, 34, "                                       ");
+						gotoxyPrint(3, 35, "                                       ");
+						gotoxyPrint(3, 36, "                                                      ");
+						gotoxyPrint(3, 37, "                         ");
+
+						return;
+
+					}
+				
+					else if((tmpSubject.subjectName[0] == 'x'|| tmpSubject.subjectName[0] == 'X' )&& tmpSubject.subjectName[1] == '\0' )  exit(0);
+
 					//입력없이 Enter를 누른 경우
-					if(tmpSubject.subjectName[0] == '\0'){
+					else if(tmpSubject.subjectName[0] == '\0'){
 						strcpy(tmpSubject.subjectName,"");
 						warningNameOfAddSubect("◀과목명을미입력했습니다.");
 					}
+
 
 					//과목명에 빈칸이 있는 경우
 					else if (checkBlankOfSubjectName(tmpSubject.subjectName) == 0) {
@@ -575,8 +693,21 @@ void addSubject(structMember *s) {
 			if( (endP=strchr(tmpSubject.subjectClass, '\n')) != NULL ) {
 				*endP = '\0';
 
+				if((tmpSubject.subjectClass[0] == 'b'|| tmpSubject.subjectClass[0] == 'B' )&& tmpSubject.subjectClass[1] == '\0' ){
+						
+						gotoxyPrint(3, 34, "                                       ");
+						gotoxyPrint(3, 35, "                                       ");
+						gotoxyPrint(3, 36, "                                                      ");
+						gotoxyPrint(3, 37, "                         ");
+
+						return;
+
+					}
+				
+				else if((tmpSubject.subjectClass[0] == 'x'|| tmpSubject.subjectClass[0] == 'X' )&& tmpSubject.subjectClass[1] == '\0' )  exit(0);
+
 				//숫자와','이외의 문자가 들어올때
-				if(checkCharaterInClass(tmpSubject.subjectClass) == 0) {
+				else if(checkCharaterInClass(tmpSubject.subjectClass) == 0) {
 					warningClassOfModifySubect("◀','와숫자이외의문자입니다");
 					strcpy(tmpSubject.subjectClass,"");
 				}
@@ -620,8 +751,14 @@ void addSubject(structMember *s) {
 
 		sortTimetable(subjectPointer,subjectTotalNum+1,s);
 
+
 		free(subjectPointer);
 	}
+
+	gotoxyPrint(3, 34, "                                       ");
+						gotoxyPrint(3, 35, "                                       ");
+						gotoxyPrint(3, 36, "                                                      ");
+						gotoxyPrint(3, 37, "                         ");
 
 }
 
@@ -673,6 +810,7 @@ void removeSubject(structMember *s) {
 		gotoxyPrint(20, 14, "- 시간표 과목삭제 -");
 
 
+		gotoxyPrint(5, 33, "▩ 삭제할 과목의 요일예시: '월' 또는 '월요일' ");
 		gotoxyPrint(7, 16, "삭제할 과목의 요일 : ");
 		/*----------수정할 과목의 요일 입력----------*/
 			while(1) {
@@ -686,8 +824,15 @@ void removeSubject(structMember *s) {
 
 					checkDay = checkModifyDay(removeDay);
 
+					if((removeDay[0] == 'b'|| removeDay[0] == 'B' )&& removeDay[1] == '\0' ){
+						gotoxyPrint(5, 33, "                                              ");
+						return;
+					}
+				
+					else if((removeDay[0] == 'x'|| removeDay[0] == 'X' )&& removeDay[1] == '\0' )  exit(0);
+
 					/*----------(입력이 있지만 요일(월~금)을 입력하지 않은 경우)----------*/
-					if(checkDay == 0){
+					else if(checkDay == 0){
 						warningModifyDay("◀삭제할요일을입력해주세요");
 						fflush(stdin);
 						strcpy(removeDay,"");
@@ -709,6 +854,7 @@ void removeSubject(structMember *s) {
 
 							// 무슨 요일인지 체크
 							if (strstr(removeDay, dayOfWeek[day])) { 
+								if(strstr(removeDay,"요일") || (strcmp(removeDay,dayOfWeek[day]) == 0 )) {
 
 								// 사용자 시간표에서 사용자가 입력한 요일 찾기
 								for(i=0; i<subjectTotalNum; i++) {
@@ -732,7 +878,11 @@ void removeSubject(structMember *s) {
 									strcpy(removeDay,"");
 									break;
 								}
+								}
+
+
 							}
+
 						}
 						//수정할 과목을 선택했을 경우
 						if(OrderOfSubject[0] != 0) {
@@ -752,13 +902,14 @@ void removeSubject(structMember *s) {
 			}
 
 			fflush(stdin);
-			gotoxyPrint(5, 30, "과목선택(숫자) >> ");
+			gotoxyPrint(10, 29, "삭제할 과목의 해당 숫자를 입력해주세요");
+			gotoxyPrint(10, 30, " >> ");
 
 
 			/*----------수정할 과목의 요일에서 과목 선택하는 while문----------*/
 			while(1) {
 				fflush(stdin);
-				gotoxy(23,30);
+				gotoxy(13,30);
 				fgets(removeSubject, sizeof(removeSubject), stdin);
 
 
@@ -767,7 +918,15 @@ void removeSubject(structMember *s) {
 
 					checkChoice = checkChoiceOfSubject(removeSubject, subjectCntOfModifyDay);
 
-					if( checkChoice == 0) {
+
+					if((removeSubject[0] == 'b'|| removeSubject[0] == 'B' )&& removeSubject[1] == '\0' ){
+						gotoxyPrint(5, 33, "                                              ");
+						return;
+					}
+				
+					else if((removeSubject[0] == 'x'|| removeSubject[0] == 'X' )&& removeSubject[1] == '\0' )  exit(0);
+
+					else if( checkChoice == 0) {
 						intRemoveSubjectNum = atoi(&removeSubject[0])-1;
 
 						for(i=OrderOfSubject[intRemoveSubjectNum];i<subjectTotalNum;i++) {
@@ -780,6 +939,7 @@ void removeSubject(structMember *s) {
 
 						break;
 					}
+
 					else if(checkChoice == 1) {
 						warningChoiceOfSubject("◀숫자외의문자를입력하셨습니다");
 						strcpy(removeSubject,"");
@@ -794,21 +954,21 @@ void removeSubject(structMember *s) {
 						strcpy(removeSubject,"");
 					}
 
+
+
 					else {
 						warningChoiceOfSubject("◀숫자외의문자를입력하셨습니다");
 						strcpy(removeSubject,"");
 					}
 				}
 				else {
+
 					warningChoiceOfSubject("◀입력이 잘못되었습니다");
 					strcpy(removeSubject,"");
 				}
 
 
 			}
-
-
-
 
 
 		if(subjectTotalNum-1 == 0 ) {
@@ -825,9 +985,9 @@ void removeSubject(structMember *s) {
 		}
 		else
 			saveTimetalbe(subjectPointer,subjectTotalNum-1,s);
-
-
 	}
+
+	gotoxyPrint(5, 33, "                                              ");
 }
 
 int checkModifyDay(char* modifyDay) {
@@ -841,6 +1001,7 @@ int checkModifyDay(char* modifyDay) {
 	
 		if(strstr(modifyDay, dayOfWeek[day])) 
 			dayCnt++;
+
 	}
 
 
@@ -866,9 +1027,10 @@ void warningModifyDay(char* warning) {
 }
 void warningChoiceOfSubject(char* warning) {
 
-	gotoxyPrint(23, 30, warning);
+
+	gotoxyPrint(13, 30, warning);
 	Sleep(1000);
-	gotoxyPrint(23, 30, "                                ");
+	gotoxyPrint(13, 30, "                                ");
 
 }
 
@@ -928,20 +1090,27 @@ int checkChoiceOfSubject(char* modifySubject, int subjectCntOfModifyDay) {
 	int i;
 	int tmpModifySubject = atoi(modifySubject);
 
-	
+
+
 		if( tmpModifySubject > 0 && tmpModifySubject <= subjectCntOfModifyDay) {
 
+			return 0;
+			
+
+		}
+		else{
 			for(i= 0; modifySubject[i] != '\0'; i++) {
 
-				if(modifySubject[i] > '0' && modifySubject[i] < '9')
-					return 0; //정상입력
+				if(modifySubject[i] >= '0' && modifySubject[i] < '9')
+					return 2;
 
-				else
-					return 1; //문자가 있을때(atoi를 하면 숫자+문자가 섞인 경우 숫자만 정수를 바꾼다)
+
 			}
-		}
 
+
+		}
 		
-	return 2; //선택신 숫자는 선택지에 없습니다.
+		return 1; //숫자외의문자를입력하셨습니다
+
 
 }

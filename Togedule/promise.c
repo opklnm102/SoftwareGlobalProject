@@ -69,7 +69,7 @@ int recordCombineTimetable(int CombineTimetable[5][13], char *DBname){		//통합시
 	char comma[1]={','};	//읽어올 timetable.txt에는 시간구분을 3,4,5 이런식으로 ','를 이용해 처리했으므로 문자열 처리를 위해 필요한 변수
 	int dayweek,time,i,j;	//통합시간표 int형 이차원배열에 요일과 시간에 대한 정보를 넣기위해 필요한 변수들 dayweek에는 요일에 대한 정보가 time에는 시간에 대한 정보가 들어간다.	
 	int length;				//문자열길이에 대한 값을 넣을 변수
-	
+	int check=0;
 	strcpy(openDB,DBname);			//매개변수로 받은 '학번+이름'에 timetable.txt를 붙인 이름을 가진 시간표정보를 읽기모드로 오픈
 	strcat(openDB,"timetable.txt");		
 	fp = fopen(openDB, "r");		
@@ -94,7 +94,7 @@ int recordCombineTimetable(int CombineTimetable[5][13], char *DBname){		//통합시
 				dayweek=4;
 			fscanf(fp,"%s", &buffer);			//과목을 읽는다. 과목도 통합시간표를 만들때 불필요한 정보
 			fscanf(fp,"%s",&buffer);			//시간을 읽는다.
-
+			check=0;
 			for(i=0;i<(int)strlen(buffer);i++) {			//읽어들인 시간 문자열의 길이만큼 for문으로 한단어씩 개별처리를 한다.
 				if(strncmp(buffer,comma,1)!=0){		//현재 시간문자열의 첫단어가 "," 가 아니면 
 					strncat(Time,buffer,1);			//Time문자열에 시간문자열의 첫문자를 덧붙여서 삽입 
@@ -107,14 +107,24 @@ int recordCombineTimetable(int CombineTimetable[5][13], char *DBname){		//통합시
 					length=strlen(Time);				
 					for(j=0; j<length; j++)				//Time문자열 초기화
 						Time[j]='\0';	
+					check=1;
 				}		
 			}
 			//길이만큼 for문을 돌리고 나오면 마지막 ','뒤의 자료처리가 남아있다. 
+			if(check==1){
 			time=atoi(buffer);					
 			CombineTimetable[dayweek][time-1]=1;
 			length=strlen(Time);
 			for(j=0; j<length; j++)
 				Time[j]='\0';
+			}
+			else if(check==0){
+			time=atoi(Time);					
+			CombineTimetable[dayweek][time-1]=1;
+			length=strlen(Time);
+			for(j=0; j<length; j++)
+				Time[j]='\0';
+			}
 		}
 	}			
 	fclose(fp);

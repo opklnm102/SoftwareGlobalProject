@@ -36,7 +36,11 @@ void removeTimetable(structMember *s) {
 		if( (endP=strchr(answer, '\n')) != NULL ) {
 			*endP = '\0';
 
-			if(answer[0] == 'y' || answer[0] == 'Y') {
+			if((answer[0] == 'b'|| answer[0] == 'B' )&& answer[1] == '\0' ) return;
+				
+			else if((answer[0] == 'x'|| answer[0] == 'X' )&& answer[1] == '\0' )  exit(0);
+
+			else if(answer[0] == 'y' || answer[0] == 'Y') {
 				nResult = remove(fileName);
 				if(nResult == 0) {
 					gotoxyPrint(8, 24, "*시간표가 정상적으로 삭제되었습니다*");  //지우기 성공
@@ -47,7 +51,10 @@ void removeTimetable(structMember *s) {
 				}
 
 				Sleep(10000);
+
 			}
+
+
 			else if(answer[0] == 'n' || answer[0] == 'N') {
 				return;
 			}

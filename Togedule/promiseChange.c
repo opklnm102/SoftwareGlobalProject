@@ -29,14 +29,13 @@ void changeTime(struct structPromise *old,int newCombineTimetable[5][13],int day
 	}
 	gotoxy(x+60,y+23);
 	printf("└─┴──┴──┴──┴──┴──┘");
-
+	newCombineTimetable[0][12]=0;
 	for (i=0; i<5; i++) {  //통합시간표를 출력(겹치는 부분 붉은색)	
 		for(j=0; j<13; j++){
 			if(newCombineTimetable[i][j]==1){				
 				gotoxy(92+6*i,10+j*2);
-				setcolor(4,4);
+				setcolor(4,4);  //글자색변경 글자(빨강),배경(빨강)
 				printf("    ",newCombineTimetable[i][j]);
-				//setcolor(7,0);
 			}			
 		}
 	}
@@ -252,10 +251,12 @@ int selectChange(char *DBname, struct structPromise *old, int listnumber, char *
 				exit(0);
 			}
 			else if(numberErrorcheck(select)){}
-			else {
-				
+			else if(!strcmp(select,"1")||!strcmp(select,"2")||!strcmp(select,"3")||!strcmp(select,"4")||!strcmp(select,"5")){
+				gotoxy(69,10);printf("                                                     ");
 				break;
 			}
+			gotoxy(69,10);printf("1~5범위 내의 숫자를 입력하세요.");
+			
 			gotoxy(69,11);printf("       ");
 		}
 		if(!strcmp(select,"1")){

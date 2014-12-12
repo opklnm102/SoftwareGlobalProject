@@ -1,6 +1,5 @@
 #include"structHeader.h"
 
-
 //● 시간표메뉴함수
 void timetableMenu(structMember *s) {
 
@@ -17,11 +16,13 @@ void timetableMenu(structMember *s) {
 		fflush(stdin);
 
 		/*----------메뉴 출력----------*/
-		gotoxyPrint(20, 18, " 1) 시간표 만들기 ");
-		gotoxyPrint(20, 20, " 2) 시간표 수  정 ");
-		gotoxyPrint(20, 22, " 3) 시간표 전체삭제 ");
-		gotoxyPrint(20, 24, " 4) 시간표 나가기 ");
-		gotoxyPrint(15, 27, "메뉴선택(숫자입력) >> ");
+		gotoxyPrint(20, 17, " 1 시간표 만들기 ");
+		gotoxyPrint(20, 19, " 2 시간표 수  정 ");
+		gotoxyPrint(20, 21, " 3 시간표 전체삭제 ");
+		gotoxyPrint(20, 23, " 4 시간표 나가기 ");
+		gotoxyPrint(13, 26, "원하는 메뉴의 숫자를 입력해주세요");
+		gotoxyPrint(12, 27, " >> ");
+		
 
 		/*----------메뉴 선택지 입력------------*/
 		fgets(choiceMenu,sizeof(choiceMenu), stdin);
@@ -40,15 +41,28 @@ void timetableMenu(structMember *s) {
 			case '3': removeTimetable(s); break;
 			//시간표 종료
 			case '4': return;
+			case 'b': return;
+			case 'B': return;
+			case 'x': exit(0);
+			case 'X': exit(0);
 			//한 문자가 들어왔지만 선택지에 없는 문자일 때
-			default: gotoxyPrint(16, 28, "●메뉴선택이 잘못되었습니다.●"); fflush(stdin); Sleep(1000);
+			default: {
+					
+				if(choiceMenu[0] == '\0') {
+					gotoxyPrint(16, 30, "●메뉴를 선택하지 않았습니다●"); fflush(stdin); Sleep(1000);
+				}
+				else{
+	
+				gotoxyPrint(16, 30, "●메뉴선택이 잘못되었습니다●"); fflush(stdin); Sleep(1000);
+				}
+			
+				}
 			}
-
 		}
 
 		/*----------(키 입력이 두 문자 이상인 경우)----------*/
 		else{
-			gotoxyPrint(16, 28, "●메뉴선택이 잘못되었습니다.●");
+			gotoxyPrint(16, 30, "●메뉴선택이 잘못되었습니다●");
 			fflush(stdin);
 			Sleep(1000);
 		}
@@ -323,17 +337,6 @@ char* getUserTextFileName (structMember *s) {
 	strcat(fileName,".txt");
 
 	return fileName;
-
-}
-
-void gotoxyPrint(int x, int y, char* word) {
-
-	COORD Cur;
-	Cur.X=x;
-	Cur.Y=y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),Cur);
-
-	printf(word);
 
 }
 

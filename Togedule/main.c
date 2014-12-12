@@ -21,27 +21,26 @@ int main()
 		gotoxy(73,27); printf("메뉴선택 >> "); 
 		while(1){
 			gotoxy(85,27); scanf("%s",menuSelect); fflush(stdin);
-			if(!strcmp(menuSelect,"1") || !strcmp(menuSelect,"2") || !strcmp(menuSelect,"3"))
-			{
-				menu=atoi(menuSelect);
-				gotoxy(50,30);
-				switch(menu){
-				case 1 :  //로그인
-					login(&s);			
-					break;
-				case 2 :  //회원가입
-					membership();
-					break;
-				case 3 :  //비밀번호재설정
-					pwFind();
-					break;
-				}
-			}
+			if(strcmp(menuSelect,"1") || strcmp(menuSelect,"2") || strcmp(menuSelect,"3"))
+				break;	
 			else{
 				gotoxy(65,29); printf("1~3만 입력");
 				gotoxy(85,27); printf("       ");
 			}
 		}
-		system("cls");
+		menu=atoi(menuSelect);
+		gotoxy(50,30);
+		switch(menu){
+		case 1 :  //로그인
+			login(&s);			
+			break;
+		case 2 :  //회원가입
+			membership();
+			break;
+		case 3 :  //비밀번호재설정
+			pwFind();
+			break;
+		}
 	}
+	system("cls");
 }
