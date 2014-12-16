@@ -142,4 +142,11 @@ void gotoxyPrint(int x, int y, char* word) {
 	printf(word);
 }
 
+//● 경고 출력 함수
+void warning(int x, int y, char *warning, char *blank) {
 
+	gotoxyPrint(x,y, warning);
+	Sleep(1000);
+	gotoxyPrint(x,y,blank);
+
+}

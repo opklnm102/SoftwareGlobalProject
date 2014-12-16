@@ -93,8 +93,8 @@ void addSubject(structMember *s); //½Ã°£Ç¥ °ú¸ñ Ãß°¡
 void OutputSubjectToModifyTheDay(char*ModifyDay);//¼öÁ¤ÇÒ ¿äÀÏ¿¡ ÇØ´çÇÏ´Â °ú¸ñ Ãâ·ÂÇÔ¼ö
 void removeSubject(structMember *s); //½Ã°£Ç¥ °ú¸ñ »èÁ¦
 void warningRemoveAnwer(char* warning);
-//¾à¼Ó°ü·Ã
 
+//¾à¼Ó°ü·Ã
 int promiseChange(char *DBname,char *logID);   //¾à¼Ó¼öÁ¤ ½ÃÀÛ-> ¸®½ºÆ® Ãâ·Â-> ¸®½ºÆ® ¼±ÅÃ-> ¾à¼Ó¼öÁ¤Ç×¸ñ ¼±ÅÃÇÔ¼ö È£Ãâ-> ¾à¼ÓÀúÀåÇÔ¼öµé È£Ãâ ÇÏ´Â ÇÔ¼ö
 int selectChange(char *DBname, struct structPromise *old, int listnumber, char **name,int CombineTimetable[5][13]);    //¾à¼Ó¼öÁ¤Ç×¸ñ ¼±ÅÃ
 void changePromiseName(struct structPromise *old);   //¾à¼Ó¼öÁ¤-> ¾à¼Ó¸í ¼öÁ¤
@@ -126,7 +126,6 @@ void setMajor(char ID[8],char Major[20]);   //ÇĞ¹ø 3¹øÂ°,4¹øÂ° ÀÚ¸®¸¦ ¹ÙÅÁÀ¸·Î Ç
 int recordCombineTimetable(int CombineTimetable[5][13], char *DBname);   //ÅëÇÕ½Ã°£Ç¥¿¡ Á¤º¸¸¦ Ãß°¡ÇÏ´Â ÇÔ¼ö, ÅëÇÕ½Ã°£Ç¥¿Í 'ÇĞ¹ø+ÀÌ¸§' ¹®ÀÚ¿­À» ¸Å°³º¯¼ö·Î ¹Ş¾Æ¼­ Ã³¸®
 int selectDate(int CombineTimetable[5][13],structPromise *newPromise);    //¸¸µé ¾à¼ÓÀÇ ³¯Â¥ ÀÔ·Â¹Ş´Â ÇÔ¼ö
 int callendar(int Month,char *dateLimit);    //´Ş·ÂÃâ·ÂÇÔ¼ö. ¿ùÀ» ¸Å°³º¯¼ö·Î ³Ñ°Ü¹Ş´Â´Ù. selectDate ÇÔ¼ö¿¡¼­ ÀÔ·Â¹ŞÀº ´ŞÀ» ³Ñ°Ü¹ŞÀ½.
-
 int weekday(int year, int month, int day);   //³âµµ, ¿ù, ÀÏ À» ¸Å°³º¯¼ö·Î ¹Ş¾Æ ¿äÀÏ Ã£´Â ÇÔ¼ö. ¸®ÅÏ°ªÀº Á¤¼öÇüÅÂ
 void selectTime(int CombineTimetable[5][13],structPromise *newPromise,int dayofWeek);    //¸¸µé ¾à¼ÓÀÇ ½Ã°£À» ÀÔ·Â¹Ş´Â ÇÔ¼ö
 void saveFriendsID(char ID[8], char *DB);    //ÇĞ¹øÀ» ¸Å°³º¯¼ö·Î ¹Ş¾Æ ÇĞ¹ø+ÀÌ¸§À» ¾Ë¾Æ³»´Â ÇÔ¼ö
@@ -135,7 +134,7 @@ void changeLocation( char* str );    //¹®ÀÚ¿­ Ã³¸®ÇÔ¼ö ¸Ç ¾ÕÀÇ ±ÛÀÚ¸¦ ¾ø¾Ö°í ÇÑ±
 //ºñ¿ë°ü·Ã
 void moneyShare1(structMember *s);  //µ·³ª´²ÁÖ¼¼¿ä ½ÃÀÛ
 void moneyShare2(structMember *s,int peopleCnt,char **transName);  //µ·³ª´©´Â ¸ğµå °í¸£´Â ±â´É
-void friendsavecost(structPromise *loginpl,int listnumber,char *fileName,int *arrMoney,int friendnum);  //ºñ¿ëÀúÀå
+void friendSaveCost(structPromise *loginpl,int listnumber,char *fileName,int *arrMoney,int friendnum);  //ºñ¿ëÀúÀå
 
 //°øÅëÀ¸·Î ¾²ÀÌ´Â °Íµé
 void gotoxy(int x, int y);  //ÁÂÇ¥¼³Á¤
@@ -152,11 +151,8 @@ int numberErrorcheck(char *s);  //¹®ÀÚ¿­¿¡¼­ ¼ıÀÚÀÌ¿ÜÀÇ °ªÀÌ µé¾î¿À´Â°Í Ã¼Å©
 int stringLengthcheck(char *s,int n);  //¹®ÀÚ¿­ ±æÀÌ Ã¼Å©(¹®ÀÚ¿­ÀÌ¶û ±æÀÌ¸¦ ÀÎÀÚ)
 int hanErrorcheck(char *s);  //ÇÑ±ÛÀÌ¿ÜÀÇ °ª Ã¼Å© 
 void gotoxyPrint(int x, int y, char* word);
+void warning(int x, int y, char *warning, char *blank);
 /*-------------------------------ÇÔ¼ö¿øÇü¼±¾ğ ³¡--------------------------------*/
-
-
-
-
 
 
 

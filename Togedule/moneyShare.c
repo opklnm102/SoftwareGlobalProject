@@ -1,217 +1,5 @@
 #include "structHeader.h"
 
-//void moneyShare2(structMember *s){
-//	/*-------------------------------변수 시작했다--------------------------------*/
-//	FILE *fin;
-//	int i;
-//	char fileName[30];
-//	char fileContents[600][100]={0};
-//	int beforeDivideMoney; // 나누기 전 돈
-//	int finalMoney; // 최종 돈
-//	int peopleCnt; // 사람 숫자
-//	int divisionNumber; // 나누는 수
-//	int arrMoney[5]={0, };
-//	int baseMoney ;
-//	int restPeople;
-//	int restMoney;
-//	int promiseNumber;
-//	int menuseletion; //메뉴 선택하는 변수
-//	int randomPersonNumber; //랜덤으로 받은 시드값을 저장하는 변수 1,2,3,4,5 중 하나
-//	int promiseCnt=0, contentsCnt=0, j=0;
-//	//promiseList 함수에서 따온 것↓
-//	char buffer[41]; //파일에서 읽어들인 값이 들어가는 임시 저장공간
-//	char promiseName[41];	//약속 이름을 저장
-//	int listCount=0;		//리스트 개수
-//	char promiseDate[10];	//약속 날짜를 저장
-//	int x=35, y=6;	
-//	/*--------------------------------변수 끝났다---------------------------------*/
-//	
-//	/*
-//	54000원이 나왔다. 5명이다.
-//	(54000 / (5 * 1000))*1000 = 50000 / 5 = 10000원씩 나누어 갖게된다.
-//	이 때 restMoney = 4000원
-//	*/
-//
-//	//나누기 전 돈, 사람 수, 나누는 수, 최종 돈, 남는 돈, i, 몰아주는 사람 제외하고 나머지
-//
-//	i=0;
-//	system("cls");
-//	strcpy(fileName,s->ID);
-//	strcat(fileName,s->name);
-//	strcat(fileName,"PromiseList.txt"); //1235039이정훈PromiseList.txt
-//	fin = fopen(fileName,"r"); // 파일생성
-//
-//	if ( fin == NULL ) {
-//		printf("현재 생성된 약속리스트가 없습니다.");
-//		return;
-//	}
-//	
-//	while (!feof(fin)) {			//약속리스트 열어서 약속의 이름과 날짜를 읽어서 출력, 최대 10개까지 출력
-//		gotoxy(55,4); printf("▷ 나의 약속리스트\n");
-//		fscanf(fin, "%s", &buffer);
-//		if(!strcmp(buffer,"약속리스트")){
-//			fscanf(fin,"%d", &listCount);
-//			gotoxy(62, 25); printf("현재 잡혀있는 약속 개수 %d",listCount);
-//			for(i=0; i<listCount; i++){
-//				fscanf(fin,"%s", promiseName);
-//				fgets(buffer,41,fin);
-//				fgets(buffer,41,fin);
-//				fgets(buffer,41,fin);
-//				fscanf(fin,"%s", promiseDate);
-//				fscanf(fin,"%s", buffer);
-//				fgets(buffer,41,fin);	
-//				fgets(buffer,41,fin);
-//				gotoxy(x,y);printf("○ %s / %s",promiseName,promiseDate);
-//				y=y+3;
-//				if(x==35&&y==21){		//한쪽에 5개를 찍은뒤 옆줄로 이동해서 다시 5개 찍음(최대 10개)
-//					x=75;
-//					y=6;
-//				}
-//				if(x==75&&y==21){		//10개를 꽉채워 찍은 경우 알림문구 표시
-//					gotoxy(53, 22);printf("나의 약속리스트는 10개까지만 표시됩니다.");
-//					gotoxy(55, 23);printf("상세한 약속은 약속 메뉴로 들어가세요.");
-//					break;
-//				}
-//			}
-//		}
-//	}
-//	fclose(fin);
-//
-//	strcpy(fileName,s->ID);
-//	strcat(fileName,s->name);
-//	strcat(fileName,"PromiseList.txt"); //1235039이정훈PromiseList.txt
-//	fin = fopen(fileName,"r"); // 파일생성
-//
-//	while(1) // 파일의 끝까지 내용을 fileContents 변수에 저장
-//	{
-//		fgets(fileContents[contentsCnt], 100, fin); //fin에서 100만큼까지 최대 읽어서 fileContents[contentsCnt]에 저장
-//		contentsCnt++;
-//		if (feof(fin)) break;
-//	}
-//	//printf("약속리스트\n");
-//	//promiseCnt = (contentsCnt-2) / 6;
-//	//for (i=0; i<promiseCnt; i++)
-//	//{
-//	//	printf("%d. %s", i+1, fileContents[(i*6)+2]);
-//	//	/*
-//	//		for (j=0; j<6; j++)
-//	//		{
-//	//			printf("%s", fileContents[(i*6)+2+j]);
-//	//		}
-//	//	*/
-//	//} // 약속 리스트들이 총 6줄이므로 6*i번째의 제목만 출력
-//
-//	//메뉴를 선택해라
-//	gotoxy(43,27);
-//	printf("약속을 선택하시오 ▶");
-//	gotoxy(52,27);
-//	scanf("%d", &promiseNumber);
-//	gotoxy(43,28);
-//	printf("<%s", fileContents[(promiseNumber-1)*6+2]);
-//	gotoxy(55,28);
-//	printf(">을 선택하셨습니다.\n");
-//	//사람 인원수 구하기
-//	peopleCnt=1;
-//	if (fileContents[(promiseNumber-1)*6+4][0]==NULL) {
-//		printf("입력오류!!!!");
-//	}
-//	else {
-//		for (i=0; ; i++)
-//		{ //해당하는 사람 숫자를 불러온다.
-//			if (fileContents[(promiseNumber-1)*6+6][i]==',') {
-//				peopleCnt++;
-//			}
-//			if (fileContents[(promiseNumber-1)*6+6][i]==NULL) {
-//				peopleCnt++;
-//				break;
-//			}
-//		}
-//	}
-//	fflush(stdin);
-
-
-//	while(1) {
-//		printf("1 : 공평하게 나누기, 2 : 한 명에게 몰아주기\n");
-//		printf("메뉴를 선택해주세요 : ▶");
-//		scanf("%d", &menuseletion); fflush(stdin);
-//
-//		if( menuseletion==1 || menuseletion==2)
-//			break;
-//		else printf("메뉴 선택을 다시 해주세요.");
-//	}
-//
-//	switch(menuseletion){
-//	case 1:
-//
-//		printf("나누기 전 돈, 절사할 최소 돈\n");
-//		printf("예시) 16500 1000\n");
-//
-//		scanf("%d %d", &beforeDivideMoney , &divisionNumber); fflush(stdin);
-//
-//		baseMoney = (beforeDivideMoney / (peopleCnt * divisionNumber)) * divisionNumber;
-//		/*int beforeDivideMoney, peopleCnt=0, divisionNumber, baseMoney = 0, finalMoney, restMoney, i, restPeople;
-//		int arrMoney[5] = {0, 0, 0, 0, 0};*/
-//
-//		restMoney = beforeDivideMoney - ( baseMoney * peopleCnt );
-//
-//		/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ알고리즘 시작ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
-//		if (restMoney == 0) {
-//			finalMoney = baseMoney+ (restMoney / (peopleCnt * divisionNumber) * divisionNumber);
-//
-//			for(i=0; i<peopleCnt; i++)
-//				arrMoney[i] = finalMoney;
-//		} 
-//		else {
-//			restPeople = ( restMoney / divisionNumber );
-//			finalMoney = baseMoney + divisionNumber;
-//
-//			if (restMoney % divisionNumber == 0) {
-//				for(i = 0 ;i<restPeople;i++){
-//					arrMoney[i] = finalMoney;
-//				}
-//				for(i=restPeople;i<5;i++){
-//					arrMoney[i] = (baseMoney + (restMoney % divisionNumber));
-//				}
-//			} 
-//			else {
-//				if (restPeople != 0)
-//					for(i=0;i<restPeople;i++)
-//						arrMoney[i] = finalMoney;
-//				if (peopleCnt - restPeople - 1 != 0)
-//					for(i=restPeople;i<peopleCnt-1;i++)
-//						arrMoney[i] = baseMoney;
-//				arrMoney[i] = (baseMoney + (restMoney % divisionNumber));
-//			}
-//		}
-//
-//		/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ알고리즘 끝ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ ㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
-//
-//		for(i=0; i<peopleCnt; i++){ //for (i=0; i<peopleCnt; i++)
-//			printf("%d번째 사람 : %d원\n", i+1,arrMoney[i]);
-//		}
-//
-//		getch(); break;
-//
-//	case 2: //한 명한테 몰아주기
-//		srand((unsigned)time(NULL));
-//		fflush(stdin); 
-//		randomPersonNumber = ( rand()%peopleCnt );
-//
-//		printf("나눌 돈을 적어주세요 : ▶"); 
-//		scanf("%d", &beforeDivideMoney);  fflush(stdin); 
-//
-//		printf("%d번째 사람이 당첨!\n", randomPersonNumber+1);
-//
-//		arrMoney[randomPersonNumber] = beforeDivideMoney;
-//
-//		for(i=0; i<peopleCnt; i++){
-//			printf("%d ", arrMoney[i]);
-//		}
-//		getch();
-//		break;
-//	}
-//}
-
 void moneyShare1(structMember *s){	
 	FILE *fp;
 	char fileName[30];
@@ -291,7 +79,7 @@ void moneyShare1(structMember *s){
 					strcpy(&friendsName[i][j],"\0");
 			}
 
-			cost=(char**)malloc(sizeof(char*)*listCount);						//비용은 약속수정에서 안쓰이는 정보이므로 그냥 읽어주기만 한다.. 필요없음
+			cost=(char**)malloc(sizeof(char*)*listCount);												//비용은 약속수정에서 안쓰이는 정보이므로 그냥 읽어주기만 한다.. 필요없음
 			for(i=0; i<listCount; i++) {													
 				cost[i]=(char*)malloc(sizeof(char)*10);
 				strcpy(cost[i],"\0");
@@ -299,7 +87,7 @@ void moneyShare1(structMember *s){
 					strcpy(&cost[i][j],"\0");
 			}
 
-			for(i=0; i<listCount; i++) {								//일단 약속리스트개수만큼 약속을 읽어와서 oldPromise구조체에 순서대로 저장
+			for(i=0; i<listCount; i++) {																			//일단 약속리스트개수만큼 약속을 읽어와서 oldPromise구조체에 순서대로 저장
 				fscanf(fp,"%s",&oldPromise[i].promiseName);
 				fflush(stdin);
 				fgets(check,40,fp);						
@@ -313,6 +101,7 @@ void moneyShare1(structMember *s){
 				fgets(check,40,fp);
 				strcpy(cost[i],check);
 			}
+
 			for(i=0; i<listCount; i++) {	
 				if(i==5){
 					gotoxy(35,10); printf("다음리스트를 보려면 >키를 입력하세요. 번호를 선택하려면 @키를 입력하세요.");
@@ -470,8 +259,10 @@ void moneyShare1(structMember *s){
 	}
 	listnumber--;
 
-	length=strlen(friendsName[listnumber]);			//줄단위로 읽은 학번들을 7자씩 끊어서 미리 할당해놓은 promiseFriendsName에 하나씩 넣어주는 부분
-	for(i=0; i<4; i++) {							//여기서도 굳이 회원수를 체크하려면 귀찮으니 4번 반복실행하도록 만듬, 자신포함 최대 5명이므로 저장되는 다른 회원정보는 4명
+	length = strlen(friendsName[listnumber]);			
+	//줄단위로 읽은 학번들을 7자씩 끊어서 미리 할당해놓은 promiseFriendsName에 하나씩 넣어주는 부분
+	for(i=0; i<4; i++) {											
+		//여기서도 굳이 회원수를 체크하려면 귀찮으니 4번 반복실행하도록 만듬, 자신포함 최대 5명이므로 저장되는 다른 회원정보는 4명
 		strncpy(oldPromise[listnumber].promiseFriendsName[i],friendsName[listnumber],7);
 		for(j=0; j<7; j++)
 			changeLocation(friendsName[listnumber]);
@@ -481,7 +272,8 @@ void moneyShare1(structMember *s){
 			break;		
 	}
 
-	transName=(char**)malloc(sizeof(char*)*4+1);	//학번을 그냥 쓸수 없으니 이름으로 바꿀 문자배열을 또 동적할당 해준다.
+	transName=(char**)malloc(sizeof(char*)*4+1);	
+	//학번을 그냥 쓸수 없으니 이름으로 바꿀 문자배열을 또 동적할당 해준다.
 	for(i=0; i<4; i++) {													
 		transName[i]=(char*)malloc(sizeof(char)*13);
 		strcpy(transName[i],"\0");
@@ -489,13 +281,21 @@ void moneyShare1(structMember *s){
 			strcpy(&transName[i][j],"\0");
 	}
 
-	strcpy(fileName,"회원목록.txt");						//학번을 이름으로 바꿔준다. 회원목록 txt를 5번동안 열고 닫고 하며 반복... 회원 숫자를 계산하기 귀찮으므로 그냥 5번 반복
+	strcpy(fileName,"회원목록.txt");						
+	
+	//학번을 이름으로 바꿔준다. 회원목록 txt를 5번동안 열고 닫고 하며 반복... 회원 숫자를 계산하기 귀찮으므로 그냥 5번 반복
 	for(i=0;i<4;i++){
 		fp = fopen(fileName, "r");
-		while (!feof(fp)) {		
-			fscanf(fp, "%s %s", &ID, &listName);										//학번과 이름을 한줄 읽는다.
-			if(!strcmp(ID,oldPromise[listnumber].promiseFriendsName[i])){				//검색할 학번과 같은 학번이면
-				strcpy(transName[i],listName);											//transName 문자배열에 현재 읽은 이름을 복사
+		while (!feof(fp)) {	
+			//학번과 이름을 한줄 읽는다.
+			fscanf(fp, "%s %s", &ID, &listName);	
+
+			//검색할 학번과 같은 학번이면
+			if(!strcmp(ID,oldPromise[listnumber].promiseFriendsName[i])){		
+
+				//transName 문자배열에 현재 읽은 이름을 복사
+				strcpy(transName[i],listName);											
+				
 				break;
 			}
 		}
@@ -526,23 +326,18 @@ void moneyShare1(structMember *s){
 	for(i=0; i<4; i++)
 		printf("%s ",transName[i]);
 
-	//moneyShare2(s,j,transName);  //알고리즘 호출
-
 	////-------------------------------알고리즘 시작----------------------------------------------------------//
 	while(1) {
 		peopleCnt = j+1; //j 사람 수를 peopleCnt에 저장
 		gotoxy(37,40);	printf("나누기 전 돈, 절사할 최소 돈 >>");
-		// printf("예시) 16500 1000\n");
-		//scanf("%d %d", &beforeDivideMoney , &divisionNumber); fflush(stdin);
 
 
 		gotoxy(37,41);
 		printf("예시) 16500 1000\n");
 		gotoxy(69,40); 
 
-		//하나라도 문자가 들어가는 경우. 음수는 통과함
+		//하나라도 문자가 들어가는 경우, 음수가 들어가는 경우, 공백이 들어가는 경우 오류 처리
 		do { 
-
 			fflush(stdin);
 			gotoxy(37,42);
 			printf("절사할 돈을 작게하거나 양수를 입력하세요.");
@@ -550,34 +345,7 @@ void moneyShare1(structMember *s){
 			gotoxy(69,40);
 		} 
 		while(scanf("%d %d", &beforeDivideMoney, &divisionNumber)!=2 || (beforeDivideMoney < 0) || (divisionNumber < 0) || (beforeDivideMoney < divisionNumber) || beforeDivideMoney == divisionNumber);
-
-		////하나라도 음수일 경우 절사할 돈이 더 클 경우
-		//while ( (beforeDivideMoney < 0) || (divisionNumber < 0) || (beforeDivideMoney < divisionNumber) ){
-		//	
-		//	if( beforeDivideMoney < 0 || divisionNumber < 0 ) {
-		//		do {
-		//			fflush(stdin);
-		//			gotoxy(37,42);
-		//			printf("양수를 입력해주세요. ");
-		//			gotoxy(69,40);
-		//			scanf("%d %d", &beforeDivideMoney, &divisionNumber);
-		//		}
-		//		while ( beforeDivideMoney < 0 || divisionNumber < 0 );
-		//	}
-
-		//	if( beforeDivideMoney < divisionNumber ) {
-		//		do {
-		//			fflush(stdin);
-		//			gotoxy(37,42);
-		//			printf("나누기 전 돈이 절사할 돈보다 커야합니다.");
-		//			gotoxy(69,40);
-		//			scanf("%d %d", &beforeDivideMoney, &divisionNumber);
-		//		}
-		//		while(beforeDivideMoney < divisionNumber);
-		//	}
-		//}
-
-
+		
 		system("cls");
 		screenBorderDraw();
 		listBorderDraw1(26,12);
@@ -605,6 +373,7 @@ void moneyShare1(structMember *s){
 	}
 
 	switch(menuseletion){
+
 	case 1:
 		//scanf("%d %d", &beforeDivideMoney , &divisionNumber); fflush(stdin);
 
@@ -643,19 +412,12 @@ void moneyShare1(structMember *s){
 			}
 		}
 
-		/*for(i=0; i<18; i++){
-		gotoxy(53+i,32);
-		printf("%c",waiting[i]);
-		Sleep(350);
-		}*/
-
 		for(i=0; i<peopleCnt-1; i++){
 			gotoxy(53,32+i);
 			printf("%d번째 사람 %s: %d원\n", i+1,transName[i],arrMoney[i]);
 		}
 		gotoxy(53,32+i);
 		printf("%d번째 사람 %s: %d원\n", i+1,s->name,arrMoney[i]);
-
 
 		getch(); break;
 
@@ -664,17 +426,9 @@ void moneyShare1(structMember *s){
 		srand((unsigned)time(NULL)); //랜덤 시드 생성
 		fflush(stdin); 
 		randomPersonNumber = ( rand()%peopleCnt );
-		//scanf("%d", &beforeDivideMoney);  fflush(stdin); 
-		arrMoney[randomPersonNumber] = beforeDivideMoney;
+		arrMoney[randomPersonNumber] = beforeDivideMoney;	
 
-		/*for(i=0; i<18; i++){
-		gotoxy(53+i,32);
-		printf("%c",waiting[i]);
-		Sleep(350);
-		}*/
-
-
-		for(i=0; i<peopleCnt-1; i++){ //for (i=0; i<peopleCnt; i++)
+		for(i=0; i<peopleCnt-1; i++){ 
 			gotoxy(53,32+i);
 			printf("%d번째 사람 %s: %d원\n", i+1, transName[i], arrMoney[i]);
 		}
@@ -688,7 +442,6 @@ void moneyShare1(structMember *s){
 		break;
 	}
 	/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ알고리즘 끝ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ ㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
-
 
 	//열기할 파일 이름 만들기
 	getUserfileName(fileName,s,"PromiseList");
@@ -719,7 +472,8 @@ void moneyShare1(structMember *s){
 				for(j=0; buffer[j] != '\0'; j++){
 					if(buffer[j] == ',')
 						friendCount++;
-				}				
+				}			
+
 				//친구들 학번 저장할곳 할당
 				pl[i].promiseFriendsName=(char **)malloc(sizeof(char *)*friendCount); 
 				for(j=0; j<friendCount; j++)
@@ -742,9 +496,6 @@ void moneyShare1(structMember *s){
 				}
 				pl[i].promiseFriendsName[k][l]='\0';
 
-				//for(j=0; j<friendCount; j++)  //학번 확인을 위한 임시 코드
-				//	printf("%s\n",pl[i].promiseFriendsName[j]);
-				//if(i != promiselistCount-1)
 				fseek(fp,2,SEEK_CUR);
 				fgets(pl[i].cost,10,fp);				
 			}
@@ -756,14 +507,14 @@ void moneyShare1(structMember *s){
 	fp=fopen(fileName,"w");
 	fprintf(fp,"%s\n","약속리스트");
 	fprintf(fp,"%d\n",promiselistCount);
-	for(i=0; i<promiselistCount; i++){
+	for(i=0; i<promiselistCount; i++) {
 		fprintf(fp,"%s\n",pl[i].promiseName);
 		fprintf(fp,"%s",pl[i].promisePlace);
 		fprintf(fp,"%s\n",pl[i].promiseTime);
 		fprintf(fp,"%s\n",pl[i].Promisedate);
 
 		friendCount=atoi(pl[i].promiseFreindsCount);
-		for(j=0; j<friendCount; j++){
+		for(j=0; j<friendCount; j++) {
 			fprintf(fp,"%s",pl[i].promiseFriendsName[j]);
 			if(j != friendCount-1)
 				fprintf(fp,"%s",",");
@@ -780,50 +531,14 @@ void moneyShare1(structMember *s){
 	fclose(fp);	
 
 	//친구꺼 파일에 비용 저장
-	for(k=0,l=0; k<peopleCnt-1; k++){
+	for(k=0; k<peopleCnt-1; k++) {
 
 		strcpy(fileName,pl[listnumber].promiseFriendsName[k]);  //학번복사
 		strcat(fileName,transName[k]);
 		strcat(fileName,"PromiseList.txt");
 
-		friendsavecost(pl,listnumber,fileName,arrMoney,k);
-
-		//fp=fopen(fileName,"w");
-		//fprintf(fp,"%s\n","약속리스트");
-		//fprintf(fp,"%d\n",promiselistCount);
-		//for(i=0; i<promiselistCount; i++){
-		//	fprintf(fp,"%s\n",pl[i].promiseName);
-		//	fprintf(fp,"%s",pl[i].promisePlace);
-		//	fprintf(fp,"%s\n",pl[i].promiseTime);
-		//	fprintf(fp,"%s\n",pl[i].Promisedate);
-
-		//	friendCount=atoi(pl[i].promiseFreindsCount);
-		//	for(j=0; j<friendCount; j++){
-		//		fprintf(fp,"%s",pl[i].promiseFriendsName[j]);
-		//		if(j != friendCount-1)
-		//			fprintf(fp,"%s",",");
-		//		else if(j == friendCount-1)
-		//			fprintf(fp,"%s","\n");
-		//	}
-		//	if(strcmp(pl[listnumber].promiseName,pl[i].promiseName)==0)
-		//		fprintf(fp,"%d\n",arrMoney[k]);  //수정 내돈은 arrMoney마지막에 있다.
-		//	else if(pl[i].cost[0] == 10 || i == promiselistCount-1)
-		//		fprintf(fp,"%s",pl[i].cost);
-		//	else
-		//		fprintf(fp,"%s",pl[i].cost);
-		//}
-		//fclose(fp);
+		friendSaveCost(pl,listnumber,fileName,arrMoney,k);
 	}
-
-	
-
-
-
-
-
-
-
-
 
 	//동적할당 해제
 	for(i=0; i<listCount; i++) {											
@@ -842,14 +557,12 @@ void moneyShare1(structMember *s){
 		free(transName[i]);
 	free(transName);
 
-
-
-	gotoxy(20,10);printf("메인 메뉴로 돌아가려면 B를 다른 약속을 상세보기하려면 B를 제외한 키를 입력하세요 : ");
-	gotoxy(103,10);scanf("%s",&select); fflush(stdin);
-	if(!strcmp(select,"b")||!strcmp(select,"B")){  //뒤로가기
+	gotoxy(20,10); printf("메인 메뉴로 돌아가려면 B를 다른 약속을 상세보기하려면 B를 제외한 키를 입력하세요 : ");
+	gotoxy(103,10); scanf("%s",&select); fflush(stdin);
+	if(!strcmp(select,"b")||!strcmp(select,"B")) {  //뒤로가기
 		return; //return 0;
 	}
-	else if(!strcmp(select,"x")||!strcmp(select,"X")){  //종료
+	else if(!strcmp(select,"x")||!strcmp(select,"X")) {  //종료
 		gotoxy(90,45);
 		exit(1);
 	}
@@ -857,8 +570,8 @@ void moneyShare1(structMember *s){
 		return; //return 1
 }
 
-
-void friendsavecost(structPromise *loginpl,int listnumber,char *fileName,int *arrMoney,int friendnum){
+//비용을 친구들.txt에 저장
+void friendSaveCost(structPromise *loginpl,int listnumber,char *fileName,int *arrMoney,int friendnum) {
 	FILE *fp;
 	char buffer[70];
 	int promiselistCount;
@@ -871,7 +584,7 @@ void friendsavecost(structPromise *loginpl,int listnumber,char *fileName,int *ar
 
 	if ( fp == NULL ) {						//파일이 없을 경우
 		gotoxy(20, 32);printf("현재 생성된 약속리스트가 없습니다.");
-		return ;
+		return;
 	}
 	while(!feof(fp)){
 		fscanf(fp,"%s",buffer);
@@ -886,16 +599,18 @@ void friendsavecost(structPromise *loginpl,int listnumber,char *fileName,int *ar
 
 				fscanf(fp,"%s",pl[i].promiseName);  //약속명
 				fseek(fp,2,SEEK_CUR);
-				fgets(pl[i].promisePlace,40,fp);  //장소
-				fscanf(fp,"%s",pl[i].promiseTime);  //시간
-				fscanf(fp,"%s",pl[i].Promisedate);  //날짜
-				fscanf(fp,"%s",buffer);  //친구들
+				fgets(pl[i].promisePlace, 40, fp);  //장소
+				fscanf(fp,"%s", pl[i].promiseTime);  //시간
+				fscanf(fp,"%s", pl[i].Promisedate);  //날짜
+				fscanf(fp,"%s", buffer);  //친구들
+
 				friendCount=1;
 				k=0;
 				for(j=0; buffer[j] != '\0'; j++){
 					if(buffer[j] == ',')
 						friendCount++;
-				}				
+				}	
+
 				//친구들 학번 저장할곳 할당
 				pl[i].promiseFriendsName=(char **)malloc(sizeof(char *)*friendCount); 
 				for(j=0; j<friendCount; j++)
@@ -918,21 +633,18 @@ void friendsavecost(structPromise *loginpl,int listnumber,char *fileName,int *ar
 				}
 				pl[i].promiseFriendsName[k][l]='\0';
 
-				//for(j=0; j<friendCount; j++)  //학번 확인을 위한 임시 코드
-				//	printf("%s\n",pl[i].promiseFriendsName[j]);
-				//if(i != promiselistCount-1)
 				fseek(fp,2,SEEK_CUR);
 				fgets(pl[i].cost,10,fp);				
 			}
 		}
 	}
 	fclose(fp);
-	
 
-		//친구꺼 파일에 비용 저장
+	//친구꺼 파일에 비용 저장
 	fp=fopen(fileName,"w");
 	fprintf(fp,"%s\n","약속리스트");
 	fprintf(fp,"%d\n",promiselistCount);
+
 	for(i=0; i<promiselistCount; i++){
 		fprintf(fp,"%s\n",pl[i].promiseName);
 		fprintf(fp,"%s",pl[i].promisePlace);
@@ -947,6 +659,7 @@ void friendsavecost(structPromise *loginpl,int listnumber,char *fileName,int *ar
 			else if(j == friendCount-1)
 				fprintf(fp,"%s","\n");
 		}
+
 		if(!strcmp(loginpl[listnumber].promiseName,pl[i].promiseName) && !strcmp(loginpl[listnumber].Promisedate,pl[i].Promisedate) && !strcmp(loginpl[listnumber].promiseTime,pl[i].promiseTime))
 			fprintf(fp,"%d\n",arrMoney[friendnum]);  //수정 내돈은 arrMoney마지막에 있다.
 		else if(pl[i].cost[0] == 10 || i == promiselistCount-1)
@@ -955,129 +668,4 @@ void friendsavecost(structPromise *loginpl,int listnumber,char *fileName,int *ar
 			fprintf(fp,"%s",pl[i].cost);
 	}
 	fclose(fp);	
-
-
-
-
-
-
-
-
-
-
 }
-
-//
-////구조체,사람수,이름들를 인자로
-//void moneyShare2(structMember *s,int peopleCnt,char **transName){
-//	int beforeDivideMoney; // 나누기 전 돈
-//	int finalMoney; // 최종 돈
-//	int divisionNumber; // 나누는 수
-//	int arrMoney[5]={0, };
-//	int baseMoney;
-//	int restPeople;
-//	int restMoney;
-//	//int promiseNumber;
-//	int menuseletion; //메뉴 선택하는 변수
-//	int randomPersonNumber; //랜덤으로 받은 시드값을 저장하는 변수 1,2,3,4,5 중 하나
-//	char waiting[20] = {'w','a','i','t',' ','p','l','e','a','s','e','.','.'};
-//	int i;
-//
-//	while(1) {
-//		gotoxy(37,40);	printf("나누기 전 돈, 절사할 최소 돈 >>");
-//		gotoxy(37,41);  printf("예시) 16500 1000\n");
-//		gotoxy(69,40);  scanf("%d %d", &beforeDivideMoney , &divisionNumber); fflush(stdin);
-//
-//		system("cls");
-//		screenBorderDraw();
-//		listBorderDraw1(26,12);
-//		gotoxy(58,6);
-//		printf("☆ 돈 나누기 ☆");
-//		gotoxy(45, 15);
-//		printf("1.   공평하게 나누기");
-//		gotoxy(45, 18);
-//		printf("2.   한 명에게 몰아주기\n");
-//		gotoxy(50, 30);
-//		printf("메뉴를 선택해주세요 : ▶");
-//		scanf("%d", &menuseletion); fflush(stdin);
-//
-//		if( menuseletion==1 || menuseletion==2)
-//			break;
-//		else printf("메뉴 선택을 다시 해주세요.");
-//	}
-//
-//	switch(menuseletion){
-//	case 1:
-//		baseMoney = (beforeDivideMoney / (peopleCnt * divisionNumber)) * divisionNumber;
-//		restMoney = beforeDivideMoney - ( baseMoney * peopleCnt );
-//
-//		if (restMoney == 0) {
-//			finalMoney = baseMoney+ (restMoney / (peopleCnt * divisionNumber) * divisionNumber);
-//
-//			for(i=0; i<peopleCnt; i++)
-//				arrMoney[i] = finalMoney;
-//		} 
-//		else {
-//			restPeople = ( restMoney / divisionNumber );
-//			finalMoney = baseMoney + divisionNumber;
-//
-//			if (restMoney % divisionNumber == 0) {
-//				for(i = 0 ;i<restPeople;i++){
-//					arrMoney[i] = finalMoney;
-//				}
-//				for(i=restPeople;i<5;i++){
-//					arrMoney[i] = (baseMoney + (restMoney % divisionNumber));
-//				}
-//			} 
-//			else {
-//				if (restPeople != 0)
-//					for(i=0;i<restPeople;i++)
-//						arrMoney[i] = finalMoney;
-//				if (peopleCnt - restPeople - 1 != 0)
-//					for(i=restPeople;i<peopleCnt-1;i++)
-//						arrMoney[i] = baseMoney;
-//				arrMoney[i] = (baseMoney + (restMoney % divisionNumber));
-//			}
-//		}
-//
-//		/*for(i=0; i<18; i++){
-//			gotoxy(53+i,32);
-//			printf("%c",waiting[i]);
-//			Sleep(350);
-//		}*/
-//
-//
-//		for(i=0; i<peopleCnt; i++){ //for (i=0; i<peopleCnt; i++)
-//			gotoxy(53,32+i);
-//			printf("%d번째 사람 %s: %d원\n", i+1,transName[i],arrMoney[i]);
-//		}
-//
-//		getch(); break;
-//
-//	case 2:
-//		//한 명한테 몰아주기
-//		srand((unsigned)time(NULL)); //랜덤 시드 생성
-//		fflush(stdin); 
-//		randomPersonNumber = ( rand()%peopleCnt );
-//		//scanf("%d", &beforeDivideMoney);  fflush(stdin); 
-//		arrMoney[randomPersonNumber] = beforeDivideMoney;
-//
-//		for(i=0; i<16; i++){
-//			gotoxy(53+i,32);
-//			printf("%c",waiting[i]);
-//			Sleep(100);
-//		}
-//
-//		for(i=0; i<peopleCnt; i++){ //for (i=0; i<peopleCnt; i++)
-//			gotoxy(53,32+i);
-//			printf("%d번째 사람 %s: %d원\n", i+1, transName[i], arrMoney[i]);
-//		}
-//		gotoxy(53, 36);
-//		printf("%d번째 사람이 당첨!\n", randomPersonNumber+1);
-//		getch();
-//		break;
-//	}
-//}
-
-
-

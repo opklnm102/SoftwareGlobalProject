@@ -1,5 +1,6 @@
 #include"structHeader.h"
 
+//● 시간표 만들기 함수
 void makeTimetable(structMember *s) {
 
 	int SubjectNumOfoneday[5]={0}, subjectTotalNum=0;
@@ -52,7 +53,7 @@ int InputSubjectNum(int* SubjectNumOfoneday, int* subjectTotalNum, structMember 
 
 				//하루과목개수가 5이상 9이하인 경우 (한자리 문자)
 				if(tmpSubjectNum[0] > '5' && tmpSubjectNum[0] <= '9') {
-					warningSubjectNumOfOneday(i,"◀하루최대과목개수(5개)초과");
+					warning(27,19+i*2,"◀하루최대과목개수(5개)초과","                           ");
 					i--;
 				}
 
@@ -68,13 +69,13 @@ int InputSubjectNum(int* SubjectNumOfoneday, int* subjectTotalNum, structMember 
 
 				//입력값이 문자인 경우
 				else if((tmpSubjectNum[0] < '0' || tmpSubjectNum[0] > '9') && tmpSubjectNum[0] != '\0') {
-					warningSubjectNumOfOneday(i,"◀숫자를 입력해주세요");
+					warning(27,19+i*2,"◀숫자를 입력해주세요","                           ");
 					i--;
 				}
 
 				//입력 없이 Enter를 누른 경우
 				else if(tmpSubjectNum[0] == '\0') {
-					warningSubjectNumOfOneday(i,"◀과목개수를 입력해주세요");
+					warning(27,19+i*2,"◀과목개수를 입력해주세요","                           ");
 					i--;
 				}
 				//과목 개수 입력이 올바른 경우
@@ -89,7 +90,7 @@ int InputSubjectNum(int* SubjectNumOfoneday, int* subjectTotalNum, structMember 
 
 				//과목개수를 음수로 입력한 경우
 				if(tmpSubjectNum[0] == '-') {
-					warningSubjectNumOfOneday(i,"◀양수로 입력해주세요");
+					warning(27,19+i*2,"◀양수로 입력해주세요","                           ");
 					i--;
 				}
 				//두자리이상의 숫자를 입력한 경우
@@ -97,11 +98,11 @@ int InputSubjectNum(int* SubjectNumOfoneday, int* subjectTotalNum, structMember 
 
 
 					if(tmpSubjectNum[1] < '0' || tmpSubjectNum[1] > '9') {
-						warningSubjectNumOfOneday(i,"◀숫자를 입력해주세요");
+						warning(27,19+i*2,"◀숫자를 입력해주세요","                           ");
 						i--;
 					}
 					else {
-						warningSubjectNumOfOneday(i,"◀하루최대과목개수(5개)초과");
+						warning(27,19+i*2,"◀하루최대과목개수(5개)초과","                           ");
 						i--;
 					}
 
@@ -110,13 +111,12 @@ int InputSubjectNum(int* SubjectNumOfoneday, int* subjectTotalNum, structMember 
 				}
 				//문자가 입력된 경우
 				else if((tmpSubjectNum[0] < '0' || tmpSubjectNum[0] > '9' )) {
-
-					warningSubjectNumOfOneday(i,"◀숫자를 입력해주세요");
+					warning(27,19+i*2,"◀숫자를 입력해주세요","                           ");
 					i--;
 				}
 				//그외 나머지인 경우
 				else {
-					warningSubjectNumOfOneday(i,"◀입력이 잘못되었습니다.");
+					warning(27,19+i*2,"◀입력이 잘못되었습니다.","                           ");
 					i--;
 				}
 
@@ -129,11 +129,11 @@ int InputSubjectNum(int* SubjectNumOfoneday, int* subjectTotalNum, structMember 
 
 			// 스크린에 입력한 데이터를 지우고 경고문 출력 후 while문을 다시 반복
 			for(i=0;i<5;i++)
-				gotoxyPrint(27, 18+i*2, "    ");
+				gotoxyPrint(27, 19+i*2, "    ");
 
-			gotoxyPrint(12, 28, " ※ 총 최대 과목수(13개)를 초과. ※\n");
+			gotoxyPrint(12, 29, " ※ 총 최대 과목수(13개)를 초과. ※\n");
 			Sleep(1000);
-			gotoxyPrint(8, 28, "                                              ");
+			gotoxyPrint(8, 29, "                                              ");
 			*subjectTotalNum =0;
 		}
 
@@ -216,7 +216,7 @@ void InputSubjectNameAndClass(int* SubjectNumOfoneday, int subjectTotalNum, stru
 					//입력없이 Enter를 누른 경우
 					if(tmpSubject.subjectName[0] == '\0'){
 						strcpy(tmpSubject.subjectName,"");
-						warningSubjectName(inputCurY,"◀과목명을미입력했습니다");
+						warning(72, inputCurY, "◀과목명을미입력했습니다", "                          ");
 					}
 
 					else if((tmpSubject.subjectName[0] == 'b'|| tmpSubject.subjectName[0] == 'B' )&& tmpSubject.subjectName[1] == '\0' ){
@@ -236,7 +236,7 @@ void InputSubjectNameAndClass(int* SubjectNumOfoneday, int subjectTotalNum, stru
 					//과목명에 빈칸이 있는 경우
 					else if (checkBlankOfSubjectName(tmpSubject.subjectName) == 0) {
 						strcpy(tmpSubject.subjectName,"");
-						warningSubjectName(inputCurY,"◀과목명에빈칸이있습니다");
+						warning(72, inputCurY, "◀과목명에빈칸이있습니다", "                          ");
 
 					}
 
@@ -249,7 +249,7 @@ void InputSubjectNameAndClass(int* SubjectNumOfoneday, int subjectTotalNum, stru
 				/*----------(키 입력이 5자 이상인 경우)----------*/
 				else {
 					strcpy(tmpSubject.subjectName,"");
-					warningSubjectName(inputCurY,"◀과목명5자를초과했습니다");
+					warning(72, inputCurY, "◀과목명5자를초과했습니다", "                          ");
 				}
 
 			}
@@ -283,25 +283,25 @@ void InputSubjectNameAndClass(int* SubjectNumOfoneday, int subjectTotalNum, stru
 
 					//숫자와','이외의 문자가 들어올때
 					else if(checkCharaterInClass(tmpSubject.subjectClass) == 0) {
-						warningSubjectClass( inputCurY,"◀','와숫자이외의문자");
+						warning(104, inputCurY, "◀','와숫자이외의문자", "                       ");
 						strcpy(tmpSubject.subjectClass,"");
 					}
 
 					//교시를 입력하지 않고 Enter를 쳤을때
 					else if(tmpSubject.subjectClass[0] == '\0') {
-						warningSubjectClass( inputCurY,"◀교시를미입력했습니다");
+						warning(104, inputCurY, "◀교시를미입력했습니다", "                       ");
 						strcpy(tmpSubject.subjectClass,"");
 					}
 
 					//교시를 중복되게 쳤을때
 					else if (checkOverlappingInClass(subjectPointer,tmpSubject,subjectTotalNum) == 0){
-						warningSubjectClass( inputCurY,"◀교시가중복됩니다");
+						warning(104, inputCurY, "◀교시가중복됩니다", "                       ");
 						strcpy(tmpSubject.subjectClass,"");
 					}
 
 					//1~13교시 이외의 교시를 입력 했을때
 					else if(checkNumInClass(tmpSubject.subjectClass) == 0){
-						warningSubjectClass( inputCurY,"◀1~13이외교시입니다");
+						warning(104, inputCurY, "◀1~13이외교시입니다", "                       ");
 						strcpy(tmpSubject.subjectClass,"");
 					}
 					//입력이 올바를 때
@@ -313,7 +313,7 @@ void InputSubjectNameAndClass(int* SubjectNumOfoneday, int subjectTotalNum, stru
 				}
 				/*----------(키 입력이 10자 이상인 경우)----------*/
 				else{
-					warningSubjectClass(inputCurY,"◀교시글자수초과했습니다");
+					warning(104, inputCurY, "◀교시글자수초과했습니다", "                       ");
 					strcpy(tmpSubject.subjectClass,"");
 				}
 			}
@@ -345,29 +345,4 @@ void InputSubjectNameAndClass(int* SubjectNumOfoneday, int subjectTotalNum, stru
 
 }
 
-void warningSubjectNumOfOneday(int y, char* warning) {
 
-
-	gotoxyPrint(27, 19+y*2, warning);
-	Sleep(1000);
-	gotoxyPrint(27, 19+y*2, "                           ");
-
-}
-
-void warningSubjectName(int y, char* warning) {
-
-
-	gotoxyPrint(72,y, warning);
-	Sleep(1500);
-	gotoxyPrint(72,y, "                          ");
-
-}
-
-void warningSubjectClass(int y, char* warning) {
-
-
-	gotoxyPrint(104,y, warning);
-	Sleep(1000);
-	gotoxyPrint(104,y, "                       ");
-
-}
